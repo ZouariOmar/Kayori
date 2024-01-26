@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"makefile.makefilePath": "makefile",
+		"cSpell.words": [
+			"kayori",
+			"nchallah"
+		]
+	}
+}
