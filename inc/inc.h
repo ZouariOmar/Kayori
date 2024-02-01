@@ -6,7 +6,7 @@
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>       // if dosn't work, try to use #include "SDL.h"
+#include <SDL/SDL.h>
                     /* COLORS PROTOTYPE DECLARATION PART */
 // TEXT COLORS
 // define COLOR "ANSI CODE"...
