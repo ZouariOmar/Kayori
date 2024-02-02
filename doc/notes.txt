@@ -1,2 +1,6 @@
                     --- NOTES ---
+<<<<<<< HEAD
 @ Need to start "Menu.c/.h" prototype     // No need to wait the bkg of the menu !
+=======
+// migration to linux
+>>>>>>> 4f810c855e6160ae52649d2df79c672676a6cfe9
