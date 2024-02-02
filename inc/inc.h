@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
+const int width = 1024, hight = 1024;
                     /* COLORS PROTOTYPE DECLARATION PART */
 // TEXT COLORS
 // define COLOR "ANSI CODE"...
