@@ -11,9 +11,9 @@ int main() {
     SDL_Surface *screen = SDL_SetVideoMode(width, hight, 32, SDL_HWSURFACE | SDL_SWSURFACE);                                            // initializing screen process
     if(!screen) {
         fprintf(stderr, "Error: couldn't initialize the screen: %s !", SDL_GetError()); exit(1);
-    } atexit(SDL_Quit);
+    }
+    SDL_Event usr_event;
     while(1) {                                                                                                                          // creat usr_event loop
-        SDL_Event usr_event;
         SDL_WaitEvent(&usr_event);
         switch (usr_event.type) {
             case SDL_QUIT:                                                                                                              // quit option

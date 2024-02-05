@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
+#include <SDL/SDL_image.h>
 const int width = 640, hight = 640;
                     /* COLORS PROTOTYPE DECLARATION PART */
 // TEXT COLORS
