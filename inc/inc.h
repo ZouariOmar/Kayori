@@ -22,11 +22,11 @@ const int width = 640, hight = 640;
 // SUCCESS_MSG
 // define successMsgXX...
                     /* STRUCT PROTOTYPE DECLARATION PART */
-/*
-struct...
-*/
+typedef enum Bool {
+    false,
+    true
+} bool;
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
-/*
-func...
-*/
+void menuSurface();
+void menuBkg();
 #endif
