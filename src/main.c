@@ -3,7 +3,6 @@
 // kayori :: main.c
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 #include "../lib/lib.c"
-#include "../lib/menu/menu.c"
                     /* MAIN() INT FUNCTION DEV PART */
 int main() {
 	CreatSurface();
