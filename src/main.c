@@ -5,19 +5,8 @@
 #include "../lib/lib.c"
                     /* MAIN() INT FUNCTION DEV PART */
 int main() {
-	CreatSurface();
-    SDL_Event usr_event;
-    while(1) {                                                                                                                          // creat usr_event loop
-        SDL_WaitEvent(&usr_event);
-        switch (usr_event.type) {
-            case SDL_QUIT:                                                                                                              // quit option
-                exit(0);
-            // rest of option...
-            default:
-                break;
-        }
-    }
-    //rest of code...
-    SDL_Quit();                                                                                                // free memory process
+	initEverything();
+    settings(screen);
+	closeEverything();
 	return 0;
 }

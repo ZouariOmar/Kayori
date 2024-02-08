@@ -10,7 +10,10 @@
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
-const int width = 640, hight = 640;
+#include "SDL_Msg.h"
+#include "settings.h"
+SDL_Surface *screen;
+const int width = 1920, hight = 1080;               // Full HD
                     /* COLORS PROTOTYPE DECLARATION PART */
 // TEXT COLORS
 // define COLOR "ANSI CODE"...
@@ -22,11 +25,19 @@ const int width = 640, hight = 640;
 // SUCCESS_MSG
 // define successMsgXX...
                     /* STRUCT PROTOTYPE DECLARATION PART */
-typedef enum Bool {
+typedef struct Surface {
+    SDL_Surface *screen;
+    SDL_Rect pos;
+} surface;
+typedef enum Bool {                                             // bool values def
     false,
     true
 } bool;
+typedef enum Moves {                                            // basics moves values def
+    up, down, left, right
+} moves;
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
-void menuSurface();
-void menuBkg();
+void initEverything();
+void closeEverything();
+void settings(SDL_Surface*);
 #endif

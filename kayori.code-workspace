@@ -7,9 +7,12 @@
 	"settings": {
 		"makefile.makefilePath": "makefile",
 		"cSpell.words": [
+			"Blit",
+			"DOUBLEBUF",
 			"HWSURFACE",
 			"kayori",
 			"nchallah",
+			"SUCMSG",
 			"SWSURFACE"
 		]
 	}
