@@ -6,7 +6,7 @@
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 
                     /* STRUCT PROTOTYPE DECLARATION PART */
-
+void initResources();
+void freeResources();
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
-
 #endif

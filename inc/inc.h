@@ -40,4 +40,5 @@ typedef enum Moves {                                            // basics moves 
 void initEverything();
 void closeEverything();
 void settings(SDL_Surface*);
+void setImg(char*, surface*, int, int);
 #endif

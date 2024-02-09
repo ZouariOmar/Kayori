@@ -8,5 +8,7 @@ int main() {
 	initEverything();
     settings(screen);
 	closeEverything();
+    SDL_FreeSurface(screen);
+    // freeEverything();
 	return 0;
 }
