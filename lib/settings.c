@@ -4,11 +4,15 @@
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 #include "../inc/inc.h"
 surface img00;
+
                     /* FUNCTIONS PROTOTYPE DEV PART */
 void settings() {
     initResources();
     SDL_Flip(screen);
     SDL_Event event;
+    music = Mix_LoadMUS("pkg//music//PS2_ Red Screen of Death.mp3");
+    music1 = Mix_LoadWAV("pkg//music//rac_menu_beep.wav");
+    Mix_PlayMusic(music, -1);
     int buttonPos = 0, scrollPos1 = 100, scrollPos2 = 100;
     while (1) {
         while(SDL_PollEvent(&event)) {
@@ -20,17 +24,22 @@ void settings() {
                         setImg("pkg//res//settings imgs//img01.png", &img00, 682, 30);
                         setImg("pkg//res//settings imgs//img08.png", &img00, 80, 58);
                     } break;
+                case SDL_MOUSEBUTTONDOWN:
+                    // return to the main menu code...
+                    break;
                 case SDL_KEYDOWN:
                     switch(buttonPos) {
                         case 0:
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img02.png", &img00, 311, 206);
                                 setImg("pkg//res//settings imgs//img21.png", &img00, 311, 319);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 1;
                             }
                             if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img02.png", &img00, 311, 206);
                                 setImg("pkg//res//settings imgs//img26.png", &img00, 311, 800);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 6;
                             }
                             if(event.key.keysym.sym == SDLK_RIGHT) {
@@ -43,10 +52,12 @@ void settings() {
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img04.png", &img00, 311, 319);
                                 setImg("pkg//res//settings imgs//img22.png", &img00, 311, 390);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 2;
                             } else if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img04.png", &img00, 311, 319);
                                 setImg("pkg//res//settings imgs//img19.png", &img00, 311, 206);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 0;
                             }
                             if(event.key.keysym.sym == SDLK_KP_ENTER) {
@@ -56,10 +67,12 @@ void settings() {
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img05.png", &img00, 311, 390);
                                 setImg("pkg//res//settings imgs//img23.png", &img00, 311, 503);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 3;
                             } else if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img05.png", &img00, 311, 390);
                                 setImg("pkg//res//settings imgs//img21.png", &img00, 311, 319);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 1;
                             }
                             if(event.key.keysym.sym == SDLK_KP_ENTER) {
@@ -69,10 +82,12 @@ void settings() {
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img07.png", &img00, 311, 503);
                                 setImg("pkg//res//settings imgs//img24.png", &img00, 311, 616);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 4;
                             } else if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img07.png", &img00, 311, 503);
                                 setImg("pkg//res//settings imgs//img22.png", &img00, 311, 390);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 2;
                             }
                             if(event.key.keysym.sym == SDLK_RIGHT) {
@@ -85,10 +100,12 @@ void settings() {
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img10.png", &img00, 311, 616);
                                 setImg("pkg//res//settings imgs//img25.png", &img00, 311, 687);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 5;
                             } else if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img10.png", &img00, 311, 616);
                                 setImg("pkg//res//settings imgs//img23.png", &img00, 311, 503);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 3;
                             } else if(event.key.keysym.sym == SDLK_RIGHT && scrollPos1 < 100) {
                                 setImg("pkg//res//settings imgs//img28.png", &img00, 1570, 618);
@@ -102,10 +119,12 @@ void settings() {
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img11.png", &img00, 311, 687);
                                 setImg("pkg//res//settings imgs//img26.png", &img00, 311, 800);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 6;
                             } else if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img11.png", &img00, 311, 687);
                                 setImg("pkg//res//settings imgs//img24.png", &img00, 311, 616);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 4;
                             }
                             if(event.key.keysym.sym == SDLK_RIGHT && scrollPos2 < 100) {
@@ -119,10 +138,12 @@ void settings() {
                             if(event.key.keysym.sym == SDLK_DOWN) {
                                 setImg("pkg//res//settings imgs//img13.png", &img00, 311, 800);
                                 setImg("pkg//res//settings imgs//img19.png", &img00, 311, 206);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 0;
                             } else if(event.key.keysym.sym == SDLK_UP) {
                                 setImg("pkg//res//settings imgs//img13.png", &img00, 311, 800);
                                 setImg("pkg//res//settings imgs//img25.png", &img00, 311, 687);
+                                Mix_PlayChannel(-1, music1, 0);
                                 buttonPos = 5;
                             }
                             if(event.key.keysym.sym == SDLK_RIGHT) {

@@ -1,3 +1,8 @@
                     --- NOTES ---
 @ Need to start "Menu.c/.h" prototype     // No need to wait the bkg of the menu !
 // migration to linux
+
+---
+issue 1: in settings scroll button :: bug not fixed
+issue 2: the SDL_BlitSurface() func use the CPU only
+issue 3: 

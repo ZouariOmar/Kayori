@@ -13,7 +13,10 @@
 #include <SDL/SDL_mixer.h>
 #include "SDL_Msg.h"
 #include "settings.h"
+
 SDL_Surface *screen;
+Mix_Music *music;
+Mix_Chunk *music1;
 const int width = 1920, hight = 1080;               // Full HD
                     /* COLORS PROTOTYPE DECLARATION PART */
 

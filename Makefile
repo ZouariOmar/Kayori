@@ -6,7 +6,7 @@
 CC = gcc
 
 # Specify any additional flags for the C compiler
-CFLAGS = -Wall -Wextra -std=c99 -lm -lSDL -lSDL_ttf -lSDL_image -g
+CFLAGS = -Wall -Wextra -std=c99 -lm -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -g
 
 # Define the source files
 SRC_DIR = src/main.c
