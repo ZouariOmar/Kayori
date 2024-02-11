@@ -6,6 +6,7 @@
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
@@ -15,12 +16,8 @@
 SDL_Surface *screen;
 const int width = 1920, hight = 1080;               // Full HD
                     /* COLORS PROTOTYPE DECLARATION PART */
-// TEXT COLORS
-// define COLOR "ANSI CODE"...
-// BACKGROUND COLORS
-// define bgCOLOR "ANSI CODE"...
+
                     /* MSG PROTOTYPE DECLARATION PART */
-// ERROR_MSG
 // define errorMsgXX...
 // SUCCESS_MSG
 // define successMsgXX...
@@ -38,7 +35,7 @@ typedef enum Moves {                                            // basics moves 
 } moves;
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
 void initEverything();
+void freeEverything();
 void closeEverything();
-void settings(SDL_Surface*);
 void setImg(char*, surface*, int, int);
 #endif

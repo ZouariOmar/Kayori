@@ -6,9 +6,8 @@
                     /* MAIN() INT FUNCTION DEV PART */
 int main() {
 	initEverything();
-    settings(screen);
+    settings();
 	closeEverything();
-    SDL_FreeSurface(screen);
-    // freeEverything();
+    freeEverything();
 	return 0;
 }

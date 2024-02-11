@@ -7,6 +7,7 @@
 
                     /* STRUCT PROTOTYPE DECLARATION PART */
 void initResources();
-void freeResources();
+void scroll(char*, int, int);
+// void on_off_Animation(int, float, float);
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
 #endif

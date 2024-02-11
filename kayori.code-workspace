@@ -15,6 +15,9 @@
 			"nchallah",
 			"SUCMSG",
 			"SWSURFACE"
-		]
+		],
+		"files.associations": {
+			"inc.h": "c"
+		}
 	}
 }
