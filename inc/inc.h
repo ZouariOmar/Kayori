@@ -4,20 +4,15 @@
 #ifndef __INC_H__
 #define __INC_H__
                     /* INCLUDE PROTOTYPE DECLARATION PART */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
 #include "SDL_Msg.h"
 #include "settings.h"
-
+                    /* PUBLIC VARIABLES PROTOTYPE DECLARATION PART */
 SDL_Surface *screen;
-Mix_Music *music;
-Mix_Chunk *music1;
-const int width = 1920, hight = 1080;               // Full HD
+SDL_Event event;
+                    /* PRINCIPAL SCREEN RESOLUTION PROTOTYPE DECLARATION PART */
+int SCREEN_WIDTH = 1920;
+int SCREEN_HEIGHT = 1080;
+int SCREEN_BPP = 32;
                     /* COLORS PROTOTYPE DECLARATION PART */
 
                     /* MSG PROTOTYPE DECLARATION PART */
@@ -25,20 +20,7 @@ const int width = 1920, hight = 1080;               // Full HD
 // SUCCESS_MSG
 // define successMsgXX...
                     /* STRUCT PROTOTYPE DECLARATION PART */
-typedef struct Surface {
-    SDL_Surface *screen;
-    SDL_Rect pos;
-} surface;
-typedef enum Bool {                                             // bool values def
-    false,
-    true
-} bool;
-typedef enum Moves {                                            // basics moves values def
-    up, down, left, right
-} moves;
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
-void initEverything();
-void freeEverything();
-void closeEverything();
-void setImg(char*, surface*, int, int);
+void initEverything();                                                                              // initEverything() void func > main.c
+void closeEverything();                                                                             // closeEverything() void func > main.c
 #endif

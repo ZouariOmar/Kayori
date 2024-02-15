@@ -11,13 +11,18 @@
 			"DOUBLEBUF",
 			"HWSURFACE",
 			"kayori",
+			"keysym",
+			"MOUSEBUTTONDOWN",
 			"MOUSEMOTION",
 			"nchallah",
+			"SDLK",
 			"SUCMSG",
 			"SWSURFACE"
 		],
 		"files.associations": {
-			"inc.h": "c"
+			"inc.h": "c",
+			"stdio.h": "c",
+			"start_menu.h": "c"
 		}
 	}
 }
