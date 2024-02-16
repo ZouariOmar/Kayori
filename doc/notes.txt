@@ -3,6 +3,6 @@
 // migration to linux
 
 ---
-issue 1: in settings scroll button :: bug not fixed
-issue 2: the SDL_BlitSurface() func use the CPU only
+issue 1: in settings scroll button (double click in the same time) :: bug not fixed
+issue 2: the SDL_BlitSurface() func use the CPU only    :: fixed :)
 issue 3: 

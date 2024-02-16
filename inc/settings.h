@@ -16,6 +16,9 @@ typedef struct Surface {                                                        
     SDL_Surface *screen;
     SDL_Rect pos;
 } surface;
+/*typedef struct Music {
+    Mix_Music *pop;
+};*/
 typedef enum Boolean {
     false, true
 } bool;

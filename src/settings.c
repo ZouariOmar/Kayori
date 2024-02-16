@@ -6,16 +6,21 @@
                     /* FUNCTIONS PROTOTYPE DEV PART */
 void settings() {
     surface sub[41];
-    int optionsAreaPos [7][3] = {
-        {2, 19, 206},
-        {4, 21, 319},
-        {5, 22, 390},
+    int optionsAreaPos[7][3] = {            // x: 311    // need to make it dynamic !
+        {2, 19, 206},                       // optionAreaPos[][0] :: the normal img pos in sub[]
+        {4, 21, 319},                       // optionAreaPos[][1] :: the animated img pos in sub[]
+        {5, 22, 390},                       // optionAreaPos[][2] :: the hight of th img (y) --> open figma for more details
         {7, 23, 503},
-        {10, 24, 616},          // x: 311
+        {10, 24, 616},
         {11, 25, 687},
         {13, 26, 800},
-    };
-    int optionPos = 0;
+    },
+    opCtrlPos[4][3] = {             // all right & left buttons ctrls height
+        {503, 30},                  // option 3 :: 30 mean that the option is in "Off" mode (30 is the loaded img pos in sub[])
+        {618, 41},                  // option 4 :: 41 mean that the volume is equal 100 (41 is the loaded img pos in sub[])
+        {685, 41},                  // option 5 :: 41 mean that the volume is equal 100 (41 is the loaded img pos in sub[])
+        {800, 29}},                 // option 6 :: 29 mean that the option is in "On" mode (29 is the loaded img pos in sub[])
+    optionPos = 0;
     loadResources(sub);
     initResources(sub);
     SDL_Flip(screen);
@@ -31,6 +36,7 @@ void settings() {
                         SDL_BlitSurface(sub[8].screen, NULL, screen, (sub[8].pos.x = 80, sub[8].pos.y = 58, &sub[8].pos));
                         SDL_BlitSurface(sub[1].screen, NULL, screen, (sub[1].pos.x = 682, sub[1].pos.y = 30, &sub[1].pos));
                     }
+                    // rest of code... :: support the mouse motion for option and their buttons
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(event.motion.x >= 80 && event.motion.x <= 80 + 60 && event.motion.y >= 58 && event.motion.y <= 58 + 60 && event.button.button == SDL_BUTTON_LEFT) {
@@ -56,19 +62,51 @@ void settings() {
                             // animated img
                             SDL_BlitSurface(sub[optionsAreaPos[optionPos][1]].screen, NULL, screen, (sub[optionsAreaPos[optionPos][1]].pos.x = 311, sub[optionsAreaPos[optionPos][1]].pos.y = optionsAreaPos[optionPos][2], &sub[optionsAreaPos[optionPos][1]].pos));
                             break;
-                        case SDLK_LEFT:
-                            // rest of code...
+                        case SDLK_LEFT:                             /* LEFT CLICK OPTION */
+                            if(3 <= optionPos && optionPos <= 6) {                              // ctrl buttons && scroll animation in option 4 and 5
+                                SDL_BlitSurface(sub[27].screen, NULL, screen, (sub[27].pos.x = 1424, sub[27].pos.y = opCtrlPos[optionPos-3][0], &sub[27].pos));
+                            }
+                            if(optionPos == 3) {                                                // On button in option 3 :: need optimization with option 6
+                                SDL_BlitSurface(sub[29].screen, NULL, screen, (sub[29].pos.x = 1485, sub[29].pos.y = 503, &sub[29].pos));
+                            } else if((optionPos == 4 || optionPos == 5) && opCtrlPos[optionPos - 3][1] > 31) {                 // option 4 scroll in left part
+                                opCtrlPos[optionPos - 3][1]--;
+                                SDL_BlitSurface(sub[opCtrlPos[optionPos - 3][1]].screen, NULL, screen, (sub[opCtrlPos[optionPos - 3][1]].pos.x = 1485, sub[opCtrlPos[optionPos - 3][1]].pos.y = opCtrlPos[optionPos - 3][0], &sub[opCtrlPos[optionPos - 3][1]].pos));
+                            }else if(optionPos == 6) {                                          // on button in option 6 :: need optimization with option 3
+                                SDL_BlitSurface(sub[29].screen, NULL, screen, (sub[29].pos.x = 1485, sub[29].pos.y = 800, &sub[29].pos));
+                            }
                             break;
-                        case SDLK_RIGHT:
-                            // rest of code
+                        case SDLK_RIGHT:                        /* RIGHT CLICK OPTION */
+                            if(3 <= optionPos && optionPos <= 6) {                              // ctrl buttons && scroll animation in option 4 and 5
+                                SDL_BlitSurface(sub[28].screen, NULL, screen, (sub[28].pos.x = 1570, sub[28].pos.y = opCtrlPos[optionPos-3][0], &sub[28].pos));
+                            }
+                            if(optionPos == 3) {                                                // Off button in option 3 :: need optimization with option 6
+                                SDL_BlitSurface(sub[30].screen, NULL, screen, (sub[30].pos.x = 1485, sub[30].pos.y = 503, &sub[30].pos));
+                            } else if((optionPos == 4 || optionPos == 5) && opCtrlPos[optionPos - 3][1] < 41) {                 // option 4 scroll in right part
+                                opCtrlPos[optionPos - 3][1]++;
+                                SDL_BlitSurface(sub[opCtrlPos[optionPos - 3][1]].screen, NULL, screen, (sub[opCtrlPos[optionPos - 3][1]].pos.x = 1485, sub[opCtrlPos[optionPos - 3][1]].pos.y = opCtrlPos[optionPos - 3][0], &sub[opCtrlPos[optionPos - 3][1]].pos));
+                            } else if(optionPos == 6) {                                         // off button in option 6 :: need optimization with option 3
+                                SDL_BlitSurface(sub[30].screen, NULL, screen, (sub[30].pos.x = 1485, sub[30].pos.y = 800, &sub[30].pos));
+                            }
                             break;
                         default:
                             break;
                         }
-                        // rest of code...
                     break;
                 case SDL_KEYUP:
-                    // rest of code...
+                    switch(event.key.keysym.sym) {
+                    case SDLK_LEFT:
+                        if(3 <= optionPos && optionPos <= 6) {
+                            SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[15].pos.x = 1424, sub[15].pos.y = opCtrlPos[optionPos-3][0], &sub[15].pos));
+                        }
+                        break;
+                    case SDLK_RIGHT:
+                        if(3 <= optionPos && optionPos <= 6) {
+                            SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[16].pos.x = 1570, sub[16].pos.y = opCtrlPos[optionPos-3][0], &sub[16].pos));
+                        }
+                        break;
+                    default:
+                        break;
+                    }
                     break;
                 case SDL_QUIT:          // with event switch
                     exit(0);
@@ -78,16 +116,15 @@ void settings() {
 }
 void loadResources(surface sub[]) {
     int i = 0, j = 0;
-    while (i < 42) {
+    while(i < 42) {
         char path[260];
-        if (i < 31)
+        if(i < 31)
             strcpy(path, "pkg//res//settings imgs//img");
         else
             strcpy(path, "pkg//res//Numbers//");
         fullPath(&sub[i].screen, path, (i < 31) ? i : j, ".png");
-        if (i >= 31) {
+        if(i >= 31)
             j += 10;
-        }
         i++;
     }
 }

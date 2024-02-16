@@ -1,0 +1,3 @@
+                    --- TODO ---
+# add infinite song  && pip notification to the "settings.c" :: @ZouariOmar
+# link the "Main_Menu.c" with "settings.c"                   :: @ZouariOmar @Fraddosse1
