@@ -21,6 +21,7 @@
 #include "Structures_SM.h"
 #include "Quit_Verification.h"
 #include "Structures_QV.h"
+// PUBLIC VARS
 SDL_Surface *screen;
 SDL_Event event;
                     /* PRINCIPAL SCREEN RESOLUTION PROTOTYPE DECLARATION PART */

@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <SDL/SDL_image.h>
-#include "..//inc//Main_Menu.h"
-#include "..//inc//Structures_MM.h"
+#include "../inc/inc.h"
 #include "Start_Menu.c"
 #include "Quit_Verification.c"
 #include "settings.c"
@@ -43,19 +40,19 @@ void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 
 	// Initialisation Image
 
-	Main_Menu->Image_background_MM = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Hollow_Vessels2.png"));
+	Main_Menu->Image_background_MM = (IMG_Load("pkg/res/menu/Hollow_Vessels2.png"));					// ! memory leak in here
 	
-	Main_Menu->Image_Start_UC = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Start_Button_UC.png"));
-	Main_Menu->Image_Start_C = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Start_Button_C.png"));
+	Main_Menu->Image_Start_UC = (IMG_Load("pkg/res/menu/Start_Button_UC.png"));
+	Main_Menu->Image_Start_C = (IMG_Load("pkg/res/menu/Start_Button_C.png"));
 	
-	Main_Menu->Image_Multiplayer_UC = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Multiplayer_Button_UC.png"));
-	Main_Menu->Image_Multiplayer_C = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Multiplayer_Button_C.png"));
+	Main_Menu->Image_Multiplayer_UC = (IMG_Load("pkg/res/menu/Multiplayer_Button_UC.png"));
+	Main_Menu->Image_Multiplayer_C = (IMG_Load("pkg/res/menu/Multiplayer_Button_C.png"));
 	
-	Main_Menu->Image_Settings_UC = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Settings_Button_UC.png"));
-	Main_Menu->Image_Settings_C = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Settings_Button_C.png"));
+	Main_Menu->Image_Settings_UC = (IMG_Load("pkg/res/menu/Settings_Button_UC.png"));
+	Main_Menu->Image_Settings_C = (IMG_Load("pkg/res/menu/Settings_Button_C.png"));
 	
-	Main_Menu->Image_Quit_UC = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Quit_Button_UC.png"));
-	Main_Menu->Image_Quit_C = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Quit_Button_C.png"));
+	Main_Menu->Image_Quit_UC = (IMG_Load("pkg/res/menu/Quit_Button_UC.png"));
+	Main_Menu->Image_Quit_C = (IMG_Load("pkg/res/menu/Quit_Button_C.png"));
 
 	// Image pointer verification
 
@@ -266,7 +263,7 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 					switch(Main_Menu.Actual_Position)
 					{
 						case 1:
-							StartMenu(Screen,Event,&(Main_Menu.Quit_game));
+							StartMenu(Screen,Event,&(Main_Menu.Quit_game));				// ! memory leak
 
 							if(Main_Menu.Quit_game)
 								Quit_Loop=1;

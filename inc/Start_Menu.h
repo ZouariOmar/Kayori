@@ -1,5 +1,4 @@
 #include "Structures_SM.h"
-
 #ifndef START_MENU
 #define START_MENU
 

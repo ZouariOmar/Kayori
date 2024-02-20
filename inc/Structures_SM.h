@@ -26,7 +26,6 @@ typedef struct Start_Menu
 		Clicked_Button,
 		Compteur_Blit_Fond;
 
-
 }SM;
 
 ////////////////////////////////////////

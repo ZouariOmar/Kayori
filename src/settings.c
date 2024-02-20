@@ -117,6 +117,7 @@ void settings(int *quit_game) {
                     break;
                 case SDL_QUIT:          // with event switch
                     *quit_game = 1;
+                    freeResources(sub);
             }
         } SDL_Flip(screen); SDL_Delay(100);
     }
@@ -127,13 +128,10 @@ void loadResources(surface sub[]) {
         char path[260];
         sprintf(path, (i < 31) ? "pkg//res//settings imgs//img%d.png" : "pkg//res//Numbers//%d.png", (i < 31) ? i : j);
         sub[i].screen = load_img(path);
-        if (i >= 31) j += 10;
+        if(i >= 31)
+            j += 10;
         i++;
     }
-}
-void fullPath(SDL_Surface **win, char *newPath, int count, char *fileType) {
-    printf(newPath, "%s%d%s", newPath, count, fileType);
-    *win = load_img(newPath);
 }
 void initResources(surface sub[]) {
     SDL_BlitSurface(sub[0].screen, NULL, screen, (sub[0].pos.x = 0, sub[0].pos.y = 0, &sub[0].pos));
@@ -163,6 +161,6 @@ void initResources(surface sub[]) {
     SDL_BlitSurface(sub[41].screen, NULL, screen, (sub[41].pos.x = 1485,sub[41].pos.y =  615, &sub[41].pos));
     SDL_BlitSurface(sub[41].screen, NULL, screen, (sub[41].pos.x = 1485,sub[41].pos.y =  683, &sub[41].pos));
 }
-void freeResources(surface sub[]) {
+void freeResources(surface *sub) {
     for(int i = 0; i < 42; i++) SDL_FreeSurface(sub[i].screen);   // free((int *)sub[i].screen);
 }
