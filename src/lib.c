@@ -3,8 +3,7 @@
 // kayori :: lib.c
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 #include "../inc/inc.h"
-#include "settings.c"
-
+#include "Main_Menu.c"
                     /* FUNCTIONS PROTOTYPE DEV PART */
 void initEverything() {
     if(SDL_Init(SDL_INIT_EVERYTHING)) {                                                                     // SDL initialisation process

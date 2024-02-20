@@ -7,7 +7,7 @@
 int main() {
 	initEverything();
     closeEverything();
-    settings();
+    MainMenu(screen, event);
     SDL_FreeSurface(screen);
 	return 0;
 }

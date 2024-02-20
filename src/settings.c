@@ -4,8 +4,8 @@
                     /* INCLUDE PROTOTYPE DECLARATION PART */
 #include "../inc/inc.h"
                     /* FUNCTIONS PROTOTYPE DEV PART */
-void settings() {
-    surface sub[41];
+void settings(int *quit_game) {
+    surface sub[42];
     int optionsAreaPos[7][3] = {            // x: 311    // need to make it dynamic !
         {2, 19, 206},                       // optionAreaPos[][0] :: the normal img pos in sub[]
         {4, 21, 319},                       // optionAreaPos[][1] :: the animated img pos in sub[]
@@ -21,10 +21,11 @@ void settings() {
         {685, 41},                  // option 5 :: 41 mean that the volume is equal 100 (41 is the loaded img pos in sub[])
         {800, 29}},                 // option 6 :: 29 mean that the option is in "On" mode (29 is the loaded img pos in sub[])
     optionPos = 0;
+    // Mix_Chunk *pop = Mix_LoadWAV("pkg//music//rac_menu_beep.wav");                  // need to optimize the music file type (converted to .wav) !
     loadResources(sub);
     initResources(sub);
     SDL_Flip(screen);
-    while(1) {
+    while(!*quit_game) {
         while(SDL_PollEvent(&event)) {
             switch(event.type) {
                 case SDL_MOUSEMOTION:
@@ -40,6 +41,8 @@ void settings() {
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(event.motion.x >= 80 && event.motion.x <= 80 + 60 && event.motion.y >= 58 && event.motion.y <= 58 + 60 && event.button.button == SDL_BUTTON_LEFT) {
+                        // Mix_PlayChannel(-1, pop, 0);
+                        // Mix_FreeChunk(pop);
                         freeResources(sub);
                         return;
                     }
@@ -53,6 +56,7 @@ void settings() {
                             if(optionPos == 7) optionPos = 0;
                             // animated img
                             SDL_BlitSurface(sub[optionsAreaPos[optionPos][1]].screen, NULL, screen, (sub[optionsAreaPos[optionPos][1]].pos.x = 311, sub[optionsAreaPos[optionPos][1]].pos.y = optionsAreaPos[optionPos][2], &sub[optionsAreaPos[optionPos][1]].pos));
+                            // Mix_PlayChannel(-1, pop, 0);
                             break;
                         case SDLK_UP:
                             // normal img
@@ -61,6 +65,7 @@ void settings() {
                             if(optionPos == -1) optionPos = 6;
                             // animated img
                             SDL_BlitSurface(sub[optionsAreaPos[optionPos][1]].screen, NULL, screen, (sub[optionsAreaPos[optionPos][1]].pos.x = 311, sub[optionsAreaPos[optionPos][1]].pos.y = optionsAreaPos[optionPos][2], &sub[optionsAreaPos[optionPos][1]].pos));
+                            // Mix_PlayChannel(-1, pop, 0);
                             break;
                         case SDLK_LEFT:                             /* LEFT CLICK OPTION */
                             if(3 <= optionPos && optionPos <= 6) {                              // ctrl buttons && scroll animation in option 4 and 5
@@ -74,6 +79,7 @@ void settings() {
                             }else if(optionPos == 6) {                                          // on button in option 6 :: need optimization with option 3
                                 SDL_BlitSurface(sub[29].screen, NULL, screen, (sub[29].pos.x = 1485, sub[29].pos.y = 800, &sub[29].pos));
                             }
+                            // Mix_PlayChannel(-1, pop, 0);
                             break;
                         case SDLK_RIGHT:                        /* RIGHT CLICK OPTION */
                             if(3 <= optionPos && optionPos <= 6) {                              // ctrl buttons && scroll animation in option 4 and 5
@@ -87,6 +93,7 @@ void settings() {
                             } else if(optionPos == 6) {                                         // off button in option 6 :: need optimization with option 3
                                 SDL_BlitSurface(sub[30].screen, NULL, screen, (sub[30].pos.x = 1485, sub[30].pos.y = 800, &sub[30].pos));
                             }
+                            // Mix_PlayChannel(-1, pop, 0);
                             break;
                         default:
                             break;
@@ -109,30 +116,23 @@ void settings() {
                     }
                     break;
                 case SDL_QUIT:          // with event switch
-                    exit(0);
+                    *quit_game = 1;
             }
         } SDL_Flip(screen); SDL_Delay(100);
     }
 }
 void loadResources(surface sub[]) {
     int i = 0, j = 0;
-    while(i < 42) {
+    while (i < 42) {
         char path[260];
-        if(i < 31)
-            strcpy(path, "pkg//res//settings imgs//img");
-        else
-            strcpy(path, "pkg//res//Numbers//");
-        fullPath(&sub[i].screen, path, (i < 31) ? i : j, ".png");
-        if(i >= 31)
-            j += 10;
+        sprintf(path, (i < 31) ? "pkg//res//settings imgs//img%d.png" : "pkg//res//Numbers//%d.png", (i < 31) ? i : j);
+        sub[i].screen = load_img(path);
+        if (i >= 31) j += 10;
         i++;
     }
 }
 void fullPath(SDL_Surface **win, char *newPath, int count, char *fileType) {
-    char str_count[4];
-    sprintf(str_count, "%d", count);
-    strcat(newPath, str_count);
-    strcat(newPath, fileType);
+    printf(newPath, "%s%d%s", newPath, count, fileType);
     *win = load_img(newPath);
 }
 void initResources(surface sub[]) {
@@ -149,13 +149,13 @@ void initResources(surface sub[]) {
     SDL_BlitSurface(sub[13].screen, NULL, screen, (sub[13].pos.x = 311, sub[13].pos.y = 800, &sub[13].pos));
     SDL_BlitSurface(sub[14].screen, NULL, screen, (sub[14].pos.x = 1457, sub[14].pos.y =  213, &sub[14].pos));
     SDL_BlitSurface(sub[17].screen, NULL, screen, (sub[17].pos.x = 1365, sub[17].pos.y =  208, &sub[17].pos));
-    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[16].pos.x = 1424, sub[16].pos.y =  503, &sub[16].pos));
-    SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[15].pos.x = 1570, sub[15].pos.y =  503, &sub[15].pos));
-    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[16].pos.x = 1424, sub[16].pos.y =  618, &sub[16].pos));
-    SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[15].pos.x = 1570, sub[15].pos.y =  618, &sub[15].pos));
-    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[16].pos.x = 1424, sub[16].pos.y =  685, &sub[16].pos));
-    SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[15].pos.x = 1570, sub[15].pos.y =  685, &sub[15].pos));
-    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[16].pos.x = 1424, sub[16].pos.y =  800, &sub[16].pos));
+    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[15].pos.x = 1424, sub[15].pos.y =  503, &sub[15].pos));
+    SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[16].pos.x = 1570, sub[16].pos.y =  503, &sub[16].pos));
+    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[15].pos.x = 1424, sub[15].pos.y =  618, &sub[15].pos));
+    SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[16].pos.x = 1570, sub[16].pos.y =  618, &sub[16].pos));
+    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[15].pos.x = 1424, sub[15].pos.y =  685, &sub[15].pos));
+    SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[16].pos.x = 1570, sub[16].pos.y =  685, &sub[16].pos));
+    SDL_BlitSurface(sub[15].screen, NULL, screen, (sub[15].pos.x = 1424, sub[15].pos.y =  800, &sub[15].pos));
     SDL_BlitSurface(sub[16].screen, NULL, screen, (sub[16].pos.x = 1570, sub[16].pos.y =  800, &sub[16].pos));
     SDL_BlitSurface(sub[19].screen, NULL, screen, (sub[19].pos.x = 311, sub[19].pos.y = 206, &sub[19].pos));
     SDL_BlitSurface(sub[29].screen, NULL, screen, (sub[29].pos.x = 1485,sub[29].pos.y =  502, &sub[29].pos));
@@ -164,5 +164,5 @@ void initResources(surface sub[]) {
     SDL_BlitSurface(sub[41].screen, NULL, screen, (sub[41].pos.x = 1485,sub[41].pos.y =  683, &sub[41].pos));
 }
 void freeResources(surface sub[]) {
-    for(int i = 0; i < 42; i++) SDL_FreeSurface(sub[i].screen);
+    for(int i = 0; i < 42; i++) SDL_FreeSurface(sub[i].screen);   // free((int *)sub[i].screen);
 }
