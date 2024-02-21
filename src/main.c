@@ -7,7 +7,7 @@
 int main() {
 	initEverything();
     closeEverything();
-    MainMenu(screen, event);            // ! memory leak here
+    MainMenu(screen, event);
     SDL_FreeSurface(screen);
 	return 0;
 }

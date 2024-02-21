@@ -1,23 +1,33 @@
 #ifndef STRUCTURES_QV
 #define STRUCTURES_QV
 
+////////////////////////////////////////
+
+typedef struct Image_Background
+{
+	SDL_Surface* Image;
+	SDL_Rect pos;
+}IBG;
+
+////////////////////////////////////////
+
 typedef struct Quit
 {
-	SDL_Rect Background,
-			 Yes_Button,
-			 No_Button;
+	//Initialisation background
+	IBG Image_Background;
 
-	SDL_Surface *Background_Image_Quit,
-				*Yes_UC_Image,
-				*Yes_C_Image,
-				*No_UC_Image,
-				*No_C_Image;
+	//Initialisation button images
+	Surface_test Image_Yes,
+				 Image_No;
 
+	//Initialisation position button Start menu & clicked button
 	int Actual_Position,
 		Last_Position,
 		Clicked_Button,
 		Compteur_Blit_Fond;
 
 }QV;
+
+////////////////////////////////////////
 
 #endif

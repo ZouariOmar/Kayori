@@ -1,26 +1,24 @@
 #ifndef STRUCTURES_MM
 #define STRUCTURES_MM
 
+typedef struct Surface_t {                                                                            // Surface struct type
+    SDL_Surface *UC_B;
+    SDL_Surface *C_B;
+    SDL_Rect pos;
+} Surface_test;
+
 // structure Main Menu
 
 typedef struct Main_Menu
 {
-	//Initialisation Main menu buttons
-	SDL_Rect Button1MM,
-			 Button2MM,
-			 Button3MM,
-			 Button4MM;
+	//Initialisation button images
+	Surface_test	Image_Start,
+					Image_Multiplayer,
+					Image_Settings,
+					Image_Quit;
 
-	//Initialisation Images
-	SDL_Surface *Image_background_MM,
-				*Image_Start_UC,
-				*Image_Start_C,
-				*Image_Multiplayer_UC,
-				*Image_Multiplayer_C,
-				*Image_Settings_UC,
-				*Image_Settings_C,
-				*Image_Quit_UC,
-				*Image_Quit_C;
+	//Initialisation background image
+	SDL_Surface *Image_background_MM;
 
 	//Initialisation position button Main menu & du bouton clické
 	int Actual_Position,

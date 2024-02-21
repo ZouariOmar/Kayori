@@ -5,5 +5,4 @@
 ---
 issue 1: in settings scroll button (double click in the same time)  :: bug not fixed :(
 issue 2: the SDL_BlitSurface() func use the CPU only                :: fixed :)
-issue 3: memory leak between Mean_Menu() and start_Menu()           :: bug not fixed :(
-''' can be from the SDL_FreeSurface();
+issue 3: memory leak between Mean_Menu() and start_Menu()           :: fixed :)             // still the SDL_Init() have memory leak

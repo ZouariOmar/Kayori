@@ -5,20 +5,14 @@
 
 typedef struct Start_Menu
 {
-	//Initialisation Start menu buttons
-	SDL_Rect Quit_Button,
-			 Save1,
-			 Save2,
-			 Save3;
+	//Initialisation button images
+	Surface_test Image_Quit_Button,
+				 Image_Save1,
+				 Image_Save2,
+				 Image_Save3;
 
-	//Initialisation Images
-	SDL_Surface *Image_background_SM,
-				*Image_UC_Quit_Button,
-				*Image_C_Quit_Button,
-				*Image_UC_Button_SM,
-				*Image_C_Button_SM,
-				*Image_NG,
-				*Image_LG;
+	//Initialisation background image
+	SDL_Surface *Image_background_SM;
 
 	//Initialisation position button Start menu & clicked button
 	int Actual_Position,

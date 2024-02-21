@@ -6,46 +6,45 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 {
 	// Background
 
-	Quit->Background.h=244;
-	Quit->Background.w=641;
+	Quit->Image_Background.pos.h=244;
+	Quit->Image_Background.pos.w=641;
 
-	Quit->Background.x=621;
-	Quit->Background.y=467;
+	Quit->Image_Background.pos.x=621;
+	Quit->Image_Background.pos.y=467;
+
+	Quit->Image_Background.Image = load_img("pkg//res//menu//Quit_Verification.png");
 
 	// Yes Button
 
-	Quit->Yes_Button.h=63;
-	Quit->Yes_Button.w=88;
+	Quit->Image_Yes.pos.h=63;
+	Quit->Image_Yes.pos.w=88;
 
-	Quit->Yes_Button.x=784;
-	Quit->Yes_Button.y=585;
+	Quit->Image_Yes.pos.x=784;
+	Quit->Image_Yes.pos.y=585;
+
+	Quit->Image_Yes.UC_B = load_img("pkg//res//menu//Yes_UC.png");
+	Quit->Image_Yes.C_B = load_img("pkg//res//menu//Yes_C.png");
 
 	// No Button
 
-	Quit->No_Button.h=63;
-	Quit->No_Button.w=88;
+	Quit->Image_No.pos.h=63;
+	Quit->Image_No.pos.w=88;
 
-	Quit->No_Button.x=1011;
-	Quit->No_Button.y=585;
+	Quit->Image_No.pos.x=1011;
+	Quit->Image_No.pos.y=585;
 
+	Quit->Image_No.UC_B = load_img("pkg//res//menu//No_UC.png");
+	Quit->Image_No.C_B = load_img("pkg//res//menu//No_C.png");
 
-	// Initialisation Image
+	// Image pointer verification
 
-	Quit->Background_Image_Quit = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Quit_Verification.png"));
-	
-	Quit->Yes_UC_Image = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Yes_UC.png"));
-	Quit->Yes_C_Image = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Yes_C.png"));
-	
-	Quit->No_UC_Image = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//No_UC.png"));
-	Quit->No_C_Image = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//No_C.png"));
-
-
-	if( !(Quit->Background_Image_Quit && Quit->Yes_UC_Image && Quit->Yes_C_Image && Quit->No_UC_Image && Quit->No_C_Image) )
+	if( !(Quit->Image_Background.Image && Quit->Image_Yes.UC_B && Quit->Image_Yes.C_B && Quit->Image_No.UC_B && Quit->Image_No.C_B) )
 	{
 		printf("Erreur allocation initialisation image\n");
 		ClearQV(Quit);
 		*Quit_Game=1;
 	}
+
 	// Initialisation position bouton & bouton cliqué
 
 	Quit->Actual_Position=2;
@@ -73,7 +72,7 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 		case 2:
 			if(Quit->Last_Position!=2)
 			{
-				ButtonBlitingQV(Screen, Quit->Yes_UC_Image, &(Quit->Yes_Button), Quit->No_C_Image, &(Quit->No_Button) );
+				ButtonBlitingQV(Screen, Quit->Image_Yes.UC_B, &(Quit->Image_Yes.pos), Quit->Image_No.C_B, &(Quit->Image_No.pos) );
 				Quit->Last_Position=2;		
 			}
 			break;
@@ -81,7 +80,7 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 		default:
 			if(Quit->Last_Position!=1)
 			{
-				ButtonBlitingQV(Screen, Quit->No_UC_Image, &(Quit->No_Button), Quit->Yes_C_Image, &(Quit->Yes_Button) );
+				ButtonBlitingQV(Screen, Quit->Image_No.UC_B, &(Quit->Image_No.pos), Quit->Image_Yes.C_B, &(Quit->Image_Yes.pos) );
 				Quit->Last_Position=1;
 			}
 			break;
@@ -95,7 +94,7 @@ void KeyboardEventQV(SDL_Event Event,QV* Quit)
 	// Verification Keyboard movement
 
 	if( Event.key.keysym.sym == SDLK_LEFT && (Quit->Actual_Position>1) )
-		(Quit->Actual_Position)--;
+		(Quit->Actual_Position)--; 
 
 	else if( Event.key.keysym.sym == SDLK_RIGHT && (Quit->Actual_Position<2) )	
 		(Quit->Actual_Position)++;
@@ -172,7 +171,7 @@ void QuitVerification(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 					if(Quit.Compteur_Blit_Fond==0)
 					{
-						SDL_BlitSurface(Quit.Background_Image_Quit,NULL,Screen,&(Quit.Background));
+						SDL_BlitSurface(Quit.Image_Background.Image,NULL,Screen,&(Quit.Image_Background.pos));
 						Quit.Compteur_Blit_Fond=1;
 					}
 
@@ -229,11 +228,11 @@ void QuitVerification(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 void ClearQV(QV* Quit)
 {
-	SDL_FreeSurface(Quit->Background_Image_Quit);
-	SDL_FreeSurface(Quit->Yes_UC_Image);
-	SDL_FreeSurface(Quit->Yes_C_Image);
-	SDL_FreeSurface(Quit->No_UC_Image);
-	SDL_FreeSurface(Quit->No_C_Image);
+	SDL_FreeSurface(Quit->Image_Background.Image);
+	SDL_FreeSurface(Quit->Image_Yes.UC_B);
+	SDL_FreeSurface(Quit->Image_Yes.C_B);
+	SDL_FreeSurface(Quit->Image_No.UC_B);
+	SDL_FreeSurface(Quit->Image_No.C_B);
 }
 
 ////////////////////////////////////////

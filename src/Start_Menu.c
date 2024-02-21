@@ -6,52 +6,57 @@ void InitialisationSM(SM* Start_Menu,int* Quit_Game)
 {
 	// Quit Button
 
-	Start_Menu->Quit_Button.h=119;
-	Start_Menu->Quit_Button.w=151;
+	Start_Menu->Image_Quit_Button.pos.h=119;
+	Start_Menu->Image_Quit_Button.pos.w=151;
 
-	Start_Menu->Quit_Button.x=69;
-	Start_Menu->Quit_Button.y=43;
+	Start_Menu->Image_Quit_Button.pos.x=69;
+	Start_Menu->Image_Quit_Button.pos.y=43;
+
+	Start_Menu->Image_Quit_Button.UC_B = load_img("pkg//res//menu//UCReturn.png");
+	Start_Menu->Image_Quit_Button.C_B = load_img("pkg//res//menu//CReturn.png");
 
 	// Bouton save 1
 
-	Start_Menu->Save1.h=206;
-	Start_Menu->Save1.w=831;
+	Start_Menu->Image_Save1.pos.h=206;
+	Start_Menu->Image_Save1.pos.w=831;
 
-	Start_Menu->Save1.x=545;
-	Start_Menu->Save1.y=168;
+	Start_Menu->Image_Save1.pos.x=545;
+	Start_Menu->Image_Save1.pos.y=168;
+
+	Start_Menu->Image_Save1.UC_B = load_img("pkg//res//menu//NG_USelected.png");
+	Start_Menu->Image_Save1.C_B = load_img("pkg//res//menu//NG_Selected.png");
 
 	// Bouton save 2
 
-	Start_Menu->Save2.h=206;
-	Start_Menu->Save2.w=831;
+	Start_Menu->Image_Save2.pos.h=206;
+	Start_Menu->Image_Save2.pos.w=831;
 
-	Start_Menu->Save2.x=545;
-	Start_Menu->Save2.y=438;
+	Start_Menu->Image_Save2.pos.x=545;
+	Start_Menu->Image_Save2.pos.y=438;
+
+	Start_Menu->Image_Save2.UC_B = load_img("pkg//res//menu//NG_USelected.png");
+	Start_Menu->Image_Save2.C_B = load_img("pkg//res//menu//NG_Selected.png");
 
 	// Bouton save 3
 
-	Start_Menu->Save3.h=206;
-	Start_Menu->Save3.w=831;
+	Start_Menu->Image_Save3.pos.h=206;
+	Start_Menu->Image_Save3.pos.w=831;
 
-	Start_Menu->Save3.x=545;
-	Start_Menu->Save3.y=708;
+	Start_Menu->Image_Save3.pos.x=545;
+	Start_Menu->Image_Save3.pos.y=708;
 
-	// Image button
-	
-	Start_Menu->Image_UC_Button_SM = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//NG_USelected.png"));
+	Start_Menu->Image_Save3.UC_B = load_img("pkg//res//menu//NG_USelected.png");
+	Start_Menu->Image_Save3.C_B = load_img("pkg//res//menu//NG_Selected.png");
 
-	Start_Menu->Image_C_Button_SM = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//NG_Selected.png"));
+	// Background image
 
-	Start_Menu->Image_UC_Quit_Button = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//UCReturn.png"));
-
-	Start_Menu->Image_C_Quit_Button = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//CReturn.png"));
-
-	Start_Menu->Image_background_SM = SDL_DisplayFormatAlpha(IMG_Load("pkg//res//menu//Fond_Start.png"));
+	Start_Menu->Image_background_SM = load_img("pkg//res//menu//Start_BG.png");
 
 	// Image pointer verification
 
-	if(!(Start_Menu->Image_UC_Button_SM && Start_Menu->Image_C_Button_SM && Start_Menu->Image_UC_Quit_Button &&
-	   Start_Menu->Image_C_Quit_Button && Start_Menu->Image_background_SM)) 
+	if(!(Start_Menu->Image_Save1.UC_B && Start_Menu->Image_Save1.C_B && Start_Menu->Image_Save2.UC_B &&
+	   Start_Menu->Image_Save2.C_B && Start_Menu->Image_Save3.UC_B && Start_Menu->Image_Save3.C_B &&
+	   Start_Menu->Image_Quit_Button.UC_B && Start_Menu->Image_Quit_Button.C_B && Start_Menu->Image_background_SM)) 
 	{
 		printf("Erreur allocation initialisation image\n");
 		ClearStartMenu(Start_Menu);
@@ -156,8 +161,8 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		case 1:
 			if(Start_Menu->Last_Position!=1)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save1), Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save2), Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save3),
-							  Start_Menu->Image_C_Quit_Button, &(Start_Menu->Quit_Button) );
+				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
+							  Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos) );
 
 				Start_Menu->Last_Position=1;
 			}
@@ -167,8 +172,8 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		case 3:
 			if(Start_Menu->Last_Position!=3)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save1), Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save3),  Start_Menu->Image_UC_Quit_Button, &(Start_Menu->Quit_Button),
-							  Start_Menu->Image_C_Button_SM, &(Start_Menu->Save2) );
+				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
+							  Start_Menu->Image_Save2.C_B, &(Start_Menu->Image_Save2.pos) );
 
 				Start_Menu->Last_Position=3;
 			}
@@ -178,8 +183,8 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		case 4:
 			if(Start_Menu->Last_Position!=4)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save1), Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save2), Start_Menu->Image_UC_Quit_Button, &(Start_Menu->Quit_Button),
-							  Start_Menu->Image_C_Button_SM, &(Start_Menu->Save3) );
+				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
+							  Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos) );
 
 				Start_Menu->Last_Position=4;
 			}
@@ -189,8 +194,8 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		default:
 			if(Start_Menu->Last_Position!=2)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save2), Start_Menu->Image_UC_Button_SM, &(Start_Menu->Save3), Start_Menu->Image_UC_Quit_Button, &(Start_Menu->Quit_Button),
-							  Start_Menu->Image_C_Button_SM, &(Start_Menu->Save1) );
+				ButtonBliting(Screen, Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
+							  Start_Menu->Image_Save1.C_B, &(Start_Menu->Image_Save1.pos) );
 
 				Start_Menu->Last_Position=2;
 			}
@@ -200,7 +205,7 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 
 ////////////////////////////////////////
 
-void StartMenu(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
+void StartMenu(int* Quit_Game)
 {
 	// Quit loop verification
 
@@ -222,9 +227,9 @@ void StartMenu(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 		while(!Quit)
 		{
-			while(SDL_PollEvent(&Event))
+			while(SDL_PollEvent(&event))
 			{
-				if(Event.type==SDL_QUIT)
+				if(event.type==SDL_QUIT)
 				{
 					Quit=1;
 					*Quit_Game=1;
@@ -236,25 +241,25 @@ void StartMenu(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 					if(Start_Menu.Compteur_Blit_Fond==0)
 					{
-						SDL_BlitSurface(Start_Menu.Image_background_SM,NULL,Screen,NULL);
+						SDL_BlitSurface(Start_Menu.Image_background_SM,NULL,screen,NULL);
 						Start_Menu.Compteur_Blit_Fond=1;
 					}
 
 					// Draw Buttons
 
-					DrawButtonsStartMenu(Screen,&Start_Menu);
+					DrawButtonsStartMenu(screen,&Start_Menu);
 							
 					// Check Main Menu position :: Mettre sous forme de fonction
 						
-					if(Event.type == SDL_KEYDOWN)
-						KeyboardEventSM(Event,&Start_Menu);
+					if(event.type == SDL_KEYDOWN)
+						KeyboardEventSM(event,&Start_Menu);
 
-					else if(Event.type==SDL_MOUSEMOTION || Event.type==SDL_MOUSEBUTTONDOWN)
-						MouseEventSM(Event,&Start_Menu);
+					else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
+						MouseEventSM(event,&Start_Menu);
 
 					// Keyboard enter handling
 
-					if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Start_Menu.Clicked_Button==1)
+					if( (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) || Start_Menu.Clicked_Button==1)
 					{
 						switch(Start_Menu.Actual_Position)
 						{
@@ -265,14 +270,17 @@ void StartMenu(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 							case 2:
 								//Save 1
+								Start_Menu.Clicked_Button=0;
 								break;
 
 							case 3:
 								//Save 2
+								Start_Menu.Clicked_Button=0;
 								break;
 
 							case 4:
 								//Save 3
+								Start_Menu.Clicked_Button=0;	
 								break;
 
 							default:
@@ -281,8 +289,7 @@ void StartMenu(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 					}
 
 					// Flip screen
-
-					SDL_Flip(Screen);
+					SDL_Flip(screen);
 				}
 			}
 
@@ -295,16 +302,19 @@ void StartMenu(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 	}
 }
 
-
 ////////////////////////////////////////
 
 void ClearStartMenu(SM* Start_Menu)
 {
-	SDL_FreeSurface(Start_Menu->Image_UC_Button_SM);
-	SDL_FreeSurface(Start_Menu->Image_C_Button_SM);
 	SDL_FreeSurface(Start_Menu->Image_background_SM);
-	SDL_FreeSurface(Start_Menu->Image_UC_Quit_Button);
-	SDL_FreeSurface(Start_Menu->Image_C_Quit_Button);
+	SDL_FreeSurface(Start_Menu->Image_Save1.UC_B);
+	SDL_FreeSurface(Start_Menu->Image_Save1.C_B);
+	SDL_FreeSurface(Start_Menu->Image_Save2.UC_B);
+	SDL_FreeSurface(Start_Menu->Image_Save2.C_B);
+	SDL_FreeSurface(Start_Menu->Image_Save3.UC_B);
+	SDL_FreeSurface(Start_Menu->Image_Save3.C_B);
+	SDL_FreeSurface(Start_Menu->Image_Quit_Button.UC_B);
+	SDL_FreeSurface(Start_Menu->Image_Quit_Button.C_B);
 }
 
 ////////////////////////////////////////

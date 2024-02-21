@@ -1,67 +1,75 @@
-#include "../inc/inc.h"
+#include <stdio.h>
+#include <SDL/SDL_image.h>
+#include "..//inc//Main_Menu.h"
+#include "..//inc//Structures_MM.h"
 #include "Start_Menu.c"
 #include "Quit_Verification.c"
 #include "settings.c"
+
 ////////////////////////////////////////
 
 void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 {
-	// Bouton 1
+	// Start button
 
-	Main_Menu->Button1MM.h=109;
-	Main_Menu->Button1MM.w=551;
+	Main_Menu->Image_Start.pos.h=109;
+	Main_Menu->Image_Start.pos.w=551;
 
-	Main_Menu->Button1MM.x=686;
-	Main_Menu->Button1MM.y=403;
+	Main_Menu->Image_Start.pos.x=686;
+	Main_Menu->Image_Start.pos.y=403;
 
-	// Bouton 2
+	Main_Menu->Image_Start.UC_B = NULL;
+	Main_Menu->Image_Start.C_B = NULL;
 
-	Main_Menu->Button2MM.h=109;
-	Main_Menu->Button2MM.w=551;
+	Main_Menu->Image_Start.UC_B = load_img("pkg//res//menu//Start_Button_UC.png");
+	Main_Menu->Image_Start.C_B = load_img("pkg//res//menu//Start_Button_C.png");
 
-	Main_Menu->Button2MM.x=686;
-	Main_Menu->Button2MM.y=550;
+	// Multiplayer button
 
-	// Bouton 3
+	Main_Menu->Image_Multiplayer.pos.h=109;
+	Main_Menu->Image_Multiplayer.pos.w=551;
 
-	Main_Menu->Button3MM.h=109;
-	Main_Menu->Button3MM.w=551;
+	Main_Menu->Image_Multiplayer.pos.x=686;
+	Main_Menu->Image_Multiplayer.pos.y=550;
 
-	Main_Menu->Button3MM.x=686;
-	Main_Menu->Button3MM.y=697;
+	Main_Menu->Image_Multiplayer.UC_B = load_img("pkg//res//menu//Multiplayer_Button_UC.png");
+	Main_Menu->Image_Multiplayer.C_B = load_img("pkg//res//menu//Multiplayer_Button_C.png");
 
-	// Bouton 4
+	// Settings button
 
-	Main_Menu->Button4MM.h=109;
-	Main_Menu->Button4MM.w=551;
+	Main_Menu->Image_Settings.pos.h=109;
+	Main_Menu->Image_Settings.pos.w=551;
 
-	Main_Menu->Button4MM.x=686;
-	Main_Menu->Button4MM.y=844;
+	Main_Menu->Image_Settings.pos.x=686;
+	Main_Menu->Image_Settings.pos.y=697;
 
-	// Initialisation Image
+	Main_Menu->Image_Settings.UC_B = load_img("pkg//res//menu//Settings_Button_UC.png");
+	Main_Menu->Image_Settings.C_B = load_img("pkg//res//menu//Settings_Button_C.png");
 
-	Main_Menu->Image_background_MM = (IMG_Load("pkg/res/menu/Hollow_Vessels2.png"));					// ! memory leak in here
-	
-	Main_Menu->Image_Start_UC = (IMG_Load("pkg/res/menu/Start_Button_UC.png"));
-	Main_Menu->Image_Start_C = (IMG_Load("pkg/res/menu/Start_Button_C.png"));
-	
-	Main_Menu->Image_Multiplayer_UC = (IMG_Load("pkg/res/menu/Multiplayer_Button_UC.png"));
-	Main_Menu->Image_Multiplayer_C = (IMG_Load("pkg/res/menu/Multiplayer_Button_C.png"));
-	
-	Main_Menu->Image_Settings_UC = (IMG_Load("pkg/res/menu/Settings_Button_UC.png"));
-	Main_Menu->Image_Settings_C = (IMG_Load("pkg/res/menu/Settings_Button_C.png"));
-	
-	Main_Menu->Image_Quit_UC = (IMG_Load("pkg/res/menu/Quit_Button_UC.png"));
-	Main_Menu->Image_Quit_C = (IMG_Load("pkg/res/menu/Quit_Button_C.png"));
+	// Quit button
+
+	Main_Menu->Image_Quit.pos.h=109;
+	Main_Menu->Image_Quit.pos.w=551;
+
+	Main_Menu->Image_Quit.pos.x=686;
+	Main_Menu->Image_Quit.pos.y=844;
+
+	Main_Menu->Image_Quit.UC_B = load_img("pkg//res//menu//Quit_Button_UC.png");
+	Main_Menu->Image_Quit.C_B = load_img("pkg//res//menu//Quit_Button_C.png");
+
+
+	// Initialisation background main menu
+
+	Main_Menu->Image_background_MM = load_img("pkg//res//menu//Hollow_Vessels2.png");
 
 	// Image pointer verification
 
-	if( !(Main_Menu->Image_background_MM && Main_Menu->Image_Start_UC && Main_Menu->Image_Start_C &&
-	   Main_Menu->Image_Multiplayer_UC && Main_Menu->Image_Multiplayer_C && Main_Menu->Image_Settings_UC &&
-	   Main_Menu->Image_Settings_C && Main_Menu->Image_Quit_UC && Main_Menu->Image_Quit_C) )
+	if( !(Main_Menu->Image_background_MM && Main_Menu->Image_Start.UC_B && Main_Menu->Image_Start.C_B &&
+	   Main_Menu->Image_Multiplayer.UC_B && Main_Menu->Image_Multiplayer.C_B && Main_Menu->Image_Settings.UC_B &&
+	   Main_Menu->Image_Settings.C_B && Main_Menu->Image_Quit.UC_B && Main_Menu->Image_Quit.C_B) )
 		ClearMainMenu(Screen,Main_Menu);
 
-	// Initialisation position bouton & bouton cliqué
+	// Initialisation button position & clicked button
 
 	Main_Menu->Actual_Position=1;
 	Main_Menu->Last_Position=0;	
@@ -96,8 +104,8 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 		case 2:
 			if(Main_Menu->Last_Position!=2)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Start_UC, &(Main_Menu->Button1MM), Main_Menu->Image_Settings_UC, &(Main_Menu->Button3MM),Main_Menu->Image_Quit_UC, &(Main_Menu->Button4MM),
-							  Main_Menu->Image_Multiplayer_C, &(Main_Menu->Button2MM) );
+				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
+							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Multiplayer.C_B, &(Main_Menu->Image_Multiplayer.pos) );
 
 				Main_Menu->Last_Position=2;
 			}
@@ -108,8 +116,8 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 
 			if(Main_Menu->Last_Position!=3)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Start_UC, &(Main_Menu->Button1MM), Main_Menu->Image_Multiplayer_UC, &(Main_Menu->Button2MM), Main_Menu->Image_Quit_UC, &(Main_Menu->Button4MM),
-							  Main_Menu->Image_Settings_C, &(Main_Menu->Button3MM) );
+				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
+							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Settings.C_B, &(Main_Menu->Image_Settings.pos) );
 
 				Main_Menu->Last_Position=3;
 			}
@@ -119,8 +127,8 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 		case 4:
 			if(Main_Menu->Last_Position!=4)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Start_UC, &(Main_Menu->Button1MM), Main_Menu->Image_Multiplayer_UC, &(Main_Menu->Button2MM), Main_Menu->Image_Settings_UC, &(Main_Menu->Button3MM),
-							  Main_Menu->Image_Quit_C, &(Main_Menu->Button4MM) );
+				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
+							  Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos), Main_Menu->Image_Quit.C_B, &(Main_Menu->Image_Quit.pos) );
 
 				Main_Menu->Last_Position=4;
 			}
@@ -130,8 +138,8 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 		default:
 			if(Main_Menu->Last_Position!=1)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Multiplayer_UC, &(Main_Menu->Button2MM), Main_Menu->Image_Settings_UC, &(Main_Menu->Button3MM), Main_Menu->Image_Quit_UC, &(Main_Menu->Button4MM),
-							  Main_Menu->Image_Start_C, &(Main_Menu->Button1MM) );
+				ButtonBliting(Screen, Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
+							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Start.C_B, &(Main_Menu->Image_Start.pos) );
 
 				Main_Menu->Last_Position=1;
 			}
@@ -263,7 +271,8 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 					switch(Main_Menu.Actual_Position)
 					{
 						case 1:
-							StartMenu(Screen,Event,&(Main_Menu.Quit_game));				// ! memory leak
+							// Start menu
+							StartMenu(&(Main_Menu.Quit_game));
 
 							if(Main_Menu.Quit_game)
 								Quit_Loop=1;
@@ -277,13 +286,14 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 							break;
 
 						case 2:
+							// Multiplayer
 							Main_Menu.Clicked_Button=0;
-							//Multiplayer
 							break;
 
 						case 3:
-							//Settings
+							// Settings
 							settings(&(Main_Menu.Quit_game));
+
 							if(Main_Menu.Quit_game)
 								Quit_Loop=1;
 							else
@@ -296,6 +306,7 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 							break;
 
 						case 4:
+							// Quit
 							QuitVerification(Screen,Event,&(Main_Menu.Quit_game));
 
 							if(Main_Menu.Quit_game)
@@ -331,16 +342,16 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 
 void ClearMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 {
-	SDL_FreeSurface(Screen);
 	SDL_FreeSurface(Main_Menu->Image_background_MM);
-	SDL_FreeSurface(Main_Menu->Image_Start_UC);
-	SDL_FreeSurface(Main_Menu->Image_Start_C);
-	SDL_FreeSurface(Main_Menu->Image_Multiplayer_UC);
-	SDL_FreeSurface(Main_Menu->Image_Multiplayer_C);
-	SDL_FreeSurface(Main_Menu->Image_Settings_UC);
-	SDL_FreeSurface(Main_Menu->Image_Settings_C);
-	SDL_FreeSurface(Main_Menu->Image_Quit_UC);
-	SDL_FreeSurface(Main_Menu->Image_Quit_C);
+	SDL_FreeSurface(Main_Menu->Image_Start.UC_B);
+	SDL_FreeSurface(Main_Menu->Image_Start.C_B);
+	SDL_FreeSurface(Main_Menu->Image_Multiplayer.UC_B);
+	SDL_FreeSurface(Main_Menu->Image_Multiplayer.C_B);
+	SDL_FreeSurface(Main_Menu->Image_Settings.UC_B);
+	SDL_FreeSurface(Main_Menu->Image_Settings.C_B);
+	SDL_FreeSurface(Main_Menu->Image_Quit.UC_B);
+	SDL_FreeSurface(Main_Menu->Image_Quit.C_B);
+	SDL_FreeSurface(Screen);
 	IMG_Quit();
 	SDL_Quit();
 	exit(1);
