@@ -1,7 +1,7 @@
 #ifndef STRUCTURES_MM
 #define STRUCTURES_MM
 
-typedef struct Surface_t {                                                                            // Surface struct type
+typedef struct Surface_t {
     SDL_Surface *UC_B;
     SDL_Surface *C_B;
     SDL_Rect pos;
@@ -11,6 +11,10 @@ typedef struct Surface_t {                                                      
 
 typedef struct Main_Menu
 {
+	//Initialisation music and chunk
+	Mix_Music* Music;
+	Mix_Chunk* Chunk;
+
 	//Initialisation button images
 	Surface_test	Image_Start,
 					Image_Multiplayer,

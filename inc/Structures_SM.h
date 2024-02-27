@@ -5,6 +5,9 @@
 
 typedef struct Start_Menu
 {
+	//Initialisation music and chunk
+	Mix_Chunk* Chunk;
+	
 	//Initialisation button images
 	Surface_test Image_Quit_Button,
 				 Image_Save1,

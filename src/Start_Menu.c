@@ -4,6 +4,10 @@
 
 void InitialisationSM(SM* Start_Menu,int* Quit_Game)
 {
+	// Music and Chunk
+
+	Start_Menu->Chunk = Mix_LoadWAV("pkg//music//rac_menu_beep.wav");
+
 	// Quit Button
 
 	Start_Menu->Image_Quit_Button.pos.h=119;
@@ -164,6 +168,7 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
 							  Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos) );
 
+				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=1;
 			}
 			break;
@@ -175,6 +180,7 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
 							  Start_Menu->Image_Save2.C_B, &(Start_Menu->Image_Save2.pos) );
 
+				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=3;
 			}
 			break;
@@ -186,6 +192,7 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
 							  Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos) );
 
+				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=4;
 			}
 			break;
@@ -197,6 +204,7 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 				ButtonBliting(Screen, Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
 							  Start_Menu->Image_Save1.C_B, &(Start_Menu->Image_Save1.pos) );
 
+				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=2;
 			}
 			break;
@@ -257,9 +265,15 @@ void StartMenu(int* Quit_Game)
 					else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
 						MouseEventSM(event,&Start_Menu);
 
-					// Keyboard enter handling
 
-					if( (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) || Start_Menu.Clicked_Button==1)
+					// Return to main menu by pressing "ESCAPE"
+
+					if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+						Quit=1;
+
+					// Keyboard enter handling
+					
+					else if( (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) || Start_Menu.Clicked_Button==1)
 					{
 						switch(Start_Menu.Actual_Position)
 						{
@@ -315,6 +329,7 @@ void ClearStartMenu(SM* Start_Menu)
 	SDL_FreeSurface(Start_Menu->Image_Save3.C_B);
 	SDL_FreeSurface(Start_Menu->Image_Quit_Button.UC_B);
 	SDL_FreeSurface(Start_Menu->Image_Quit_Button.C_B);
+	Mix_FreeChunk(Start_Menu->Chunk);
 }
 
 ////////////////////////////////////////

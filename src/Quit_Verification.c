@@ -4,6 +4,10 @@
 
 void InitialisationQV(QV* Quit,int* Quit_Game)
 {
+	// Music and Chunk
+	
+	Quit->Chunk = Mix_LoadWAV("pkg//music//rac_menu_beep.wav");
+
 	// Background
 
 	Quit->Image_Background.pos.h=244;
@@ -12,7 +16,7 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	Quit->Image_Background.pos.x=621;
 	Quit->Image_Background.pos.y=467;
 
-	Quit->Image_Background.Image = load_img("pkg//res//menu//Quit_Verification.png");
+	Quit->Image_Background.Image = load_img("pkg//res//menu//Quit_verification copie.png");
 
 	// Yes Button
 
@@ -22,8 +26,8 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	Quit->Image_Yes.pos.x=784;
 	Quit->Image_Yes.pos.y=585;
 
-	Quit->Image_Yes.UC_B = load_img("pkg//res//menu//Yes_UC.png");
-	Quit->Image_Yes.C_B = load_img("pkg//res//menu//Yes_C.png");
+	Quit->Image_Yes.UC_B = load_img("pkg//res//menu//US_Yes.png");
+	Quit->Image_Yes.C_B = load_img("pkg//res//menu//S_Yes.png");
 
 	// No Button
 
@@ -33,8 +37,8 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	Quit->Image_No.pos.x=1011;
 	Quit->Image_No.pos.y=585;
 
-	Quit->Image_No.UC_B = load_img("pkg//res//menu//No_UC.png");
-	Quit->Image_No.C_B = load_img("pkg//res//menu//No_C.png");
+	Quit->Image_No.UC_B = load_img("pkg//res//menu//US_No.png");
+	Quit->Image_No.C_B = load_img("pkg//res//menu//S_No.png");
 
 	// Image pointer verification
 
@@ -73,6 +77,8 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 			if(Quit->Last_Position!=2)
 			{
 				ButtonBlitingQV(Screen, Quit->Image_Yes.UC_B, &(Quit->Image_Yes.pos), Quit->Image_No.C_B, &(Quit->Image_No.pos) );
+
+				Mix_PlayChannel(-1,Quit->Chunk,0);
 				Quit->Last_Position=2;		
 			}
 			break;
@@ -81,6 +87,8 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 			if(Quit->Last_Position!=1)
 			{
 				ButtonBlitingQV(Screen, Quit->Image_No.UC_B, &(Quit->Image_No.pos), Quit->Image_Yes.C_B, &(Quit->Image_Yes.pos) );
+
+				Mix_PlayChannel(-1,Quit->Chunk,0);
 				Quit->Last_Position=1;
 			}
 			break;
@@ -188,9 +196,14 @@ void QuitVerification(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 					DrawButtonsQV(Screen,&Quit);
 
+					// Return to main menu by pressing "ESCAPE"
+
+					if(Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_ESCAPE)
+						Quit_Loop=1;
+
 					// Main event handling
 
-					if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Quit.Clicked_Button==1)
+					else if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Quit.Clicked_Button==1)
 					{
 						switch(Quit.Actual_Position)
 						{
@@ -233,6 +246,7 @@ void ClearQV(QV* Quit)
 	SDL_FreeSurface(Quit->Image_Yes.C_B);
 	SDL_FreeSurface(Quit->Image_No.UC_B);
 	SDL_FreeSurface(Quit->Image_No.C_B);
+	Mix_FreeChunk(Quit->Chunk);
 }
 
 ////////////////////////////////////////

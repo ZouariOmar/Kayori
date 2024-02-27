@@ -13,6 +13,10 @@ typedef struct Image_Background
 
 typedef struct Quit
 {
+	//Initialisation music and chunk
+	Mix_Music* Music;
+	Mix_Chunk* Chunk;
+	
 	//Initialisation background
 	IBG Image_Background;
 

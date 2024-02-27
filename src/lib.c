@@ -14,14 +14,9 @@ void initEverything() {
         fprintf(stderr, "%s: %s",SDL_ERRMSG04, SDL_GetError()); exit(1);
     }
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);                                                                  // IMG initialisation process
-	const SDL_VideoInfo* Video_Info = SDL_GetVideoInfo();
-    if(Video_Info)
-        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF);
-    else
-        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,SDL_SWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF);
-    if(!screen) {
-        fprintf(stderr, "%s : %s !", SDL_ERRMSG07, SDL_GetError()); exit(1);
-    }
+	//////////////
+    CreatScreen(0);
+    //////////////
     SDL_WM_SetCaption("Our Game Name", NULL);
 }
 void closeEverything() {                                                                                    // free memory process
@@ -38,4 +33,14 @@ SDL_Surface *load_img(char* path) {
         SDL_FreeSurface(loadedImg);
     }
     return optimizedImg;
+}
+void CreatScreen(int x) {
+    const SDL_VideoInfo* Video_Info = SDL_GetVideoInfo();
+    if(Video_Info)
+        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|x);
+    else
+        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|x);
+    if(!screen) {
+        fprintf(stderr, "%s : %s !", SDL_ERRMSG07, SDL_GetError()); exit(1);
+    }
 }

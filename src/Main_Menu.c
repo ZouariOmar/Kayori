@@ -10,6 +10,12 @@
 
 void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 {
+	// Music and Chunk
+
+	Main_Menu->Music = Mix_LoadMUS("pkg//music//PS2_ Red Screen of Death.mp3");
+
+	Main_Menu->Chunk = Mix_LoadWAV("pkg//music//rac_menu_beep.wav");
+
 	// Start button
 
 	Main_Menu->Image_Start.pos.h=109;
@@ -18,11 +24,8 @@ void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 	Main_Menu->Image_Start.pos.x=686;
 	Main_Menu->Image_Start.pos.y=403;
 
-	Main_Menu->Image_Start.UC_B = NULL;
-	Main_Menu->Image_Start.C_B = NULL;
-
-	Main_Menu->Image_Start.UC_B = load_img("pkg//res//menu//Start_Button_UC.png");
-	Main_Menu->Image_Start.C_B = load_img("pkg//res//menu//Start_Button_C.png");
+	Main_Menu->Image_Start.UC_B = load_img("pkg//res//menu//US_Start.png");
+	Main_Menu->Image_Start.C_B = load_img("pkg//res//menu//S_Start.png");
 
 	// Multiplayer button
 
@@ -32,8 +35,8 @@ void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 	Main_Menu->Image_Multiplayer.pos.x=686;
 	Main_Menu->Image_Multiplayer.pos.y=550;
 
-	Main_Menu->Image_Multiplayer.UC_B = load_img("pkg//res//menu//Multiplayer_Button_UC.png");
-	Main_Menu->Image_Multiplayer.C_B = load_img("pkg//res//menu//Multiplayer_Button_C.png");
+	Main_Menu->Image_Multiplayer.UC_B = load_img("pkg//res//menu//US_Multiplayer.png");
+	Main_Menu->Image_Multiplayer.C_B = load_img("pkg//res//menu//S_Multiplayer.png");
 
 	// Settings button
 
@@ -43,8 +46,8 @@ void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 	Main_Menu->Image_Settings.pos.x=686;
 	Main_Menu->Image_Settings.pos.y=697;
 
-	Main_Menu->Image_Settings.UC_B = load_img("pkg//res//menu//Settings_Button_UC.png");
-	Main_Menu->Image_Settings.C_B = load_img("pkg//res//menu//Settings_Button_C.png");
+	Main_Menu->Image_Settings.UC_B = load_img("pkg//res//menu//US_Settings.png");
+	Main_Menu->Image_Settings.C_B = load_img("pkg//res//menu//S_Settings.png");
 
 	// Quit button
 
@@ -54,13 +57,13 @@ void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 	Main_Menu->Image_Quit.pos.x=686;
 	Main_Menu->Image_Quit.pos.y=844;
 
-	Main_Menu->Image_Quit.UC_B = load_img("pkg//res//menu//Quit_Button_UC.png");
-	Main_Menu->Image_Quit.C_B = load_img("pkg//res//menu//Quit_Button_C.png");
+	Main_Menu->Image_Quit.UC_B = load_img("pkg//res//menu//US_Quit.png");
+	Main_Menu->Image_Quit.C_B = load_img("pkg//res//menu//S_Quit.png");
 
 
 	// Initialisation background main menu
 
-	Main_Menu->Image_background_MM = load_img("pkg//res//menu//Hollow_Vessels2.png");
+	Main_Menu->Image_background_MM = load_img("pkg//res//menu//Background menu.png");
 
 	// Image pointer verification
 
@@ -107,6 +110,7 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
 							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Multiplayer.C_B, &(Main_Menu->Image_Multiplayer.pos) );
 
+				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=2;
 			}
 			break;
@@ -119,6 +123,7 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
 							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Settings.C_B, &(Main_Menu->Image_Settings.pos) );
 
+				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=3;
 			}
 			break;
@@ -130,6 +135,7 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
 							  Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos), Main_Menu->Image_Quit.C_B, &(Main_Menu->Image_Quit.pos) );
 
+				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=4;
 			}
 			break;
@@ -141,6 +147,7 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 				ButtonBliting(Screen, Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
 							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Start.C_B, &(Main_Menu->Image_Start.pos) );
 
+				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=1;
 			}
 			break;
@@ -233,12 +240,17 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 
 	InitialisationMM(Screen,&Main_Menu);
 
+	// Play music
+
+	Mix_PlayMusic(Main_Menu.Music,-1);
+
 	// Main Menu Loop
 
 	while(!Quit_Loop)
 	{
 		while(SDL_PollEvent(&Event))
 		{
+			// Quit game
 			if(Event.type==SDL_QUIT)
 				ClearMainMenu(Screen,&Main_Menu);
 
@@ -264,9 +276,27 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 
 				DrawButtonsMainMenu(Screen,&Main_Menu);
 
+				// Press ESCAPE to enter "Quit verification"
+
+				if(Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_ESCAPE)
+				{
+					// Quit
+					QuitVerification(Screen,Event,&(Main_Menu.Quit_game));
+
+					if(Main_Menu.Quit_game)
+						Quit_Loop=1;
+					else
+					{
+						// Réinitialisation des paramètres
+						Main_Menu.Clicked_Button=0;
+						Main_Menu.Compteur_Blit_Fond=0;
+						Main_Menu.Last_Position=0;
+					}
+				}
+
 				// Keyboard enter handling
 
-				if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Main_Menu.Clicked_Button==1)
+				else if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Main_Menu.Clicked_Button==1)
 				{
 					switch(Main_Menu.Actual_Position)
 					{
@@ -352,6 +382,8 @@ void ClearMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 	SDL_FreeSurface(Main_Menu->Image_Quit.UC_B);
 	SDL_FreeSurface(Main_Menu->Image_Quit.C_B);
 	SDL_FreeSurface(Screen);
+	Mix_FreeMusic(Main_Menu->Music);
+	Mix_FreeChunk(Main_Menu->Chunk);
 	IMG_Quit();
 	SDL_Quit();
 	exit(1);

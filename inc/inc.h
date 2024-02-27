@@ -43,4 +43,5 @@ typedef enum Boolean {
     false, true
 } bool;
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
+void CreatScreen(int);
 #endif
