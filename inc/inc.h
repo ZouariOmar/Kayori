@@ -4,15 +4,19 @@
 #ifndef __INC_H__
 #define __INC_H__
                     /* INCLUDE PROTOTYPE DECLARATION PART */
+// * STANDER LIBS INCLUDE PART
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// SDL1.2 INCLUDE PART
+#include <stdbool.h>
+
+// * SDL1.2 INCLUDE PART
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
-// OUR INC FILES
+
+// * OUR INC FILES
 #include "SDL_Msg.h"
 #include "settings.h"
 #include "Main_Menu.h"
@@ -21,7 +25,8 @@
 #include "Structures_SM.h"
 #include "Quit_Verification.h"
 #include "Structures_QV.h"
-// PUBLIC VARS
+
+// * PUBLIC VARS
 SDL_Surface *screen;
 SDL_Event event;
                     /* PRINCIPAL SCREEN RESOLUTION PROTOTYPE DECLARATION PART */
@@ -39,9 +44,9 @@ int SCREEN_BPP = 32;
 // SUCCESS_MSG
 // define successMsgXX...
                     /* STRUCT PROTOTYPE DECLARATION PART */
-typedef enum Boolean {
-    false, true
-} bool;
+
                     /* FUNCTIONS PROTOTYPE DECLARATION PART */
-void CreatScreen(int);
+// * CreatScreen() int func
+void setScreen(int);
+
 #endif

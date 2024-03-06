@@ -5,9 +5,10 @@
 #include "lib.c"
                     /* MAIN() INT FUNCTION DEV PART */
 int main() {
+    Mix_Chunk *pip = Mix_LoadWAV("pkg//music//rac_menu_beep.wav");
 	initEverything();
     closeEverything();
-    MainMenu(screen, event);
+    MainMenu();
     SDL_FreeSurface(screen);
 	return 0;
 }

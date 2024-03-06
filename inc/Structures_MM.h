@@ -27,9 +27,7 @@ typedef struct Main_Menu
 	//Initialisation position button Main menu & du bouton clické
 	int Actual_Position,
 		Last_Position,
-		Clicked_Button,
-		Compteur_Blit_Fond,
-		Quit_game;
+		Clicked_Button;
 
 }MM;
 

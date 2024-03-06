@@ -54,20 +54,30 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	Quit->Actual_Position=2;
 	Quit->Last_Position=0;	
 	Quit->Clicked_Button=0;
-	Quit->Compteur_Blit_Fond=0;
+
+	// Blitting of the quit verification
+
+	// Draw background
+	SDL_BlitSurface(Quit->Image_Background.Image,NULL,screen,&(Quit->Image_Background.pos));
 }
 
 ////////////////////////////////////////
 
-void ButtonBlitingQV(SDL_Surface* Screen, SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* C_Image, SDL_Rect* C_Rect)
+void ButtonUpdateQV(SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk)
 {
-	SDL_BlitSurface(UC_Image1,NULL,Screen,UC_Rect1);
-	SDL_BlitSurface(C_Image,NULL,Screen,C_Rect);
+	// Image blitting
+
+	SDL_BlitSurface(UC_Image1,NULL,screen,UC_Rect1);
+	SDL_BlitSurface(C_Image,NULL,screen,C_Rect);
+
+	// Play chunk
+
+	Mix_PlayChannel(-1,Chunk,0);
 }
 
 ////////////////////////////////////////
 
-void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
+void UpdateButtonsQV(QV* Quit)
 {
 	// Visuel des boutons
 
@@ -76,9 +86,8 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 		case 2:
 			if(Quit->Last_Position!=2)
 			{
-				ButtonBlitingQV(Screen, Quit->Image_Yes.UC_B, &(Quit->Image_Yes.pos), Quit->Image_No.C_B, &(Quit->Image_No.pos) );
+				ButtonUpdateQV(Quit->Image_Yes.UC_B, &(Quit->Image_Yes.pos), Quit->Image_No.C_B, &(Quit->Image_No.pos), Quit->Chunk );
 
-				Mix_PlayChannel(-1,Quit->Chunk,0);
 				Quit->Last_Position=2;		
 			}
 			break;
@@ -86,9 +95,8 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 		default:
 			if(Quit->Last_Position!=1)
 			{
-				ButtonBlitingQV(Screen, Quit->Image_No.UC_B, &(Quit->Image_No.pos), Quit->Image_Yes.C_B, &(Quit->Image_Yes.pos) );
+				ButtonUpdateQV(Quit->Image_No.UC_B, &(Quit->Image_No.pos), Quit->Image_Yes.C_B, &(Quit->Image_Yes.pos), Quit->Chunk );
 
-				Mix_PlayChannel(-1,Quit->Chunk,0);
 				Quit->Last_Position=1;
 			}
 			break;
@@ -97,43 +105,43 @@ void DrawButtonsQV(SDL_Surface* Screen,QV* Quit)
 
 ////////////////////////////////////////
 
-void KeyboardEventQV(SDL_Event Event,QV* Quit)
+void KeyboardEventQV(QV* Quit)
 {
 	// Verification Keyboard movement
 
-	if( Event.key.keysym.sym == SDLK_LEFT && (Quit->Actual_Position>1) )
+	if( event.key.keysym.sym == SDLK_LEFT && (Quit->Actual_Position>1) )
 		(Quit->Actual_Position)--; 
 
-	else if( Event.key.keysym.sym == SDLK_RIGHT && (Quit->Actual_Position<2) )	
+	else if( event.key.keysym.sym == SDLK_RIGHT && (Quit->Actual_Position<2) )	
 		(Quit->Actual_Position)++;
 
 }
 
 ////////////////////////////////////////
 
-void MouseEventQV(SDL_Event Event,QV* Quit)
+void MouseEventQV(QV* Quit)
 {
-	if(Event.motion.y>=585 && Event.motion.y<=648)
+	if(event.motion.y>=585 && event.motion.y<=648)
 	{
-		if(Event.motion.x>=784 && Event.motion.x<=872)
+		if(event.motion.x>=784 && event.motion.x<=872)
 		{
 			// Initialisation bouton position
 			Quit->Actual_Position=1;
 
 			// Test position curseur bouton 1
 
-			if(Event.button.button == SDL_BUTTON_LEFT)
+			if(event.button.button == SDL_BUTTON_LEFT)
 				Quit->Clicked_Button=1;
 		}
 
-		else if(Event.motion.x>=1011 && Event.motion.x<=1099)
+		else if(event.motion.x>=1011 && event.motion.x<=1099)
 		{
 			// Initialisation bouton position
 			Quit->Actual_Position=2;
 
 			// Test position curseur bouton 2
 
-			if(Event.button.button == SDL_BUTTON_LEFT)
+			if(event.button.button == SDL_BUTTON_LEFT)
 				Quit->Clicked_Button=1;
 		}
 	}
@@ -142,11 +150,22 @@ void MouseEventQV(SDL_Event Event,QV* Quit)
 
 ////////////////////////////////////////
 
-void QuitVerification(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
+void MovementEventQV(QV* Quit)
+{
+	if(event.type == SDL_KEYDOWN)
+		KeyboardEventQV(Quit);
+
+	else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
+		MouseEventQV(Quit);
+}
+
+////////////////////////////////////////
+
+void QuitVerification(int* Quit_Game)
 {
 	// Quit loop verification
 
-	int Quit_Loop=0;
+	int Quit_QV=0;
 
 	// Création Quit
 
@@ -158,84 +177,71 @@ void QuitVerification(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game)
 
 	// If no error occured in the initialisation => Enter Quit Verification loop
 
-	if(!(*Quit_Game))
+	while(!Quit_QV && !(*Quit_Game))
 	{
-		// Quit verification loop
-		while(!Quit_Loop)
+		while(SDL_PollEvent(&event))
 		{
-			while(SDL_PollEvent(&Event))
+			// Check Main Menu position
+
+			MovementEventQV(&Quit);
+
+			// Draw Buttons
+
+			UpdateButtonsQV(&Quit);
+
+			// If the quit cross is pressed
+
+			if(event.type == SDL_QUIT)
 			{
-				//Switch type of event
-
-				if(Event.type == SDL_QUIT)
-				{
-					*Quit_Game=1;
-					Quit_Loop=1;
-				}
-
-				else
-				{
-					// Draw background once
-
-					if(Quit.Compteur_Blit_Fond==0)
-					{
-						SDL_BlitSurface(Quit.Image_Background.Image,NULL,Screen,&(Quit.Image_Background.pos));
-						Quit.Compteur_Blit_Fond=1;
-					}
-
-					// Check Main Menu position :: à mettre sous forme d'une seule fonction
-
-					if(Event.type == SDL_KEYDOWN)
-						KeyboardEventQV(Event,&Quit);
-
-					else if(Event.type==SDL_MOUSEMOTION || Event.type==SDL_MOUSEBUTTONDOWN)
-						MouseEventQV(Event,&Quit);
-
-
-					// Draw Buttons
-
-					DrawButtonsQV(Screen,&Quit);
-
-					// Return to main menu by pressing "ESCAPE"
-
-					if(Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_ESCAPE)
-						Quit_Loop=1;
-
-					// Main event handling
-
-					else if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Quit.Clicked_Button==1)
-					{
-						switch(Quit.Actual_Position)
-						{
-							case 1:
-								//Quit game
-								*Quit_Game=1;
-								Quit_Loop=1;
-								break;
-
-							case 2:
-								//Return to main menu
-								Quit_Loop=1;
-								break;
-
-							default:
-								break;
-						}
-					}
-
-					// Flip screen
-					SDL_Flip(Screen);
-				}
+				Quit_QV=1;
+				*Quit_Game=1;
 			}
 
-			//Frame regulation
-			SDL_Delay(6);
+			// Return to main menu by pressing "ESCAPE"
+
+			else if(event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN )
+			{
+				// Return to main menu by pressing "ESCAPE"
+
+				if(event.key.keysym.sym == SDLK_ESCAPE)
+					Quit_QV=1;
+					
+				// Mouse click / Space button pressed
+
+				else if( event.key.keysym.sym == SDLK_SPACE || Quit.Clicked_Button )
+				{
+					switch(Quit.Actual_Position)
+					{
+						case 1:
+							//Quit game
+							*Quit_Game=1;
+							Quit_QV=1;
+							break;
+
+						case 2:
+							//Return to main menu
+							Quit_QV=1;
+							break;
+
+						default:
+							break;
+					}
+				}					
+			}
+
+			// Flip screen
+			SDL_Flip(screen);
 		}
 
-		// CLear Quit verification
-		ClearQV(&Quit);
+		//Frame regulation
+		SDL_Delay(6);
 	}
+
+	// CLear Quit verification
+	ClearQV(&Quit);
 }
+
+
 
 ////////////////////////////////////////
 

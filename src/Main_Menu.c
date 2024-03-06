@@ -8,7 +8,7 @@
 
 ////////////////////////////////////////
 
-void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
+void InitialisationMM(MM* Main_Menu)
 {
 	// Music and Chunk
 
@@ -70,26 +70,38 @@ void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu)
 	if( !(Main_Menu->Image_background_MM && Main_Menu->Image_Start.UC_B && Main_Menu->Image_Start.C_B &&
 	   Main_Menu->Image_Multiplayer.UC_B && Main_Menu->Image_Multiplayer.C_B && Main_Menu->Image_Settings.UC_B &&
 	   Main_Menu->Image_Settings.C_B && Main_Menu->Image_Quit.UC_B && Main_Menu->Image_Quit.C_B) )
-		ClearMainMenu(Screen,Main_Menu);
+		ClearMainMenu(Main_Menu);
 
 	// Initialisation button position & clicked button
 
 	Main_Menu->Actual_Position=1;
 	Main_Menu->Last_Position=0;	
 	Main_Menu->Clicked_Button=0;
-	Main_Menu->Compteur_Blit_Fond=0;
-	Main_Menu->Quit_game=0;
+
+	// Blitting of the main menu
+
+	// Draw background
+	SDL_BlitSurface(Main_Menu->Image_background_MM,NULL,screen,NULL);
+
+	// Draw buttons
+	UpdateButtonsMainMenu(Main_Menu);	
 
 }
 
 ////////////////////////////////////////
 
-void ButtonBliting(SDL_Surface* Screen, SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* UC_Image2, SDL_Rect* UC_Rect2, SDL_Surface* UC_Image3, SDL_Rect* UC_Rect3, SDL_Surface* C_Image, SDL_Rect* C_Rect)
+void ButtonUpdate( SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* UC_Image2, SDL_Rect* UC_Rect2, SDL_Surface* UC_Image3, SDL_Rect* UC_Rect3, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk)
 {
-	SDL_BlitSurface(UC_Image1,NULL,Screen,UC_Rect1);
-	SDL_BlitSurface(UC_Image2,NULL,Screen,UC_Rect2);
-	SDL_BlitSurface(UC_Image3,NULL,Screen,UC_Rect3);
-	SDL_BlitSurface(C_Image,NULL,Screen,C_Rect);
+	// Image blitting
+
+	SDL_BlitSurface(UC_Image1,NULL,screen,UC_Rect1);
+	SDL_BlitSurface(UC_Image2,NULL,screen,UC_Rect2);
+	SDL_BlitSurface(UC_Image3,NULL,screen,UC_Rect3);
+	SDL_BlitSurface(C_Image,NULL,screen,C_Rect);
+
+	// Play chunk
+
+	Mix_PlayChannel(-1,Chunk,0);
 }
 
 // A changer lors de review code 
@@ -97,7 +109,7 @@ void ButtonBliting(SDL_Surface* Screen, SDL_Surface* UC_Image1, SDL_Rect* UC_Rec
 
 ////////////////////////////////////////
 
-void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
+void UpdateButtonsMainMenu(MM* Main_Menu)
 {
 	// Visuel des boutons
 
@@ -107,10 +119,9 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 		case 2:
 			if(Main_Menu->Last_Position!=2)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
-							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Multiplayer.C_B, &(Main_Menu->Image_Multiplayer.pos) );
+				ButtonUpdate(Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
+							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Multiplayer.C_B, &(Main_Menu->Image_Multiplayer.pos), Main_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=2;
 			}
 			break;
@@ -120,10 +131,9 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 
 			if(Main_Menu->Last_Position!=3)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
-							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Settings.C_B, &(Main_Menu->Image_Settings.pos) );
+				ButtonUpdate(Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
+							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Settings.C_B, &(Main_Menu->Image_Settings.pos), Main_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=3;
 			}
 			break;
@@ -132,10 +142,9 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 		case 4:
 			if(Main_Menu->Last_Position!=4)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
-							  Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos), Main_Menu->Image_Quit.C_B, &(Main_Menu->Image_Quit.pos) );
+				ButtonUpdate(Main_Menu->Image_Start.UC_B, &(Main_Menu->Image_Start.pos), Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos),
+							  Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos), Main_Menu->Image_Quit.C_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=4;
 			}
 			break;
@@ -144,10 +153,9 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 		default:
 			if(Main_Menu->Last_Position!=1)
 			{
-				ButtonBliting(Screen, Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
-							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Start.C_B, &(Main_Menu->Image_Start.pos) );
+				ButtonUpdate(Main_Menu->Image_Multiplayer.UC_B, &(Main_Menu->Image_Multiplayer.pos), Main_Menu->Image_Settings.UC_B, &(Main_Menu->Image_Settings.pos),
+							  Main_Menu->Image_Quit.UC_B, &(Main_Menu->Image_Quit.pos), Main_Menu->Image_Start.C_B, &(Main_Menu->Image_Start.pos), Main_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Main_Menu->Chunk,0);
 				Main_Menu->Last_Position=1;
 			}
 			break;
@@ -156,24 +164,38 @@ void DrawButtonsMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 
 ////////////////////////////////////////
 
-void KeyboardEventMM(SDL_Event Event,MM* Main_Menu)
+void KeyboardEventMM(MM* Main_Menu)
 {
 	// Verification Keyboard movement
 
-	if( Event.key.keysym.sym == SDLK_UP && (Main_Menu->Actual_Position>1) )
-		(Main_Menu->Actual_Position)--;
+	// If Key Up is pressed
 
-	else if( Event.key.keysym.sym == SDLK_DOWN && (Main_Menu->Actual_Position<4) )	
-		(Main_Menu->Actual_Position)++;
+	if(event.key.keysym.sym == SDLK_UP)
+	{	
+		if(Main_Menu->Actual_Position>1)
+			Main_Menu->Actual_Position--;
+		else
+			Main_Menu->Actual_Position=4;
+	}
+
+	// If Key Down is pressed
+
+	else if(event.key.keysym.sym == SDLK_DOWN)
+	{
+		if(Main_Menu->Actual_Position<4)
+			Main_Menu->Actual_Position++;
+		else
+			Main_Menu->Actual_Position=1;
+	}
 }
 
 ////////////////////////////////////////
 
-void MouseEventMM(SDL_Event Event,MM* Main_Menu)
+void MouseEventMM(MM* Main_Menu)
 {
-	if(Event.motion.x>=686 && Event.motion.x<=1237)
+	if(event.motion.x>=686 && event.motion.x<=1237)
 	{
-		if(Event.motion.y>=403 && Event.motion.y<=512)
+		if(event.motion.y>=403 && event.motion.y<=512)
 		{
 			// Initialisation bouton position
 
@@ -181,11 +203,11 @@ void MouseEventMM(SDL_Event Event,MM* Main_Menu)
 
 			// Test position curseur bouton 1
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Main_Menu->Clicked_Button=1;
 		}
 
-		else if(Event.motion.y>=550 && Event.motion.y<=659)
+		else if(event.motion.y>=550 && event.motion.y<=659)
 		{
 			// Initialisation bouton position
 
@@ -193,11 +215,11 @@ void MouseEventMM(SDL_Event Event,MM* Main_Menu)
 
 			// Test position curseur bouton 2
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Main_Menu->Clicked_Button=1;
 		}
 
-		else if(Event.motion.y>=697 && Event.motion.y<=809)
+		else if(event.motion.y>=697 && event.motion.y<=809)
 		{
 			// Initialisation bouton position
 
@@ -205,11 +227,11 @@ void MouseEventMM(SDL_Event Event,MM* Main_Menu)
 
 			// Test position curseur bouton 3
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Main_Menu->Clicked_Button=1;
 		}
 
-		else if(Event.motion.y>=844 && Event.motion.y<=953)
+		else if(event.motion.y>=844 && event.motion.y<=953)
 		{
 			// Initialisation bouton position
 
@@ -217,7 +239,7 @@ void MouseEventMM(SDL_Event Event,MM* Main_Menu)
 
 			// Test position curseur bouton 4
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Main_Menu->Clicked_Button=1;
 		}
 	}
@@ -226,7 +248,18 @@ void MouseEventMM(SDL_Event Event,MM* Main_Menu)
 
 ////////////////////////////////////////
 
-void MainMenu(SDL_Surface* Screen,SDL_Event Event)
+void MovementEventMM(MM* Main_Menu)
+{
+	if(event.type == SDL_KEYDOWN)
+		KeyboardEventMM(Main_Menu);
+
+	else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
+		MouseEventMM(Main_Menu);
+}
+
+////////////////////////////////////////
+
+void MainMenu(void)
 {
 	// Quit loop verification
 
@@ -236,9 +269,9 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 
 	MM Main_Menu;
 
-	// Initialisation Structure Main Menu
+	// Initialisation Structure Main Menu && Blitting of the background
 
-	InitialisationMM(Screen,&Main_Menu);
+	InitialisationMM(&Main_Menu);
 
 	// Play music
 
@@ -248,129 +281,99 @@ void MainMenu(SDL_Surface* Screen,SDL_Event Event)
 
 	while(!Quit_Loop)
 	{
-		while(SDL_PollEvent(&Event))
+		while(SDL_PollEvent(&event))
 		{
-			// Quit game
-			if(Event.type==SDL_QUIT)
-				ClearMainMenu(Screen,&Main_Menu);
+			// Checks Main Menu position
 
-			else
+			MovementEventMM(&Main_Menu);
+
+			// Updates buttons
+
+			UpdateButtonsMainMenu(&Main_Menu);
+
+			// If the quit cross is pressed
+
+			if(event.type == SDL_QUIT)
+				ClearMainMenu(&Main_Menu);
+
+			// If a button is clicked/pressed
+
+			else if( event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN )
 			{
-				// Draw background
-
-				if(Main_Menu.Compteur_Blit_Fond==0)
-				{
-					SDL_BlitSurface(Main_Menu.Image_background_MM,NULL,Screen,NULL);
-					Main_Menu.Compteur_Blit_Fond=1;
-				}
-					
-				// Check Main Menu position :: à mettre sous forme d'une seule fonction
-
-				if(Event.type == SDL_KEYDOWN)
-					KeyboardEventMM(Event,&Main_Menu);
-
-				else if(Event.type==SDL_MOUSEMOTION || Event.type==SDL_MOUSEBUTTONDOWN)
-					MouseEventMM(Event,&Main_Menu);
-
-				// Draw Buttons
-
-				DrawButtonsMainMenu(Screen,&Main_Menu);
-
 				// Press ESCAPE to enter "Quit verification"
 
-				if(Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_ESCAPE)
+				if(event.key.keysym.sym == SDLK_ESCAPE)
 				{
-					// Quit
-					QuitVerification(Screen,Event,&(Main_Menu.Quit_game));
+					// Free Main menu
+					ClearMainMenu(&Main_Menu);
 
-					if(Main_Menu.Quit_game)
-						Quit_Loop=1;
-					else
-					{
-						// Réinitialisation des paramètres
-						Main_Menu.Clicked_Button=0;
-						Main_Menu.Compteur_Blit_Fond=0;
-						Main_Menu.Last_Position=0;
-					}
+					// Quit
+					QuitVerification(&Quit_Loop);
+											
+					if(!Quit_Loop)
+						InitialisationMM(&Main_Menu);
 				}
 
-				// Keyboard enter handling
+				// Menu event handling
 
-				else if( (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_SPACE) || Main_Menu.Clicked_Button==1)
+				else if( event.key.keysym.sym == SDLK_SPACE || Main_Menu.Clicked_Button )
 				{
+					// Free Main menu
+					ClearMainMenu(&Main_Menu);
+
 					switch(Main_Menu.Actual_Position)
 					{
+						// Start menu
 						case 1:
-							// Start menu
-							StartMenu(&(Main_Menu.Quit_game));
 
-							if(Main_Menu.Quit_game)
-								Quit_Loop=1;
-							else
-							{
-								// Réinitialisation des paramètres
-								Main_Menu.Clicked_Button=0;
-								Main_Menu.Compteur_Blit_Fond=0;
-								Main_Menu.Last_Position=0;
-							}
+							StartMenu(&Quit_Loop);
+								
 							break;
 
+						// Multiplayer
 						case 2:
-							// Multiplayer
+
 							Main_Menu.Clicked_Button=0;
+
 							break;
 
+						// Settings
 						case 3:
-							// Settings
-							settings(&(Main_Menu.Quit_game));
-
-							if(Main_Menu.Quit_game)
-								Quit_Loop=1;
-							else
-							{
-								// Réinitialisation des paramètres
-								Main_Menu.Clicked_Button=0;
-								Main_Menu.Compteur_Blit_Fond=0;
-								Main_Menu.Last_Position=0;
-							}
+							
+							settings(&Quit_Loop);
+								
 							break;
 
+						// Quit
 						case 4:
-							// Quit
-							QuitVerification(Screen,Event,&(Main_Menu.Quit_game));
 
-							if(Main_Menu.Quit_game)
-								Quit_Loop=1;
-							else
-							{
-								// Réinitialisation des paramètres
-								Main_Menu.Clicked_Button=0;
-								Main_Menu.Compteur_Blit_Fond=0;
-								Main_Menu.Last_Position=0;
-							}
-							break;
+							QuitVerification(&Quit_Loop);
 
 						default:
 							break;
 					}
+
+					// Reainitialise Main menu if not quitting
+					if(!Quit_Loop)
+						InitialisationMM(&Main_Menu);
 				}
+			}
 
 				// Flip screen
-				SDL_Flip(Screen);
-			}
+			SDL_Flip(screen);
 		}
 
 		//Frame regulation
-		SDL_Delay(6);
+		SDL_Delay(6);	
 	}
 
-	// Clear Menu & Game
-	ClearMainMenu(Screen,&Main_Menu);
+	// Free Menu music
+	Mix_FreeMusic(Main_Menu.Music);
 }
 
 ////////////////////////////////////////
 
-void ClearMainMenu(SDL_Surface* Screen,MM* Main_Menu)
+void ClearMainMenu(MM* Main_Menu)
 {
 	SDL_FreeSurface(Main_Menu->Image_background_MM);
 	SDL_FreeSurface(Main_Menu->Image_Start.UC_B);
@@ -381,12 +384,7 @@ void ClearMainMenu(SDL_Surface* Screen,MM* Main_Menu)
 	SDL_FreeSurface(Main_Menu->Image_Settings.C_B);
 	SDL_FreeSurface(Main_Menu->Image_Quit.UC_B);
 	SDL_FreeSurface(Main_Menu->Image_Quit.C_B);
-	SDL_FreeSurface(Screen);
-	Mix_FreeMusic(Main_Menu->Music);
 	Mix_FreeChunk(Main_Menu->Chunk);
-	IMG_Quit();
-	SDL_Quit();
-	exit(1);
 }
 
 ////////////////////////////////////////

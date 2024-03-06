@@ -20,8 +20,7 @@ typedef struct Start_Menu
 	//Initialisation position button Start menu & clicked button
 	int Actual_Position,
 		Last_Position,
-		Clicked_Button,
-		Compteur_Blit_Fond;
+		Clicked_Button;
 
 }SM;
 

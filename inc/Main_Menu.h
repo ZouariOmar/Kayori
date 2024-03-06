@@ -5,35 +5,35 @@
 
 ////////////////////////////////////////
 
-void InitialisationSDL(SDL_Surface** Screen);
+void InitialisationMM(MM* Main_Menu);
 
 ////////////////////////////////////////
 
-void InitialisationMM(SDL_Surface* Screen,MM* Main_Menu);
+void ButtonUpdate( SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* UC_Image2, SDL_Rect* UC_Rect2, SDL_Surface* UC_Image3, SDL_Rect* UC_Rect3, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk);
 
 ////////////////////////////////////////
 
-void ButtonBliting(SDL_Surface* Screen, SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* UC_Image2, SDL_Rect* UC_Rect2, SDL_Surface* UC_Image3, SDL_Rect* UC_Rect3, SDL_Surface* C_Image, SDL_Rect* C_Rect);
+void UpdateButtonsMainMenu(MM* Main_Menu);
 
 ////////////////////////////////////////
 
-void DrawButtonsMainMenu(SDL_Surface* Screen,MM* MainMenu);
+void KeyboardEventMM(MM* MainMenu);
 
 ////////////////////////////////////////
 
-void KeyboardEventMM(SDL_Event Event,MM* MainMenu);
+void MouseEventMM(MM* MainMenu);
 
 ////////////////////////////////////////
 
-void MouseEventMM(SDL_Event Event,MM* MainMenu);
+void MovementEventMM(MM* Main_Menu);
 
 ////////////////////////////////////////
 
-void MainMenu(SDL_Surface* Screen,SDL_Event Event);
+void MainMenu(void);
 
 ////////////////////////////////////////
 
-void ClearMainMenu(SDL_Surface* Screen,MM* MainMenu);
+void ClearMainMenu(MM* MainMenu);
 
 ////////////////////////////////////////
 

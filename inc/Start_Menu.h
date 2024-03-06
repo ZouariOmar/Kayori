@@ -9,15 +9,19 @@ void InitialisationSM(SM* Start_Menu,int* Quit_Game);
 
 ////////////////////////////////////////
 
-void KeyboardEventSM(SDL_Event Event,SM* Start_Menu);
+void KeyboardEventSM(SM* Start_Menu);
 
 ////////////////////////////////////////
 
-void MouseEventSM(SDL_Event Event,SM* Start_Menu);
+void MouseEventSM(SM* Start_Menu);
 
 ////////////////////////////////////////
 
-void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu);
+void MovementEventSM(SM* Main_Menu);
+
+////////////////////////////////////////
+
+void UpdateButtonsStartMenu(SM* Start_Menu);
 
 ////////////////////////////////////////
 

@@ -67,40 +67,42 @@ void InitialisationSM(SM* Start_Menu,int* Quit_Game)
 		*Quit_Game=1;
 	}
 
-	// Image Save/New Game
-
-	/*
-	Start_Menu->Image_NG=IMG_Load(" ");
-	Start_Menu->Image_SG=IMG_Load("");
-	*/
-
 	// Position & Click
 
 	Start_Menu->Actual_Position=2;
 	Start_Menu->Last_Position=0;
-	Start_Menu->Compteur_Blit_Fond=0;
 	Start_Menu->Clicked_Button=0;
 
+	// Blitting of the start menu
+
+	// Draw background
+
+	SDL_BlitSurface(Start_Menu->Image_background_SM,NULL,screen,NULL);
 }
 
 ////////////////////////////////////////
 
-void KeyboardEventSM(SDL_Event Event,SM* Start_Menu)
+void KeyboardEventSM(SM* Start_Menu)
 {
 	// Verification Keyboard movement
 
-	if( Event.key.keysym.sym == SDLK_UP && (Start_Menu->Actual_Position>1) )
+	if( event.key.keysym.sym == SDLK_UP && (Start_Menu->Actual_Position>1) )
 		(Start_Menu->Actual_Position)--;
 
-	else if( Event.key.keysym.sym == SDLK_DOWN && (Start_Menu->Actual_Position<4) )	
-		(Start_Menu->Actual_Position)++;
+	else if( event.key.keysym.sym == SDLK_DOWN )
+	{
+		if(Start_Menu->Actual_Position<4)
+			(Start_Menu->Actual_Position)++;
+		else
+			Start_Menu->Actual_Position=2;
+	}	
 }
 
 ////////////////////////////////////////
 
-void MouseEventSM(SDL_Event Event,SM* Start_Menu)
+void MouseEventSM(SM* Start_Menu)
 {
-	if(Event.motion.y>=43 && Event.motion.y<=162 && Event.motion.x>=69 && Event.motion.x<=220)
+	if(event.motion.y>=43 && event.motion.y<=162 && event.motion.x>=69 && event.motion.x<=220)
 	{
 		// Initialisation bouton position
 
@@ -108,13 +110,13 @@ void MouseEventSM(SDL_Event Event,SM* Start_Menu)
 
 		// Test position curseur bouton 1
 
-		if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+		if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 			Start_Menu->Clicked_Button=1;
 	}
 
-	else if(Event.motion.x>=545 && Event.motion.x<=1376)
+	else if(event.motion.x>=545 && event.motion.x<=1376)
 	{
-		if(Event.motion.y>=168 && Event.motion.y<=374)
+		if(event.motion.y>=168 && event.motion.y<=374)
 		{
 			// Initialisation bouton position
 
@@ -122,11 +124,11 @@ void MouseEventSM(SDL_Event Event,SM* Start_Menu)
 
 			// Test position curseur bouton 2
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Start_Menu->Clicked_Button=1;
 		}
 
-		else if(Event.motion.y>=438 && Event.motion.y<=644)
+		else if(event.motion.y>=438 && event.motion.y<=644)
 		{
 			// Initialisation bouton position
 
@@ -134,11 +136,11 @@ void MouseEventSM(SDL_Event Event,SM* Start_Menu)
 
 			// Test position curseur bouton 3
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Start_Menu->Clicked_Button=1;
 		}
 
-		else if(Event.motion.y>=708 && Event.motion.y<=914)
+		else if(event.motion.y>=708 && event.motion.y<=914)
 		{
 			// Initialisation bouton position
 
@@ -146,7 +148,7 @@ void MouseEventSM(SDL_Event Event,SM* Start_Menu)
 
 			// Test position curseur bouton 4
 
-			if(Event.type == SDL_MOUSEBUTTONDOWN && Event.button.button == SDL_BUTTON_LEFT)
+			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 				Start_Menu->Clicked_Button=1;
 		}
 	}
@@ -155,7 +157,18 @@ void MouseEventSM(SDL_Event Event,SM* Start_Menu)
 
 ////////////////////////////////////////
 
-void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
+void MovementEventSM(SM* Start_Menu)
+{
+	if(event.type == SDL_KEYDOWN)
+		KeyboardEventSM(Start_Menu);
+
+	else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
+		MouseEventSM(Start_Menu);
+}
+
+////////////////////////////////////////
+
+void UpdateButtonsStartMenu(SM* Start_Menu)
 {
 	// Visuel des boutons
 
@@ -165,10 +178,9 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		case 1:
 			if(Start_Menu->Last_Position!=1)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
-							  Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos) );
+				ButtonUpdate(Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
+							  Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=1;
 			}
 			break;
@@ -177,10 +189,9 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		case 3:
 			if(Start_Menu->Last_Position!=3)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
-							  Start_Menu->Image_Save2.C_B, &(Start_Menu->Image_Save2.pos) );
+				ButtonUpdate(Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
+							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save2.C_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=3;
 			}
 			break;
@@ -189,10 +200,9 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		case 4:
 			if(Start_Menu->Last_Position!=4)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
-							  Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos) );
+				ButtonUpdate(Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
+							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=4;
 			}
 			break;
@@ -201,10 +211,9 @@ void DrawButtonsStartMenu(SDL_Surface* Screen,SM* Start_Menu)
 		default:
 			if(Start_Menu->Last_Position!=2)
 			{
-				ButtonBliting(Screen, Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos),
-							  Start_Menu->Image_Save1.C_B, &(Start_Menu->Image_Save1.pos) );
+				ButtonUpdate(Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
+							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save1.C_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Chunk );
 
-				Mix_PlayChannel(-1,Start_Menu->Chunk,0);
 				Start_Menu->Last_Position=2;
 			}
 			break;
@@ -217,103 +226,89 @@ void StartMenu(int* Quit_Game)
 {
 	// Quit loop verification
 
-	int Quit=0;
+	int Quit_SM=0;
 
 	// Création Start Menu
 
 	SM Start_Menu;
 
-	// Initialisation Start Menu
+	// Initialisation Start Menu && Blitting of the background
 
 	InitialisationSM(&Start_Menu, Quit_Game);
 
 	// If no error occured in the initialisation => Enter Start menu loop
 
-	if(!(*Quit_Game))
+	while(!Quit_SM && !(*Quit_Game))
 	{
-		// Start menu loop
-
-		while(!Quit)
+		while(SDL_PollEvent(&event))
 		{
-			while(SDL_PollEvent(&event))
-			{
-				if(event.type==SDL_QUIT)
-				{
-					Quit=1;
-					*Quit_Game=1;
-				}
-
-				else
-				{
-					// Draw background
-
-					if(Start_Menu.Compteur_Blit_Fond==0)
-					{
-						SDL_BlitSurface(Start_Menu.Image_background_SM,NULL,screen,NULL);
-						Start_Menu.Compteur_Blit_Fond=1;
-					}
-
-					// Draw Buttons
-
-					DrawButtonsStartMenu(screen,&Start_Menu);
-							
-					// Check Main Menu position :: Mettre sous forme de fonction
+			// Check Main Menu position
 						
-					if(event.type == SDL_KEYDOWN)
-						KeyboardEventSM(event,&Start_Menu);
+			MovementEventSM(&Start_Menu);
 
-					else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
-						MouseEventSM(event,&Start_Menu);
+			// Draw Buttons
 
+			UpdateButtonsStartMenu(&Start_Menu);
 
-					// Return to main menu by pressing "ESCAPE"
+			// If the quit cross is pressed
+			
+			if(event.type==SDL_QUIT)
+			{
+				Quit_SM=1;
+				*Quit_Game=1;
+			}
+		
+			// If a button is clicked/pressed
 
-					if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-						Quit=1;
+			else if(event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN)
+			{
+				// Return to main menu by pressing "ESCAPE"
 
-					// Keyboard enter handling
-					
-					else if( (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) || Start_Menu.Clicked_Button==1)
+				if(event.key.keysym.sym == SDLK_ESCAPE)
+					Quit_SM=1;
+
+				// Mouse click / Space button pressed
+						
+				else if( event.key.keysym.sym == SDLK_SPACE || Start_Menu.Clicked_Button )
+				{
+					switch(Start_Menu.Actual_Position)
 					{
-						switch(Start_Menu.Actual_Position)
-						{
-							case 1:
-								//Return to main menu
-								Quit=1;
-								break;
+						case 1:
+							//Return to main menu
+							Quit_SM=1;
+							break;
 
-							case 2:
-								//Save 1
-								Start_Menu.Clicked_Button=0;
-								break;
+						case 2:
+							//Save 1
+							Start_Menu.Clicked_Button=0;
+							break;
 
-							case 3:
-								//Save 2
-								Start_Menu.Clicked_Button=0;
-								break;
+						case 3:
+							//Save 2
+							Start_Menu.Clicked_Button=0;
+							break;
 
-							case 4:
-								//Save 3
-								Start_Menu.Clicked_Button=0;	
-								break;
+						case 4:
+							//Save 3
+							Start_Menu.Clicked_Button=0;	
+							break;
 
-							default:
-								break;
-						}
+						default:
+							break;
 					}
-
-					// Flip screen
-					SDL_Flip(screen);
-				}
+				}						
 			}
 
-			// Frame regulation
-			SDL_Delay(6);
+			// Flip screen
+			SDL_Flip(screen);
 		}
 
-		// Clear memory
-		ClearStartMenu(&Start_Menu);
+		// Frame regulation
+		SDL_Delay(6);
 	}
+
+	// Clear memory
+	ClearStartMenu(&Start_Menu);
 }
 
 ////////////////////////////////////////

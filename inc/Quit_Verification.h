@@ -9,23 +9,27 @@ void InitialisationQV(QV* Quit,int* Quit_Game);
 
 ////////////////////////////////////////
 
-void ButtonBlitingQV(SDL_Surface* Screen, SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* C_Image, SDL_Rect* C_Rect);
+void ButtonUpdateQV(SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk);
 
 ////////////////////////////////////////
 
-void DrawButtonsQV(SDL_Surface* Screen,QV* Quit);
+void UpdateButtonsQV(QV* Quit);
 
 ////////////////////////////////////////
 
-void KeyboardEventQV(SDL_Event Event,QV* Quit);
+void KeyboardEventQV(QV* Quit);
 
 ////////////////////////////////////////
 
-void MouseEventQV(SDL_Event Event,QV* Quit);
+void MouseEventQV(QV* Quit);
 
 ////////////////////////////////////////
 
-void QuitVerification(SDL_Surface* Screen,SDL_Event Event,int* Quit_Game);
+void MovementEventQV(QV* Quit);
+
+////////////////////////////////////////
+
+void QuitVerification(int* Quit_Game);
 
 ////////////////////////////////////////
 
