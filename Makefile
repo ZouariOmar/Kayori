@@ -1,6 +1,6 @@
-# by_kayori_Nova_Grp
-# 01/24/24
-# kayori :: Makefile
+#* @team:   by_kayori_Nova_Grp
+#* @update: 04/06/24
+#? @file:   Makefile
 
 # Define the C compiler to use
 CC = gcc
@@ -9,7 +9,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -lm -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -g
 
 # Define the source files
-SRC_DIR = src/main.c
+SRC_DIR = project/src/main.c
 
 # Define the output directory
 OUT_DIR = bin/debug

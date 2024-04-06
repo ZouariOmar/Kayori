@@ -1,0 +1,4 @@
+fullscreenOption (0 or SDL_FULLSCREEN)
+musicVolume      (from 0 to 128 :: ±8)
+AudioVolume      (from 0 to 128 :: ±8)
+language         (Eng or Frc)

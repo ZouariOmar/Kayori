@@ -8,6 +8,7 @@
 		"makefile.makefilePath": "makefile",
 		"cSpell.words": [
 			"Blit",
+			"blited",
 			"DOUBLEBUF",
 			"Fraddosse",
 			"FULLSCREEN",
@@ -24,7 +25,10 @@
 		"files.associations": {
 			"inc.h": "c",
 			"stdio.h": "c",
-			"start_menu.h": "c"
+			"start_menu.h": "c",
+			"signal.h": "c",
+			"time.h": "c",
+			"stdbool.h": "c"
 		}
 	}
 }
