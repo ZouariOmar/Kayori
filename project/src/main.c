@@ -15,6 +15,9 @@ int main() {
 
     //* game lunching part
     ////MainMenu();
+    //! testing part
+    int quit_game = 0;
+    settings(&quit_game);
 
     //* free the main screen surface
     SDL_FreeSurface(screen);

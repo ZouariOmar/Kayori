@@ -7,6 +7,8 @@
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
 ////#include "Main_Menu.c"
+//! testing part
+#include "settings.c"
 
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 /*
@@ -74,6 +76,6 @@ void setScreen(int x) {
     else
         screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|x);
     if(!screen) {
-        fprintf(stderr, "%s : %s !", SDL_ERRMSG07, SDL_GetError()); exit(1);
+        fprintf(stderr, "%s: %s !", SDL_ERRMSG07, SDL_GetError()); exit(1);
     }
 }
