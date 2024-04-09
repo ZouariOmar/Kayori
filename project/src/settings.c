@@ -14,11 +14,12 @@
 */
 void settings(int *quit_game) {
     // * all 100 settings sub-surfaces
-    surface sub[12];
+    surface sub[27];
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
-    loadResources(sub, "project/res/settings_srf/img");
+    loadResources(sub, "project/res/settings_srf/LS/img", 0, 12);
+    loadResources(sub, "project/res/settings_srf/RS/controls_menu/img", 12, 27);
 
     //* set potions for the other res
     set_pos(sub);
@@ -65,7 +66,12 @@ void settings(int *quit_game) {
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
-                            // rest of code
+                            // rest of code...
+                            break;
+
+                        //? --- SPACE CLICK OPTION ---
+                        case SDLK_SPACE:
+                            // rest of code...
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -142,7 +148,7 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
 
     //* blit the rest of the left menu
     for (int i = 0; i < 5; i++)
-        if (i != usrOpPos)
+        if (i != *usrOpPos)
             SDL_BlitSurface(sub[2 + i].win,  NULL, screen, &sub[2 + i].pos);
 
     //* update the usrOpPos
@@ -163,13 +169,12 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
 ? loadResources(surface*, char*) void func
 * load all res
 */
-void loadResources(surface* sub, char* path) {
-    int i = 0;
-    while (i < 12) {
+void loadResources(surface* sub, char* path, int begin_res, int nbr_res) {
+    while (begin_res < nbr_res) {
         char tmp_path[260];
-        sprintf(tmp_path, "%s%d%s", path, i, ".png");
-        sub[i].win = load_img(tmp_path);
-        i++;
+        sprintf(tmp_path, "%s%d%s", path, begin_res, ".png");
+        sub[begin_res].win = load_img(tmp_path);
+        begin_res++;
     }
 }
 
@@ -181,9 +186,8 @@ void set_pos(surface* sub) {
     //* bkg img position
     sub[0].pos.x = 0; sub[0].pos.y = 0;
     
-
     //? --- left menu img positions ---
-    //* contour img postion
+    //* contour_00 img postion
     sub[1].pos.x = 270;  sub[1].pos.y = 274;
 
     //* normal img position
@@ -199,6 +203,29 @@ void set_pos(surface* sub) {
     sub[9].pos.x  = 271;  sub[9].pos.y  = 426;
     sub[10].pos.x = 271;  sub[10].pos.y = 496;
     sub[11].pos.x = 271;  sub[11].pos.y = 565;
+
+    //? --- right menu img position (controls) ---
+    //* contour_01 img position
+    sub[12].pos.x = 952;  sub[12].pos.y = 274;
+
+    //* contour_02 img position
+    sub[17].pos.x = 952;  sub[17].pos.y = 475;
+
+    //* normal img position
+    sub[13].pos.x = 960;  sub[13].pos.y = 291;
+    sub[14].pos.x = 960;  sub[14].pos.y = 355;
+    sub[18].pos.x = 1014;  sub[18].pos.y = 494;
+    sub[19].pos.x = 1014;  sub[19].pos.y = 561;
+    sub[20].pos.x = 1014;  sub[20].pos.y = 634;
+    sub[21].pos.x = 1014;  sub[21].pos.y = 707;
+    sub[22].pos.x = 1014;  sub[22].pos.y = 778;
+
+    //* animated img position
+
+    //? --- right menu img position (video) ---
+
+
+    
 }
 
 /*
@@ -206,6 +233,7 @@ void set_pos(surface* sub) {
 * blit the first viewed res (not all them)
 */
 void initResources(surface* sub) {
+    //* LS sub_surfaces blit part
     SDL_BlitSurface(sub[0].win,  NULL, screen, &sub[0].pos);
     SDL_BlitSurface(sub[1].win,  NULL, screen, &sub[1].pos);
     SDL_BlitSurface(sub[7].win,  NULL, screen, &sub[7].pos);
@@ -213,6 +241,33 @@ void initResources(surface* sub) {
     SDL_BlitSurface(sub[4].win,  NULL, screen, &sub[4].pos);
     SDL_BlitSurface(sub[5].win,  NULL, screen, &sub[5].pos);
     SDL_BlitSurface(sub[6].win,  NULL, screen, &sub[6].pos);
+
+    //* RS sub_surfaces blit part (controls)
+    init_rs_ctrl(sub);
+}
+
+/*
+? init_rs_ctrl(surface*) void func
+* blit the controls option menu
+*/
+void init_rs_ctrl(surface* sub) {
+    SDL_BlitSurface(sub[12].win,  NULL, screen, &sub[12].pos);
+    SDL_BlitSurface(sub[13].win,  NULL, screen, &sub[13].pos);
+    SDL_BlitSurface(sub[14].win,  NULL, screen, &sub[14].pos);
+    SDL_BlitSurface(sub[17].win,  NULL, screen, &sub[17].pos);
+    SDL_BlitSurface(sub[18].win,  NULL, screen, &sub[18].pos);
+    SDL_BlitSurface(sub[19].win,  NULL, screen, &sub[19].pos);
+    SDL_BlitSurface(sub[20].win,  NULL, screen, &sub[20].pos);
+    SDL_BlitSurface(sub[21].win,  NULL, screen, &sub[21].pos);
+    SDL_BlitSurface(sub[22].win,  NULL, screen, &sub[22].pos);
+}
+
+/*
+? init_rs_vid(surface*) void func
+* blit the video option menu
+*/
+void init_rs_vid(surface*) {
+    // rest of code ...
 }
 
 /*
@@ -220,5 +275,5 @@ void initResources(surface* sub) {
 * free all res :: sub_surfaces, chunk and ttf
 */
 void freeResources(surface *sub) {
-    for(int i = 0; i < 12; i++) SDL_FreeSurface(sub[i].win);
+    for(int i = 0; i < 27; i++) SDL_FreeSurface(sub[i].win);
 }

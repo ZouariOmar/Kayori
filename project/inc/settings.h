@@ -18,19 +18,25 @@ typedef struct Surface {
 //? settings(int*) void func
 void settings(int*);
 
-//? scroll_UD(surface*, int*, int) void func
+//? scroll_UD(surface*, int*, int) void func > settings(int*)
 void scroll_UD(surface*, int*, int);
 
-//? loadResources(surface*, char*) void func
-void loadResources(surface*, char*);
+//? loadResources(surface*, char*) void func > settings(int*)
+void loadResources(surface*, char*, int, int);
 
-//? set_pos(surface*) void func
-void set_pos(surface* sub);
+//? set_pos(surface*) void func              > initResources(surface*)
+void set_pos(surface*);
 
-//? initResources(surface*) void func
+//? initResources(surface*) void func        > settings(int*)
 void initResources(surface*);
 
-//? freeResources(surface*) void func
+//? init_rs_ctrl(surface*) void func         > initResources(surface*)
+void init_rs_ctrl(surface*);
+
+//? init_rs_vid(surface*) void func          > initResources(surface*)
+void init_rs_vid(surface*);
+
+//? freeResources(surface*) void func        > settings(int*)
 void freeResources(surface*);
 
 #endif
