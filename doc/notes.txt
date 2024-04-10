@@ -5,3 +5,14 @@
 issue 1: in settings scroll button (double click in the same time)  :: fixed :)
 issue 2: the SDL_BlitSurface() func use the CPU only                :: fixed :)
 issue 3: memory leak between Mean_Menu() and start_Menu()           :: fixed :) :: still the SDL_Init() have memory leak
+---
+//? --- settings_srf file guide ---
+--
+controls           (right_mv left_mv jump_mv slide_mv dash_c)
+fullscreenOption   (0 or SDL_FULLSCREEN)
+musicVolume        (from 0 to 128 :: ±8)
+audioVolume        (from 0 to 128 :: ±8)
+language           (0: Eng or 1: Frc)
+gamePlay(speedRun) (0 or 1)
+--
+---
