@@ -75,7 +75,7 @@ void rs_scroll_UD(surface*, int*, int);
 void rn_settings(surface*);
 
 //? editValue(int) void func                    > usr_modification[#](sub)
-void editValue(char*, int, int);
+void editValue(char*, char*, int, int);
 
 /*
 ? --- LOAD && FREEING FUNCS DECLARATION PART ---

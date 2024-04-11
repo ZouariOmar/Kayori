@@ -33,7 +33,7 @@ void initEverything() {
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
     //* set the screen in windowed mode (1920x1080)
-    setScreen(0);
+    setScreen(scanValue(1));
 
     //* set the game caption
     SDL_WM_SetCaption("Hollow Vessels", NULL);
