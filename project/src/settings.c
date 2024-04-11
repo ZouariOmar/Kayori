@@ -27,7 +27,8 @@ InitFunc init[] = {
 
 //? usr_modification InitFunc public array var
 InitFunc usr_modification[] = {
-    controls
+    controls,
+    video
 };
 
 /*
@@ -52,6 +53,12 @@ void settings(int *quit_game) {
 
     //* initializing the settings resources
     initResources(sub);
+    init_rs_ctrl(sub);
+
+    //* ctrl button selected by default
+    SDL_BlitSurface(sub[7].win,  NULL, screen, &sub[7].pos);
+    
+    
 
     // * update the screen
     SDL_Flip(screen);
@@ -185,13 +192,10 @@ void set_pos(surface* sub) {
 * blit the first viewed res (not all them)
 */
 void initResources(surface* sub) {
+    sub[0].pos.x = 0; sub[0].pos.y = 0;
     //* LS sub_surfaces blit part
-    for (int i = 0; i < 8; i++)
-        if (i != 2)
-            SDL_BlitSurface(sub[i].win,  NULL, screen, &sub[i].pos);
-
-    //* RS sub_surfaces blit part (controls)
-    init_rs_ctrl(sub);
+    for (int i = 0; i < 7; i++)
+        SDL_BlitSurface(sub[i].win,  NULL, screen, &sub[i].pos);
 }
 
 /*
@@ -208,12 +212,8 @@ void init_rs_ctrl(surface* sub) {
 * blit the video option menu :: support the @autosave mode
 */
 void init_rs_vid(surface* sub) {
-    //* blit the left and right video buttons
-    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 300, &sub[30].pos));
-    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
-
-    //* blit the video std imgs (2 img)
-    for (int i = 28; i < 30; i++)
+    //* blit the video std imgs (2 img) && blit the left and right video buttons
+    for (int i = 28; i < 32; i++)
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
     
     //* blit off/on fullscreen mode state
@@ -247,6 +247,10 @@ void init_rs_aud(surface* sub) {
     //* blit the left and right "sound" buttons
     SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 381, &sub[30].pos));
     SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 381, &sub[31].pos));
+
+    //* rest to the original values
+    sub[30].pos.y = 300;
+    sub[31].pos.y = 300;
 
     // X42 = X43 = X44 :: we choose X42
     sub[42].pos.x = 1341;
@@ -416,14 +420,7 @@ void controls(surface* sub) {
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            //* del the old rs_interface
-                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
-
-                            //* reset the ctrl sub menu
-                            init_rs_ctrl(sub);
-
-                            //* reset the settings menu selection
-                            SDL_BlitSurface(sub[7 + usrOpPos].win,  NULL, screen, &sub[7 + usrOpPos].pos);
+                            rn_settings(sub);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -450,6 +447,7 @@ void controls(surface* sub) {
         SDL_Delay(100);
     }
 }
+
 /*
 ? scroll_UD(surface*, int*, int) void func
 * scroll the right menu up and down
@@ -464,13 +462,13 @@ void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     //* blit the @normal_img for the curent usr option
     SDL_BlitSurface(sub[13 + *ctrl_usrOpPos].win,  NULL, screen, &sub[13 + *ctrl_usrOpPos].pos);
 
-    //* blit the sub left menu
-    //! support the kb_menu only
-    for (int i = 17; i < 23; i++)
-        SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
-
     //* update the usrOpPos
     *ctrl_usrOpPos += direction;
+
+    //* blit the sub left menu
+    //! support the kb_menu only (we don't have the controller resources)
+    for (int i = 17; i < 23 && !(*ctrl_usrOpPos); i++)
+        SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
 
     //* fix usr option postion
     if (*ctrl_usrOpPos == -1)
@@ -482,8 +480,181 @@ void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     SDL_BlitSurface(sub[15 + *ctrl_usrOpPos].win,  NULL, screen, &sub[15 + *ctrl_usrOpPos].pos);
 }
 
+/*
+? video(surface*) void func
+* in this section the usr can change:
+    * fullscreen mode
+        * 0:              windowed(1920x1080)
+        * SDL_FULLSCREEN: fullscreen
+* support the @autosave mode
+*/
+void video(surface* sub) {
+    //* init part
+    SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
 
+    //* update the screen
+    SDL_Flip(screen);
 
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        //? --- LEFT CLICK OPTION ---
+                        case SDLK_LEFT:
+                            //* blit left animated button
+                            SDL_BlitSurface(sub[33].win, NULL, screen, &sub[33].pos);
+                            break;
+
+                        //? --- RIGHT CLICK OPTION ---
+                        case SDLK_RIGHT:
+                            //* blit right animated button
+                            SDL_BlitSurface(sub[34].win, NULL, screen, &sub[34].pos);
+                            break;
+
+                        //? --- ESCAPE CLICK OPTION ---
+                        case SDLK_ESCAPE:
+                            rn_settings(sub);
+                            return;
+
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
+
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYUP:
+                    switch (event.key.keysym.sym) {
+                        //? --- LEFT CLICK OPTION ---
+                        case SDLK_LEFT:
+                            //* windowed mode set
+                            setScreen(0);
+                            
+                            //* change to windowed mode
+                            editValue("fullscreen", 0, 1);
+
+                            //* reset the screen
+                            initResources(sub);
+
+                            //* reset the video menu surface
+                            init_rs_vid(sub);
+                            SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
+
+                            //* blit left normal button
+                            SDL_BlitSurface(sub[30].win, NULL, screen, &sub[30].pos);
+                            break;
+
+                        //? --- RIGHT CLICK OPTION ---
+                        case SDLK_RIGHT:
+                            //* fullscreen mode set
+                            setScreen(SDL_FULLSCREEN);
+                            
+                            //* change to fullscreen mode
+                            editValue("fullscreen", SDL_FULLSCREEN, 1);
+
+                            //* reset the screen
+                            initResources(sub);
+
+                            //* reset the video menu surface
+                            init_rs_vid(sub);
+                            SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
+
+                            //* blit right normal button
+                            SDL_BlitSurface(sub[31].win, NULL, screen, &sub[31].pos);
+                            break;
+                        
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
+
+                //? --------------------- QUIT CLICK EVENT ---------------------
+                case SDL_QUIT:
+                    freeResources(sub);
+                    exit(EXIT_SUCCESS);
+                    break;
+
+                //? --------------------- OTHER CLICK EVENT ---------------------
+                default:
+                    break;
+            }
+        }
+        //* update the screen
+        SDL_Flip(screen);
+
+        //* wait 100 millisecond befor returning
+        SDL_Delay(100);
+    }
+}
+
+/*
+? rn_settings(surface*) void func
+* return to the main settings menu proccess
+*/
+void rn_settings(surface* sub) {
+    //* del the old rs_surface
+    SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+    //* reset the sub menu surface
+    init[usrOpPos](sub);
+
+    //* reset the settings menu selection
+    SDL_BlitSurface(sub[7 + usrOpPos].win,  NULL, screen, &sub[7 + usrOpPos].pos);
+}
+
+/*
+? editValue(int) void func
+* update the changed option info
+*/
+void editValue(char* option, int value, int line) {
+    //* open the settings file
+    FILE* file = fopen("project/doc/settings", "r+");
+    if (!file) {
+        perror("Error: can't open settings file !");
+        exit(EXIT_FAILURE);
+    }
+
+    //* creat a tmp file
+    FILE* tmp_file = fopen("project/doc/tmp", "w+");
+    if (!tmp_file) {
+        perror("Error: can't open the file !");
+        exit(EXIT_FAILURE);
+    }
+
+    /*
+    ? holder     :: to detect the newLine char ('\n')
+    ? ln         :: to detect the file line number
+    */
+    char holder;
+    int ln = 0;
+
+    //* process each character in the settings file
+    while ((holder = fgetc(file)) != EOF) {
+        if (ln == line) {
+            //* add the update info line
+            fprintf(tmp_file, "%s  %d\n", option, value);
+            ln++;
+
+            //* skip the rest of the original value line
+            while ((holder = fgetc(file)) != EOF && holder != '\n');
+        } else {
+            //* add the other info
+            fputc(holder, tmp_file);
+            if (holder == '\n') ln++;
+        }
+    }
+
+    //* close both files
+    fclose(file);
+    fclose(tmp_file);
+
+    //* replace the original file with the tmp file
+    remove("project/doc/settings");
+    rename("project/doc/tmp", "project/doc/settings");
+}
 
 
 

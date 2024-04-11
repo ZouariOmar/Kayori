@@ -1,0 +1,66 @@
+==34044== Memcheck, a memory error detector
+==34044== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==34044== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==34044== Command: bin/debug/app
+==34044== 
+==34044== 
+==34044== HEAP SUMMARY:
+==34044==     in use at exit: 199,888 bytes in 1,284 blocks
+==34044==   total heap usage: 15,900 allocs, 14,616 frees, 37,542,333 bytes allocated
+==34044== 
+==34044== 0 bytes in 1 blocks are definitely lost in loss record 1 of 427
+==34044==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==34044==    by 0x4005A22: malloc (rtld-malloc.h:56)
+==34044==    by 0x4005A22: _dl_find_object_update (dl-find_object.c:791)
+==34044==    by 0x400ECCF: dl_open_worker_begin (dl-open.c:735)
+==34044==    by 0x4AF3A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==34044==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==34044==    by 0x4AF3A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==34044==    by 0x400E34D: _dl_open (dl-open.c:883)
+==34044==    by 0x4AF3E00: do_dlopen (dl-libc.c:95)
+==34044==    by 0x4AF3A97: _dl_catch_exception (dl-error-skeleton.c:208)
+==34044==    by 0x4AF3B62: _dl_catch_error (dl-error-skeleton.c:227)
+==34044==    by 0x4AF3F36: dlerror_run (dl-libc.c:45)
+==34044==    by 0x4AF3F36: __libc_dlopen_mode (dl-libc.c:162)
+==34044==    by 0x4AA4610: __libc_unwind_link_get (unwind-link.c:50)
+==34044==    by 0x4AA4610: __libc_unwind_link_get (unwind-link.c:40)
+==34044== 
+==34044== 8 bytes in 2 blocks are definitely lost in loss record 18 of 427
+==34044==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==34044==    by 0x4A2758E: strdup (strdup.c:42)
+==34044==    by 0x4E60F8A: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==34044==    by 0x4E65985: _XimSetICValueData (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==34044==    by 0x4E5CF4B: _XimLocalCreateIC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==34044==    by 0x4E434FA: XCreateIC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==34044==    by 0x48A4B31: ??? (in /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4)
+==34044==    by 0x48A58F4: ??? (in /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4)
+==34044==    by 0x4896BE8: SDL_VideoInit (in /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4)
+==34044==    by 0x486EABB: SDL_InitSubSystem (in /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4)
+==34044==    by 0x486EB88: SDL_Init (in /usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4)
+==34044==    by 0x10A9F6: initEverything (lib.c:20)
+==34044== 
+==34044== 88 bytes in 1 blocks are definitely lost in loss record 322 of 427
+==34044==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==34044==    by 0x4DD4AFA: pa_xmalloc (in /usr/lib/x86_64-linux-gnu/libpulse.so.0.24.1)
+==34044==    by 0x4DBF1E9: ??? (in /usr/lib/x86_64-linux-gnu/libpulse.so.0.24.1)
+==34044==    by 0x4DCEC92: pa_stream_update_timing_info (in /usr/lib/x86_64-linux-gnu/libpulse.so.0.24.1)
+==34044==    by 0x4DCEF3D: ??? (in /usr/lib/x86_64-linux-gnu/libpulse.so.0.24.1)
+==34044==    by 0x4DD0681: ??? (in /usr/lib/x86_64-linux-gnu/libpulse.so.0.24.1)
+==34044==    by 0x546D382: ??? (in /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-15.99.so)
+==34044==    by 0x546E5BE: pa_pdispatch_run (in /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-15.99.so)
+==34044==    by 0x4DB2082: ??? (in /usr/lib/x86_64-linux-gnu/libpulse.so.0.24.1)
+==34044==    by 0x5473486: ??? (in /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-15.99.so)
+==34044==    by 0x54741D7: ??? (in /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-15.99.so)
+==34044==    by 0x5474599: ??? (in /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-15.99.so)
+==34044== 
+==34044== LEAK SUMMARY:
+==34044==    definitely lost: 96 bytes in 4 blocks
+==34044==    indirectly lost: 0 bytes in 0 blocks
+==34044==      possibly lost: 0 bytes in 0 blocks
+==34044==    still reachable: 197,776 bytes in 1,259 blocks
+==34044==         suppressed: 0 bytes in 0 blocks
+==34044== Reachable blocks (those to which a pointer was found) are not shown.
+==34044== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==34044== 
+==34044== For lists of detected and suppressed errors, rerun with: -s
+==34044== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)

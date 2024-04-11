@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 //* SDL1.2 INCLUDE PART
 #include <SDL/SDL.h>

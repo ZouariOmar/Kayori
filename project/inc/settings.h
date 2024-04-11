@@ -26,7 +26,7 @@ void scroll_UD(surface*, int*, int);
 /*
 ? --- INIT FUNCS DECLARATION PART ---
 */
-//? initResources(surface*) void fun > settings(int*)
+//? initResources(surface*) void func > settings(int*)
 void initResources(surface*);
 
 //? set_pos(surface*) void func      > initResources(surface*)
@@ -70,6 +70,12 @@ void gamePlay(surface*);
 
 //? rs_scroll_UD(surface*, int*, int) void func > settings(int*)
 void rs_scroll_UD(surface*, int*, int);
+
+//? rn_settings(surface*) void func             > usr_modification[#](sub)
+void rn_settings(surface*);
+
+//? editValue(int) void func                    > usr_modification[#](sub)
+void editValue(char*, int, int);
 
 /*
 ? --- LOAD && FREEING FUNCS DECLARATION PART ---
