@@ -77,6 +77,9 @@ void rn_settings(surface*);
 //? editValue(int) void func                    > usr_modification[#](sub)
 void editValue(char*, char*, int, int);
 
+//?ctrl_volume(surface*, char*, int, int) void func > audio(surface*)
+void ctrl_volume(surface*, char*, int, int);
+
 /*
 ? --- LOAD && FREEING FUNCS DECLARATION PART ---
 */

@@ -43,7 +43,7 @@ int SCREEN_BPP    = 32;
 //? initEverything() void func
 void initEverything();
 
-//? CreatScreen(int) int func
+//? setScreen(int) void func
 void setScreen(int);
 
 //? load_img(char*) SDL_Surface*

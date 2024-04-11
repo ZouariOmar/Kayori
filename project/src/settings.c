@@ -5,7 +5,11 @@
 ----------------------------------------------- */
 
 //? ----------------------- TODO SECTION DECLARATION PART -----------------------
-//TODO_01: working on the 5 usr_modification functions             :: @ZouariOmar
+/*
+TODO_01: working on the 5 usr_modification functions               :: @ZouariOmar :: 90%
+    * fix bugs in video(surface*) fn
+    * load and test with test.mp3, test0.wav, test1.wav
+*/
 //TODO_03: move the 5 usr_modification functions to a new c files  :: @ZouariOmar
 //TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
 
@@ -44,12 +48,12 @@ void settings(int *quit_game) {
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
-    loadResources(sub, "project/res/settings_srf/LS/img",               0,  12);
-    loadResources(sub, "project/res/settings_srf/RS/controls_menu/img", 12, 27);
-    loadResources(sub, "project/res/settings_srf/RS/video_menu/img",    27, 37);
-    loadResources(sub, "project/res/settings_srf/RS/audio_menu/img",    37, 45);
-    loadResources(sub, "project/res/settings_srf/RS/language_menu/img", 45, 50);
-    loadResources(sub, "project/res/settings_srf/RS/gamePlay_menu/img", 50, 52);
+    loadResources(sub, "project/res/settings/LS/img",               0,  12);
+    loadResources(sub, "project/res/settings/RS/controls_menu/img", 12, 27);
+    loadResources(sub, "project/res/settings/RS/video_menu/img",    27, 37);
+    loadResources(sub, "project/res/settings/RS/audio_menu/img",    37, 45);
+    loadResources(sub, "project/res/settings/RS/language_menu/img", 45, 50);
+    loadResources(sub, "project/res/settings/RS/gamePlay_menu/img", 50, 52);
 
     //* set potions for the other res
     set_pos(sub);
@@ -223,7 +227,7 @@ void init_rs_vid(surface* sub) {
     if (!scanValue(1))
         SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
     else
-        SDL_BlitSurface(sub[35].win, NULL, screen, &sub[36].pos);
+        SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
 }
 
 /*
@@ -255,13 +259,11 @@ void init_rs_aud(surface* sub) {
     sub[30].pos.y = 300;
     sub[31].pos.y = 300;
 
-    // X42 = X43 = X44 :: we choose X42
-    sub[42].pos.x = 1341;
-    sub[42].pos.y = 284;
+    //! X42 = X43 = X44 :: we choose X42
 
     //TODO: optimize the music and sound bars blit proccess in 1 fn
     //* --- blit the music volume bars ---
-    for (int i = 1; i <= (int)(scanValue(2) / 8); i++) {
+    for (int i = 1; i <= (scanValue(2) / 8); i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -273,7 +275,7 @@ void init_rs_aud(surface* sub) {
                 SDL_BlitSurface(sub[44].win, NULL, screen, &sub[42].pos);
                 break;
         }
-        sub[42].pos.x += 15;
+        sub[42].pos.x += 16;
     }
     // reset the X42;
     sub[42].pos.x = 1341;
@@ -281,7 +283,7 @@ void init_rs_aud(surface* sub) {
     //* --- blit the sound volume bars ---
     // Y42 = Y43 = Y44 :: we choose to change Y42
     sub[42].pos.y = 365;
-    for (int i = 1; i <= (int)(scanValue(3) / 8); i++) {
+    for (int i = 1; i <= (scanValue(3) / 8); i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -293,7 +295,7 @@ void init_rs_aud(surface* sub) {
                 SDL_BlitSurface(sub[44].win, NULL, screen, &sub[42].pos);
                 break;
         }
-        sub[42].pos.x += 15;
+        sub[42].pos.x += 16;
     }
     // reset the X42 and Y42
     sub[42].pos.x = 1341;
@@ -319,6 +321,9 @@ void init_rs_lang(surface* sub) {
         SDL_BlitSurface(sub[48].win, NULL, screen, (sub[48].pos.x = 1320, sub[48].pos.y = 275, &sub[48].pos));
         SDL_BlitSurface(sub[45].win, NULL, screen, (sub[45].pos.x = 1062, sub[45].pos.y = 292, &sub[45].pos));
     }
+    // reset the X42 and Y42
+    sub[42].pos.x = 1341;
+    sub[42].pos.y = 284;
 }
 
 /*
@@ -343,42 +348,6 @@ void init_rs_gmP(surface* sub) {
         SDL_BlitSurface(sub[35].win, NULL, screen, &sub[36].pos);
 }
 
-/*
-? --- scanValue(int) int func ---
-* return 0 or (1 or SDL_code_number)
-*/
-int scanValue(int line) {
-    //* open the settings file
-    FILE* file = fopen("project/doc/settings", "r");
-    if (!file) {
-        perror("Error: can't open settings file !"); exit(EXIT_FAILURE);
-    }
-
-    /*
-    ? holder     :: to detect the newLine char ('\n')
-    ? consumer   :: to store the unused info
-    ? ln         :: to detect the file line number
-    ? value      :: to store the needed info (0 or 1 or SDL_code_number)
-    */
-    char holder,
-        consumer[100];
-    int value,
-        ln = 0;
-
-    while ((holder = fgetc(file)) != EOF) {
-        if (ln == line) {
-            fscanf(file, "%s%d", consumer, &value);
-            break;
-        }
-        if (holder == '\n') ln++;
-    }
-
-    //* close the settings file
-    fclose(file);
-
-    return value;
-}
-
 //? ----------------------- USR_MODIFICATION FUNCTIONS DEV PART -----------------------
 /*
 ? controls(surface*, int) void func
@@ -398,6 +367,7 @@ void controls(surface* sub) {
     //* update the screen
     SDL_Flip(screen);
 
+    //* enter the @event_loop part
     while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -484,7 +454,7 @@ void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
 }
 
 /*
-? video(surface*) void func
+? --- video(surface*) void func ---
 * in this section the usr can change:
     * fullscreen mode
         * 0:              windowed(1920x1080)
@@ -498,6 +468,7 @@ void video(surface* sub) {
     //* update the screen
     SDL_Flip(screen);
 
+    //* enter the @event_loop part
     while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -594,7 +565,7 @@ void video(surface* sub) {
 }
 
 /*
-? rn_settings(surface*) void func
+? --- rn_settings(surface*) void func ---
 * return to the main settings menu proccess
 */
 void rn_settings(surface* sub) {
@@ -609,82 +580,192 @@ void rn_settings(surface* sub) {
 }
 
 /*
-? editValue(int) void func
-* update the changed option info
-*/
-void editValue(char* format, char* option, int value, int line) {
-    //* open the settings file
-    FILE* file = fopen("project/doc/settings", "r+");
-    if (!file) {
-        perror("Error: can't open settings file !");
-        exit(EXIT_FAILURE);
-    }
-
-    //* creat a tmp file
-    FILE* tmp_file = fopen("project/doc/tmp", "w+");
-    if (!tmp_file) {
-        perror("Error: can't open the file !");
-        exit(EXIT_FAILURE);
-    }
-
-    /*
-    ? holder     :: to detect the newLine char ('\n')
-    ? ln         :: to detect the file line number
-    */
-    char holder;
-    int ln = 0;
-
-    //* process each character in the settings file
-    while ((holder = fgetc(file)) != EOF) {
-        if (ln == line) {
-            //* add the update info line
-            fprintf(tmp_file, format, option, value);
-            ln++;
-
-            //* skip the rest of the original value line
-            while ((holder = fgetc(file)) != EOF && holder != '\n');
-        } else {
-            //* add the other info
-            fputc(holder, tmp_file);
-            if (holder == '\n') ln++;
-        }
-    }
-
-    //* close both files
-    fclose(file);
-    fclose(tmp_file);
-
-    //* replace the original file with the tmp file
-    remove("project/doc/settings");
-    rename("project/doc/tmp", "project/doc/settings");
-}
-
-
-void audio(surface*) {
-    // rest of code...
-}
-
-void language(surface*) {
-    // rest of code...
-}
-
-
-
-/*
-? video(surface*) void func
+? --- audio(surface*) void func ---
 * in this section the usr can change:
-    * speedRun mode
-        * 0: speedRun in @off_mode
-        * 1: speedRun in @on_mode
-! support the @autosave mode
+    * audio
+        * music: usr can change the volume from 0 to 16
+        * sound: usr can change the volume from 0 to 16
+* support the @autosave mode
 */
-void gamePlay(surface* sub) {
+void audio(surface* sub) {
+    //* the curent @audio_user_option_position
+    int audio_usrOpPos = 0;
+
     //* init part
-    SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
+    SDL_BlitSurface(sub[40].win, NULL, screen, &sub[40].pos);
 
     //* update the screen
     SDL_Flip(screen);
 
+    //* enter the @event_loop part
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        //? --- UP CLICK OPTION ---
+                        case SDLK_UP:
+                            //* update the @audio_usrOpPos
+                            audio_usrOpPos--;
+
+                            //* correct the @audio_usrOpPos
+                            if (audio_usrOpPos == -1)
+                                audio_usrOpPos = 1;
+                            else if (audio_usrOpPos == 2)
+                                audio_usrOpPos = 0;
+                            
+                            //* del the old rs_interface
+                            SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
+
+                            //* reset the current @sub_menu_surface
+                            init[usrOpPos](sub);
+                            
+                            //* blit the selected @sub_option
+                            SDL_BlitSurface(sub[40 + audio_usrOpPos].win, NULL, screen, &sub[40 + audio_usrOpPos].pos);
+                            break;
+
+                        //? --- DOWN CLICK OPTION ---
+                        case SDLK_DOWN:
+                            //* update the @audio_usrOpPos
+                            audio_usrOpPos++;
+
+                            //* correct the @audio_usrOpPos
+                            if (audio_usrOpPos == -1)
+                                audio_usrOpPos = 1;
+                            else if (audio_usrOpPos == 2)
+                                audio_usrOpPos = 0;
+                            
+                            //* del the old rs_interface
+                            SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
+
+                            //* reset the current @sub_menu_surface
+                            init[usrOpPos](sub);
+                            
+                            //* blit the selected @sub_option
+                            SDL_BlitSurface(sub[40 + audio_usrOpPos].win, NULL, screen, &sub[40 + audio_usrOpPos].pos);
+                            break;
+
+                        //? --- LEFT CLICK OPTION ---
+                        case SDLK_LEFT:
+                            //* reduce volume
+                            if (!audio_usrOpPos)
+                                ctrl_volume(sub, "musicVolume", 2, -8);
+                            else
+                                ctrl_volume(sub, "soundVolume", 3, -8);
+                            break;
+
+                        //? --- RIGHT CLICK OPTION ---
+                        case SDLK_RIGHT:
+                            //* add volume
+                            if (!audio_usrOpPos)
+                                ctrl_volume(sub, "musicVolume", 2, 8);
+                            else
+                                ctrl_volume(sub, "soundVolume", 3, 8);
+                            break;
+
+                        //? --- ESCAPE CLICK OPTION ---
+                        case SDLK_ESCAPE:
+                            rn_settings(sub);
+                            return;
+
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYUP:
+                    switch (event.key.keysym.sym) {
+                        //? --- LEFT CLICK OPTION ---
+                        case SDLK_LEFT:
+                            //* blit left normal button
+                            SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y += (sub[30].pos.h + 49) * audio_usrOpPos, &sub[30].pos));
+
+                            //* reset the Y31
+                            sub[30].pos.y = 300;
+                            break;
+
+                        //? --- RIGHT CLICK OPTION ---
+                        case SDLK_RIGHT:
+                            //* blit right normal button
+                            SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y += (sub[31].pos.h + 49) * audio_usrOpPos, &sub[31].pos));
+
+                            //* reset the Y31
+                            sub[31].pos.y = 300;
+                            break;
+                        
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
+
+                //? --------------------- QUIT CLICK EVENT ---------------------
+                case SDL_QUIT:
+                    freeResources(sub);
+                    exit(EXIT_SUCCESS);
+                    break;
+
+                //? --------------------- OTHER CLICK EVENT ---------------------
+                default:
+                    break;
+            }
+        }
+        //* update the screen
+        SDL_Flip(screen);
+
+        //* wait 100 millisecond befor returning
+        SDL_Delay(100);
+    }
+}
+
+void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
+    //* del the old rs_interface
+    SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
+
+    //* add/reduce the volume
+    int volume = scanValue(line);
+    if (volume >= 0 && volume <= 128) {
+        volume += config;
+        
+        //* correct the volume in mute or max volume situation
+        if (volume == -8)
+            volume = 0;
+        else if(volume == 136)
+            volume = 128;
+
+        //* update the new volume
+        editValue("%s %d\n", type_vol, volume, line);
+    }
+    
+    //* reset the current @sub_menu_surface
+    init[usrOpPos](sub);
+
+    //* blit the selected @audio_sub_option
+    SDL_BlitSurface(sub[40 + (line % 2)].win, NULL, screen, &sub[40 + (line % 2)].pos);
+
+    //* blit L/R animated button
+    if (config == -8)
+        SDL_BlitSurface(sub[33].win, NULL, screen, (sub[33].pos.y += (sub[33].pos.h + 49) * (line - 2), &sub[33].pos));
+    else
+        SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y += (sub[34].pos.h + 49) * (line - 2), &sub[34].pos));
+
+    //* reset the Y33/Y34
+    sub[33].pos.y = 300;
+    sub[34].pos.y = 300;
+}
+
+/*
+? --- language(surface*) void func ---
+* in this section the usr can change:
+    * language
+        * 0: @English
+        * 1: @France
+* support the @autosave mode
+*/
+void language(surface* sub) {
+    //* enter the @event_loop part
     while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -696,10 +777,91 @@ void gamePlay(surface* sub) {
                             //* del the old rs_interface
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
-                            //* change to windowed mode
+                            //* change the language to @Eng
+                            editValue("%s    %d\n", "language", 0, 4);
+
+                            //* reset the current @sub_menu_surface
+                            init[usrOpPos](sub);
+                            break;
+
+                        //? --- RIGHT CLICK OPTION ---
+                        case SDLK_RIGHT:
+                            //* del the old rs_interface
+                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+                            //* change the language to @Frc
+                            editValue("%s    %d\n", "language", 1, 4);
+
+                            //* reset the current @sub_menu_surface
+                            init[usrOpPos](sub);
+                            break;
+
+                        //? --- SPACE CLICK OPTION ---
+                        case SDLK_SPACE:
+                            rn_settings(sub);
+                            return;
+
+                        //? --- ESCAPE CLICK OPTION ---
+                        case SDLK_ESCAPE:
+                            rn_settings(sub);
+                            return;
+
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
+
+                //? --------------------- QUIT CLICK EVENT ---------------------
+                case SDL_QUIT:
+                    freeResources(sub);
+                    exit(EXIT_SUCCESS);
+                    break;
+
+                //? --------------------- OTHER CLICK EVENT ---------------------
+                default:
+                    break;
+            }
+        }
+        //* update the screen
+        SDL_Flip(screen);
+
+        //* wait 100 millisecond befor returning
+        SDL_Delay(100);
+    }
+}
+
+/*
+? --- gamePlay(surface*) void func ---
+* in this section the usr can change:
+    * speedRun mode
+        * 0: speedRun in @off_mode
+        * 1: speedRun in @on_mode
+* support the @autosave mode
+*/
+void gamePlay(surface* sub) {
+    //* init part
+    SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
+
+    //* update the screen
+    SDL_Flip(screen);
+
+    //* enter the @event_loop part
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        //? --- LEFT CLICK OPTION ---
+                        case SDLK_LEFT:
+                            //* del the old rs_interface
+                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+                            //* change the gamePlay to @Off_mode
                             editValue("%s    %d\n", "gamePlay", 0, 5);
 
-                            //* reset the video menu surface
+                            //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
                             SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
 
@@ -712,10 +874,10 @@ void gamePlay(surface* sub) {
                             //* del the old rs_interface
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
-                            //* change to windowed mode
+                            //* change the gamePlay to @On_mode
                             editValue("%s    %d\n", "gamePlay", 1, 5);
 
-                            //* reset the video menu surface
+                            //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
                             SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
 
@@ -776,7 +938,93 @@ void gamePlay(surface* sub) {
 }
 
 
+//? ------------------ SCANNING && EDITING FILES FUNCTIONS DEV PART ------------------
+/*
+? --- scanValue(int) int func ---
+* return 0 or (1 or SDL_code_number)
+*/
+int scanValue(int line) {
+    //* open the settings file
+    FILE* file = fopen("project/doc/settings", "r");
+    if (!file) {
+        perror("Error: can't open settings file !"); exit(EXIT_FAILURE);
+    }
 
+    /*
+    ? holder     :: to detect the newLine char ('\n')
+    ? consumer   :: to store the unused info
+    ? ln         :: to detect the file line number
+    ? value      :: to store the needed info (0 or 1 or SDL_code_number)
+    */
+    char holder,
+        consumer[100];
+    int value,
+        ln = 0;
+
+    while ((holder = fgetc(file)) != EOF) {
+        if (ln == line) {
+            fscanf(file, "%s%d", consumer, &value);
+            break;
+        }
+        if (holder == '\n') ln++;
+    }
+
+    //* close the settings file
+    fclose(file);
+
+    return value;
+}
+
+/*
+? editValue(int) void func
+* update the changed option info
+*/
+void editValue(char* format, char* option, int value, int line) {
+    //* open the settings file
+    FILE* file = fopen("project/doc/settings", "r+");
+    if (!file) {
+        perror("Error: can't open settings file !");
+        exit(EXIT_FAILURE);
+    }
+
+    //* creat a tmp file
+    FILE* tmp_file = fopen("project/doc/tmp", "w+");
+    if (!tmp_file) {
+        perror("Error: can't open the file !");
+        exit(EXIT_FAILURE);
+    }
+
+    /*
+    ? holder     :: to detect the newLine char ('\n')
+    ? ln         :: to detect the file line number
+    */
+    char holder;
+    int ln = 0;
+
+    //* process each character in the settings file
+    while ((holder = fgetc(file)) != EOF) {
+        if (ln == line) {
+            //* add the update info line
+            fprintf(tmp_file, format, option, value);
+            ln++;
+
+            //* skip the rest of the original value line
+            while ((holder = fgetc(file)) != EOF && holder != '\n');
+        } else {
+            //* add the other info
+            fputc(holder, tmp_file);
+            if (holder == '\n') ln++;
+        }
+    }
+
+    //* close both files
+    fclose(file);
+    fclose(tmp_file);
+
+    //* replace the original file with the tmp file
+    remove("project/doc/settings");
+    rename("project/doc/tmp", "project/doc/settings");
+}
 
 //? ----------------------- LOAD && FREEING FUNCTIONS DEV PART -----------------------
 /*
