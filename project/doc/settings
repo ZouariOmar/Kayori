@@ -1,6 +1,6 @@
 controls    SDLK_RIGHT SDLK_LEFT SDLK_SPACE SDLK_x SDLK_c
 fullscreen  0
-musicVolume 128
-audioVolume 64
+musicVolume 0
+audioVolume 128
 language    0
 gamePlay    0
