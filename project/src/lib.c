@@ -32,8 +32,12 @@ void initEverything() {
     //* IMG initialisation process
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
-    //* set the screen in windowed mode (1920x1080)
-    setScreen(scanValue(1));
+    //* upload the screen mode
+    setScreen(scanValue(18));
+
+    //* upload the music and chunk volume
+    ////Mix_VolumeMusic(scanValue(2));
+    ////Mix_VolumeChunk(pop, scanValue(3));
 
     //* set the game caption
     SDL_WM_SetCaption("Hollow Vessels", NULL);
@@ -41,7 +45,7 @@ void initEverything() {
 
 /*
 ? closeEverything() void func
-* close SDL1.2 resources
+* close SDL1.2 resources in exit action
 */
 void closeEverything() {
 	atexit(Mix_Quit);
@@ -72,9 +76,9 @@ SDL_Surface *load_img(char* path) {
 void setScreen(int x) {
     const SDL_VideoInfo* Video_Info = SDL_GetVideoInfo();
     if(Video_Info)
-        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|x);
+        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF | x);
     else
-        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|x);
+        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF | x);
     if(!screen) {
         fprintf(stderr, "%s: %s !", SDL_ERRMSG07, SDL_GetError()); exit(1);
     }

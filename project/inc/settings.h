@@ -17,10 +17,13 @@ typedef struct Surface {
 typedef void (*InitFunc)(surface*);
 
 //? ----------------------- FUNCTIONS PROTOTYPE DECLARATION PART -----------------------
-//? settings(int*) void func
-void settings(int*);
+//? settings() void func
+void settings();
 
-//? scroll_UD(surface*, int*, int) void func > settings(int*)
+//? set_pos(surface*) void func              > settings()
+void set_pos(surface*);
+
+//? scroll_UD(surface*, int*, int) void func > settings()
 void scroll_UD(surface*, int*, int);
 
 /*
@@ -29,56 +32,56 @@ void scroll_UD(surface*, int*, int);
 //? initResources(surface*) void func > settings(int*)
 void initResources(surface*);
 
-//? set_pos(surface*) void func      > initResources(surface*)
-void set_pos(surface*);
-
-//? init_rs_ctrl(surface*) void func > initResources(surface*)
+//? init_rs_ctrl(surface*) void func  > initResources(surface*)
 void init_rs_ctrl(surface*);
 
-//? init_rs_vid(surface*) void func  > initResources(surface*)
+//? init_rs_vid(surface*) void func   > initResources(surface*)
 void init_rs_vid(surface*);
 
-//? init_rs_aud(surface*) void func  > initResources(surface*)
+//? init_rs_aud(surface*) void func   > initResources(surface*)
 void init_rs_aud(surface*);
 
-//? init_rs_lang(surface*) void func > initResources(surface*)
+//? init_rs_lang(surface*) void func  > initResources(surface*)
 void init_rs_lang(surface*);
 
-//? init_rs_gmP(surface*) void func  > initResources(surface*)
+//? init_rs_gmP(surface*) void func   > initResources(surface*)
 void init_rs_gmP(surface*);
-
-//? scanValue(int) int func          > init_rs_#(surface*)
-int scanValue(int);
 
 /*
 ? --- USR_MODIFICATION FUNCS DECLARATION PART ---
 */
-//? controls(surface*, int) void func           > settings(int*)
+//? controls(surface*, int) void func               > settings()
 void controls(surface*);
 
-//? video(surface*) void func                   > settings(int*)
+//? video(surface*) void func                       > settings()
 void video(surface*);
 
-//? audio(surface*) void func                   > settings(int*)
+//? audio(surface*) void func                       > settings()
 void audio(surface*);
 
-//? language(surface*) void func                > settings(int*)
+//? language(surface*) void func                    > settings()
 void language(surface*);
 
-//? gamePlay(surface*) void func                > settings(int*)
+//? gamePlay(surface*) void func                    > settings()
 void gamePlay(surface*);
 
-//? rs_scroll_UD(surface*, int*, int) void func > settings(int*)
+//? rs_scroll_UD(surface*, int*, int) void func     > settings()
 void rs_scroll_UD(surface*, int*, int);
 
-//? rn_settings(surface*) void func             > usr_modification[#](sub)
+//? rn_settings(surface*) void func                 > usr_modification[#](sub)
 void rn_settings(surface*);
-
-//? editValue(int) void func                    > usr_modification[#](sub)
-void editValue(char*, char*, int, int);
 
 //?ctrl_volume(surface*, char*, int, int) void func > audio(surface*)
 void ctrl_volume(surface*, char*, int, int);
+
+/*
+? --- SCANNING && EDITING FILES FUNCTIONS DECLARATION PART ---
+*/
+//? scanValue(int) int func              > init[#](surface*)
+int scanValue(int);
+
+//? editValue(int) void func             > usr_modification[#](surface*)
+void editValue(char*, char*, int, int);
 
 /*
 ? --- LOAD && FREEING FUNCS DECLARATION PART ---

@@ -6,12 +6,12 @@
 
 //? ----------------------- TODO SECTION DECLARATION PART -----------------------
 /*
-TODO_01: working on the 5 usr_modification functions               :: @ZouariOmar :: 90%
-    * fix bugs in video(surface*) fn
+TODO_01: working on the 5 usr_modification functions             :: @ZouariOmar :: 90%
+    * fix the "volume bars view" in video(surface*) fn
     * load and test with test.mp3, test0.wav, test1.wav
+TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
+TODO_03: move the 5 usr_modification functions to a new c files  :: @ZouariOmar :: maybe we don't need this instruction
 */
-//TODO_03: move the 5 usr_modification functions to a new c files  :: @ZouariOmar
-//TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
@@ -42,7 +42,7 @@ InitFunc usr_modification[] = {
 ? settings(int*) void func
 * quit_game can be 0 or 1
 */
-void settings(int *quit_game) {
+void settings() {
     // * all 100 settings sub-surfaces
     surface sub[52];
 
@@ -64,13 +64,11 @@ void settings(int *quit_game) {
 
     //* ctrl button selected by default
     SDL_BlitSurface(sub[7].win,  NULL, screen, &sub[7].pos);
-    
-    
 
     // * update the screen
     SDL_Flip(screen);
 
-    while (!*quit_game) {
+    while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 //? ----------------------- MOUSE MOTION EVENT -----------------------
@@ -153,7 +151,7 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
     //* blit the @normal_img for the curent usr option
     SDL_BlitSurface(sub[2 + *usrOpPos].win,  NULL, screen, &sub[2 + *usrOpPos].pos);
 
-    //* blit the rest of the left menu
+    //* blit the left menu
     for (int i = 0; i < 5; i++)
         if (i != *usrOpPos)
             SDL_BlitSurface(sub[2 + i].win,  NULL, screen, &sub[2 + i].pos);
@@ -175,7 +173,6 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
 /*
 ? set_pos(surface*) void func
 * determinate the positions of all sub_surfaces
-! we need to rm set_pos(surface*) void func :: all instruction will be included in the blit instruction
 */
 void set_pos(surface* sub) {
     //* open the settings file
@@ -224,10 +221,7 @@ void init_rs_vid(surface* sub) {
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
     
     //* blit off/on fullscreen mode state
-    if (!scanValue(1))
-        SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
-    else
-        SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
+    (!scanValue(18)) ? SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos) : SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
 }
 
 /*
@@ -263,7 +257,7 @@ void init_rs_aud(surface* sub) {
 
     //TODO: optimize the music and sound bars blit proccess in 1 fn
     //* --- blit the music volume bars ---
-    for (int i = 1; i <= (scanValue(2) / 8); i++) {
+    for (int i = 1; i <= (scanValue(19) / 8); i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -277,13 +271,13 @@ void init_rs_aud(surface* sub) {
         }
         sub[42].pos.x += 16;
     }
-    // reset the X42;
+    //* reset the X42;
     sub[42].pos.x = 1341;
 
     //* --- blit the sound volume bars ---
     // Y42 = Y43 = Y44 :: we choose to change Y42
     sub[42].pos.y = 365;
-    for (int i = 1; i <= (scanValue(3) / 8); i++) {
+    for (int i = 1; i <= (scanValue(20) / 8); i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -297,7 +291,7 @@ void init_rs_aud(surface* sub) {
         }
         sub[42].pos.x += 16;
     }
-    // reset the X42 and Y42
+    //* reset the X42 and Y42
     sub[42].pos.x = 1341;
     sub[42].pos.y = 284;
 }
@@ -312,7 +306,7 @@ void init_rs_lang(surface* sub) {
     SDL_BlitSurface(sub[49].win, NULL, screen, (sub[49].pos.x = 1319, sub[49].pos.y = 274, &sub[49].pos));
 
     //* blit the Eng and Frc normal imgs
-    if (!scanValue(4)) {
+    if (!scanValue(21)) {
         //* Eng option selected
         SDL_BlitSurface(sub[47].win, NULL, screen, (sub[47].pos.x = 952,  sub[47].pos.y = 275, &sub[47].pos));
         SDL_BlitSurface(sub[46].win, NULL, screen, (sub[46].pos.x = 1451, sub[46].pos.y = 292, &sub[46].pos));
@@ -342,7 +336,7 @@ void init_rs_gmP(surface* sub) {
     SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
 
     //* blit off/on fullscreen mode state
-    if (!scanValue(5))
+    if (!scanValue(22))
         SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
     else
         SDL_BlitSurface(sub[35].win, NULL, screen, &sub[36].pos);
@@ -424,6 +418,7 @@ void controls(surface* sub) {
 /*
 ? scroll_UD(surface*, int*, int) void func
 * scroll the right menu up and down
+! support only the controls(surface*) function
 */
 void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     //* del the old rs_interface
@@ -505,9 +500,9 @@ void video(surface* sub) {
                         case SDLK_LEFT:
                             //* windowed mode set
                             setScreen(0);
-                            
+
                             //* change to windowed mode
-                            editValue("%s  %d\n", "fullscreen", 0, 1);
+                            editValue("%s  %d\n", "fullscreen", 0, 18);
 
                             //* reset the screen
                             initResources(sub);
@@ -526,7 +521,7 @@ void video(surface* sub) {
                             setScreen(SDL_FULLSCREEN);
                             
                             //* change to fullscreen mode
-                            editValue("%s  %d\n", "fullscreen", SDL_FULLSCREEN, 1);
+                            editValue("%s  %d\n", "fullscreen", SDL_FULLSCREEN, 18);
 
                             //* reset the screen
                             initResources(sub);
@@ -582,7 +577,7 @@ void rn_settings(surface* sub) {
 /*
 ? --- audio(surface*) void func ---
 * in this section the usr can change:
-    * audio
+    * audio volume
         * music: usr can change the volume from 0 to 16
         * sound: usr can change the volume from 0 to 16
 * support the @autosave mode
@@ -649,19 +644,13 @@ void audio(surface* sub) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* reduce volume
-                            if (!audio_usrOpPos)
-                                ctrl_volume(sub, "musicVolume", 2, -8);
-                            else
-                                ctrl_volume(sub, "soundVolume", 3, -8);
+                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, -8) : ctrl_volume(sub, "soundVolume", 20, -8);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* add volume
-                            if (!audio_usrOpPos)
-                                ctrl_volume(sub, "musicVolume", 2, 8);
-                            else
-                                ctrl_volume(sub, "soundVolume", 3, 8);
+                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, 8) : ctrl_volume(sub, "soundVolume", 20, 8);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -724,11 +713,13 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
 
-    //* add/reduce the volume
+    //* scan the music/chunk volume
     int volume = scanValue(line);
+
+    //* add/reduce the volume process
     if (volume >= 0 && volume <= 128) {
         volume += config;
-        
+
         //* correct the volume in mute or max volume situation
         if (volume == -8)
             volume = 0;
@@ -737,13 +728,16 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
 
         //* update the new volume
         editValue("%s %d\n", type_vol, volume, line);
+
+        //* set the new music/chunk volume
+        ////(line == 2) ? Mix_VolumeMusic(scanValue(2)) : Mix_VolumeChunk(pop, scanValue(3));
     }
     
     //* reset the current @sub_menu_surface
     init[usrOpPos](sub);
 
     //* blit the selected @audio_sub_option
-    SDL_BlitSurface(sub[40 + (line % 2)].win, NULL, screen, &sub[40 + (line % 2)].pos);
+    SDL_BlitSurface(sub[41 - (line % 2)].win, NULL, screen, &sub[41 - (line % 2)].pos);
 
     //* blit L/R animated button
     if (config == -8)
@@ -778,7 +772,7 @@ void language(surface* sub) {
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
                             //* change the language to @Eng
-                            editValue("%s    %d\n", "language", 0, 4);
+                            editValue("%s    %d\n", "language", 0, 21);
 
                             //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
@@ -790,7 +784,7 @@ void language(surface* sub) {
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
                             //* change the language to @Frc
-                            editValue("%s    %d\n", "language", 1, 4);
+                            editValue("%s    %d\n", "language", 1, 21);
 
                             //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
@@ -859,7 +853,7 @@ void gamePlay(surface* sub) {
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
                             //* change the gamePlay to @Off_mode
-                            editValue("%s    %d\n", "gamePlay", 0, 5);
+                            editValue("%s    %d\n", "gamePlay", 0, 22);
 
                             //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
@@ -875,7 +869,7 @@ void gamePlay(surface* sub) {
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
                             //* change the gamePlay to @On_mode
-                            editValue("%s    %d\n", "gamePlay", 1, 5);
+                            editValue("%s    %d\n", "gamePlay", 1, 22);
 
                             //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);

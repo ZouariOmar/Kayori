@@ -1,6 +1,24 @@
-controls    SDLK_RIGHT SDLK_LEFT SDLK_SPACE SDLK_x SDLK_c
+** keyboard controller **
+--
+kb_move_left  SDLK_LEFT
+kb_move_right SDLK_RIGHT
+kb_jump       SDLK_SPACE
+kb_dash       SDLK_x
+kb_slide      SDLK_c
+--
+** console controller **
+--
+cl_move_left  SDLK_LEFT
+cl_move_right SDLK_RIGHT
+cl_jump       SDLK_SPACE
+cl_dash       SDLK_x
+cl_slide      SDLK_c
+--
+** other options **
+--
 fullscreen  -2147483648
-musicVolume 56
-soundVolume 88
+musicVolume 64
+soundVolume 64
 language    0
 gamePlay    0
+--
