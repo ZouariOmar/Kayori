@@ -1,0 +1,20 @@
+Is Paris the capital of France?                           1
+Is the Amazon Rainforest located in South America?        1
+Does the Earth revolve around the Sun?                    1
+Is Mount Everest the tallest mountain on Earth?           1
+Is New York City located in California?                   0
+Is the Nile River the longest river in the world?         0
+Are strawberries a type of vegetable?                     0
+Are dolphins mammals?                                     1
+Is the Mona Lisa a famous painting by Pablo Picasso?      0
+Do elephants have wings?                            	  0
+Is the Great Barrier Reef located in Australia?     	  1
+Is the Pacific Ocean the smallest ocean on Earth?   	  0
+Do humans have five senses?                         	  1
+Is the Statue of Liberty located in New York City? 	      1
+Are oranges typically purple in color?             	      0
+Is the Sahara Desert the largest hot desert in the world? 1
+Can penguins fly?					                      1
+Do fish breathe underwater?                               0
+Is the Moon made of cheese?                               0
+Is the Eiffel Tower located in Rome?                      0

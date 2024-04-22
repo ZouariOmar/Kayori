@@ -14,13 +14,15 @@
 ? stopwatch() void fun
 * @stopwatch_format: HH:MM:SS:MS
 ! spRun() fun need 2 flag
-    * stop :  1/0 :: stop the @stopwatch fun and reset it in 00:00:00:000
-    * pause: -1/0 :: pause the  @stopwatch fun and save the @current_stopwatch_time in tell the usr "resume the game (pause/resume option)"
+    * stop :  1/0 :: stop the @stopwatch func and reset it in 00:00:00:000
+    * pause: -1/0 :: pause the  @stopwatch func and save the @current_stopwatch_time in tell the usr "resume the game (pause/resume option)"
 */
 
 void startStopwatch(int* pause) {
-
+    //* init the @start_time and @current_time vars
     struct timeval start_time, current_time;
+
+    //* get the current time as @start_time
     gettimeofday(&start_time, NULL);
 
     int stop = scanValue(22);
@@ -28,7 +30,7 @@ void startStopwatch(int* pause) {
         if (!*pause) {
             gettimeofday(&current_time, NULL);
             long elapsed_ms = (current_time.tv_sec - start_time.tv_sec) * 1000L +
-                              (current_time.tv_usec - start_time.tv_usec) / 1000L;
+                            (current_time.tv_usec - start_time.tv_usec) / 1000L;
 
             displayTime(elapsed_ms);
         }

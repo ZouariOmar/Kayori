@@ -7,6 +7,9 @@
 #ifndef __INC_H__
 #define __INC_H__
 
+//? -------------------- DEFINE PROTOTYPE DECLARATION PART --------------------
+#define MAX_PATH 260
+
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 //* STANDER LIBS INCLUDE PART
 #include <stdio.h>

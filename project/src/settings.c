@@ -10,7 +10,8 @@ TODO_01: working on the 5 usr_modification functions             :: @ZouariOmar 
     * fix the "volume bars view" in video(surface*) fn
     * load and test with test.mp3, test0.wav, test1.wav
 TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
-TODO_03: move the 5 usr_modification functions to a new c files  :: @ZouariOmar :: maybe we don't need this instruction
+TODO_03: code the miniMap() void func                            :: @ZouariOmar
+TODO_04: code the controller_conf() void func                    :: @ZouariOmar
 */
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
