@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <time.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 //* SDL1.2 INCLUDE PART
 #include <SDL/SDL.h>
@@ -25,6 +26,7 @@
 //* OUR INC FILES
 #include "SDL_Msg.h"
 #include "settings.h"
+#include "speedRun.h"
 
 //* PUBLIC VARS
 SDL_Surface *screen;
@@ -37,7 +39,8 @@ int SCREEN_BPP    = 32;
 
 //? --------------------- COLORS PROTOTYPE DECLARATION PART ---------------------
 //* SDL_COLOR PUBLIC DEFINTION
-////SDL_Color WHITE = {255, 255, 255};
+SDL_Color WHITE = {255, 255, 255};
+SDL_Color BLACK = {0, 0, 0};
 
 //? -------------------- FUNCTIONS PROTOTYPE DECLARATION PART --------------------
 //? initEverything() void func

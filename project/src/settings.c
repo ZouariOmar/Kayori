@@ -67,7 +67,7 @@ void settings() {
 
     // * update the screen
     SDL_Flip(screen);
-
+    
     while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
