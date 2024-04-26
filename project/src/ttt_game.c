@@ -19,7 +19,7 @@ void __ttt_game__() {
     
     // * load_part
     surface sub[16];
-    loadResources(sub);
+    loadResources(sub, "project/res/img_ttt/img", 0, 16);
     initResources(sub);
 
     // * usr_info :: range(0, 8)
@@ -262,18 +262,6 @@ void __ttt_game__() {
         // * update the screen
         SDL_Flip(screen);
         SDL_Delay(10);
-    }
-}
-
-/*
-? loadResources() void func guide
-* load all res using the "load_img() SDL_Surface func"
-*/
-void loadResources(surface sub[]) {
-    for (int i = 0; i < 16; i++) {
-        char tmp_path[MAX_PATH];
-        sprintf(tmp_path, "%s%d%s", "res//Tic Tac Toe - Mini_Game//img", i, ".png");
-        sub[i].win = load_img(tmp_path);
     }
 }
 

@@ -13,8 +13,6 @@
 // ? __ttt_game__() void func :: main_tic_tac_toe_func_launcher
 void __ttt_game__();
 
-
-void loadResources(surface*);
 void initResources(surface*);
 void have_coordinate(Sint16*, Sint16*, int);
 

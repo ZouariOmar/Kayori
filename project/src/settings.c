@@ -57,7 +57,7 @@ void settings() {
     loadResources(sub, "project/res/settings/RS/gamePlay_menu/img", 50, 52);
 
     //* set potions for the other res
-    set_pos(sub);
+    set_pos(sub, "project/doc/settings_ref", 52);
 
     //* initializing the settings resources
     initResources(sub);
@@ -110,7 +110,7 @@ void settings() {
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            freeResources(sub);
+                            freeResources(sub, NULL, 52);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -121,7 +121,7 @@ void settings() {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub);
+                    freeResources(sub, NULL, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -171,26 +171,6 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
         SDL_BlitSurface(sub[7 + *usrOpPos].win,  NULL, screen, &sub[7 + *usrOpPos].pos);
 }
 
-/*
-? set_pos(surface*) void func
-* determinate the positions of all sub_surfaces
-*/
-void set_pos(surface* sub) {
-    //* open the settings file
-    FILE* file = fopen("project/doc/settings_ref", "r");
-    if (!file) {
-        perror("Error: can't open settings_ref file !"); exit(EXIT_FAILURE);
-    }
-
-    //* fill all surface positions
-    int i = 0;
-    while (i < 52 && fscanf(file, "%hd%hd", &(sub[i].pos.x), &(sub[i].pos.y)) == 2)
-        i++;
-
-    //* close the settings file
-    fclose(file);
-}
-
 //? ----------------------- INIT FUNCTIONS DEV PART -----------------------
 /*
 ? --- initResources(surface*) void func ---
@@ -222,7 +202,7 @@ void init_rs_vid(surface* sub) {
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
     
     //* blit off/on fullscreen mode state
-    (!scanValue(18)) ? SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos) : SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
+    (!scanValue("project/doc/settings", 18)) ? SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos) : SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
 }
 
 /*
@@ -258,7 +238,7 @@ void init_rs_aud(surface* sub) {
 
     //TODO: optimize the music and sound bars blit proccess in 1 fn
     //* --- blit the music volume bars ---
-    for (int i = 1; i <= (scanValue(19) / 8); i++) {
+    for (int i = 1; i <= (scanValue("project/doc/settings", 19) / 8); i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -278,7 +258,7 @@ void init_rs_aud(surface* sub) {
     //* --- blit the sound volume bars ---
     // Y42 = Y43 = Y44 :: we choose to change Y42
     sub[42].pos.y = 365;
-    for (int i = 1; i <= (scanValue(20) / 8); i++) {
+    for (int i = 1; i <= (scanValue("project/doc/settings", 20) / 8); i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -307,7 +287,7 @@ void init_rs_lang(surface* sub) {
     SDL_BlitSurface(sub[49].win, NULL, screen, (sub[49].pos.x = 1319, sub[49].pos.y = 274, &sub[49].pos));
 
     //* blit the Eng and Frc normal imgs
-    if (!scanValue(21)) {
+    if (!scanValue("project/doc/settings", 21)) {
         //* Eng option selected
         SDL_BlitSurface(sub[47].win, NULL, screen, (sub[47].pos.x = 952,  sub[47].pos.y = 275, &sub[47].pos));
         SDL_BlitSurface(sub[46].win, NULL, screen, (sub[46].pos.x = 1451, sub[46].pos.y = 292, &sub[46].pos));
@@ -337,7 +317,7 @@ void init_rs_gmP(surface* sub) {
     SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
 
     //* blit off/on fullscreen mode state
-    if (!scanValue(22))
+    if (!scanValue("project/doc/settings", 22))
         SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
     else
         SDL_BlitSurface(sub[35].win, NULL, screen, &sub[36].pos);
@@ -399,7 +379,7 @@ void controls(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub);
+                    freeResources(sub, NULL, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -543,7 +523,7 @@ void video(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub);
+                    freeResources(sub, NULL, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -693,7 +673,7 @@ void audio(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub);
+                    freeResources(sub, NULL, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -715,7 +695,7 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
     SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
 
     //* scan the music/chunk volume
-    int volume = scanValue(line);
+    int volume = scanValue("project/doc/settings", line);
 
     //* add/reduce the volume process
     if (volume >= 0 && volume <= 128) {
@@ -731,7 +711,7 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
         editValue("%s %d\n", type_vol, volume, line);
 
         //* set the new music/chunk volume
-        ////(line == 2) ? Mix_VolumeMusic(scanValue(2)) : Mix_VolumeChunk(pop, scanValue(3));
+        ////(line == 2) ? Mix_VolumeMusic(scanValue("project/doc/settings", 2)) : Mix_VolumeChunk(pop, scanValue("project/doc/settings", 3));
     }
     
     //* reset the current @sub_menu_surface
@@ -809,7 +789,7 @@ void language(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub);
+                    freeResources(sub, NULL, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -915,7 +895,7 @@ void gamePlay(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub);
+                    freeResources(sub, NULL, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -930,115 +910,4 @@ void gamePlay(surface* sub) {
         //* wait 100 millisecond befor returning
         SDL_Delay(100);
     }
-}
-
-
-//? ------------------ SCANNING && EDITING FILES FUNCTIONS DEV PART ------------------
-/*
-? --- scanValue(int) int func ---
-* return 0 or (1 or SDL_code_number)
-*/
-int scanValue(int line) {
-    //* open the settings file
-    FILE* file = fopen("project/doc/settings", "r");
-    if (!file) {
-        perror("Error: can't open settings file !"); exit(EXIT_FAILURE);
-    }
-
-    /*
-    ? holder     :: to detect the newLine char ('\n')
-    ? consumer   :: to store the unused info
-    ? ln         :: to detect the file line number
-    ? value      :: to store the needed info (0 or 1 or SDL_code_number)
-    */
-    char holder,
-        consumer[100];
-    int value,
-        ln = 0;
-
-    while ((holder = fgetc(file)) != EOF) {
-        if (ln == line) {
-            fscanf(file, "%s%d", consumer, &value);
-            break;
-        }
-        if (holder == '\n') ln++;
-    }
-
-    //* close the settings file
-    fclose(file);
-
-    return value;
-}
-
-/*
-? editValue(int) void func
-* update the changed option info
-*/
-void editValue(char* format, char* option, int value, int line) {
-    //* open the settings file
-    FILE* file = fopen("project/doc/settings", "r+");
-    if (!file) {
-        perror("Error: can't open settings file !");
-        exit(EXIT_FAILURE);
-    }
-
-    //* creat a tmp file
-    FILE* tmp_file = fopen("project/doc/tmp", "w+");
-    if (!tmp_file) {
-        perror("Error: can't open the file !");
-        exit(EXIT_FAILURE);
-    }
-
-    /*
-    ? holder     :: to detect the newLine char ('\n')
-    ? ln         :: to detect the file line number
-    */
-    char holder;
-    int ln = 0;
-
-    //* process each character in the settings file
-    while ((holder = fgetc(file)) != EOF) {
-        if (ln == line) {
-            //* add the update info line
-            fprintf(tmp_file, format, option, value);
-            ln++;
-
-            //* skip the rest of the original value line
-            while ((holder = fgetc(file)) != EOF && holder != '\n');
-        } else {
-            //* add the other info
-            fputc(holder, tmp_file);
-            if (holder == '\n') ln++;
-        }
-    }
-
-    //* close both files
-    fclose(file);
-    fclose(tmp_file);
-
-    //* replace the original file with the tmp file
-    remove("project/doc/settings");
-    rename("project/doc/tmp", "project/doc/settings");
-}
-
-//? ----------------------- LOAD && FREEING FUNCTIONS DEV PART -----------------------
-/*
-? --- loadResources(surface*, char*) void func ---
-* load all resources
-*/
-void loadResources(surface* sub, char* path, int begin_res, int nbr_res) {
-    while (begin_res < nbr_res) {
-        char tmp_path[260];
-        sprintf(tmp_path, "%s%d%s", path, begin_res, ".png");
-        sub[begin_res].win = load_img(tmp_path);
-        begin_res++;
-    }
-}
-
-/*
-? --- freeResources(surface*) void func ---
-* free all res :: sub_surfaces, chunk and ttf
-*/
-void freeResources(surface *sub) {
-    for(int i = 0; i < 52; i++) SDL_FreeSurface(sub[i].win);
 }

@@ -20,9 +20,6 @@ typedef void (*InitFunc)(surface*);
 //? settings() void func
 void settings();
 
-//? set_pos(surface*) void func              > settings()
-void set_pos(surface*);
-
 //? scroll_UD(surface*, int*, int) void func > settings()
 void scroll_UD(surface*, int*, int);
 
@@ -73,23 +70,5 @@ void rn_settings(surface*);
 
 //?ctrl_volume(surface*, char*, int, int) void func > audio(surface*)
 void ctrl_volume(surface*, char*, int, int);
-
-/*
-? --- SCANNING && EDITING FILES FUNCTIONS DECLARATION PART ---
-*/
-//? scanValue(int) int func              > init[#](surface*)
-int scanValue(int);
-
-//? editValue(int) void func             > usr_modification[#](surface*)
-void editValue(char*, char*, int, int);
-
-/*
-? --- LOAD && FREEING FUNCS DECLARATION PART ---
-*/
-//? loadResources(surface*, char*) void func   > settings(int*)
-void loadResources(surface*, char*, int, int);
-
-//? freeResources(surface*) void func          > settings(int*)
-void freeResources(surface*);
 
 #endif

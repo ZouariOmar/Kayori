@@ -5,58 +5,65 @@
 ? @file:   speedRun.c
 ----------------------------------------------- */
 
+//? ----------------------- TODO SECTION DECLARATION PART -----------------------
+/*
+TODO_01: fix the timer
+    * make the HH, MM, SS, MS in the timer struct
+    * fix the divergent time between all @time_info
+*/
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
 
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
-/*
-? stopwatch() void fun
-* @stopwatch_format: HH:MM:SS:MS
-! spRun() fun need 2 flag
-    * stop :  1/0 :: stop the @stopwatch func and reset it in 00:00:00:000
-    * pause: -1/0 :: pause the  @stopwatch func and save the @current_stopwatch_time in tell the usr "resume the game (pause/resume option)"
-*/
-
-void startStopwatch(int* pause) {
-    //* init the @start_time and @current_time vars
-    struct timeval start_time, current_time;
-
-    //* get the current time as @start_time
-    gettimeofday(&start_time, NULL);
-
-    int stop = scanValue(22);
-    while (stop) {
+void startStopwatch(int *pause, int *elapsed_ss, surface remover) {
+    int stop = scanValue("project/doc/settings", 22);
+    if (stop) {
         if (!*pause) {
+            //* init the @start_time and @current_time vars
+            struct timeval current_time;
             gettimeofday(&current_time, NULL);
-            long elapsed_ms = (current_time.tv_sec - start_time.tv_sec) * 1000L +
-                            (current_time.tv_usec - start_time.tv_usec) / 1000L;
-
-            displayTime(elapsed_ms);
+            if (time(NULL))
+                displayTime(remover, ++(*elapsed_ss));
         }
-
-        //* sleep for a short period to avoid high CPU usage (10 milliseconds)
-        usleep(10000);
     }
 }
 
-void displayTime(long elapsed_ms) {
+void displayTime(surface remover, long elapsed_ss) {
+    //* init the Code 7x5.ttf font
     TTF_Font * font = TTF_OpenFont("project/res/font/Code 7x5.ttf", 20);
+    
+    //* init the elapsed_ss surface
     surface txt;
-    char stopwatch[21];
-    int HH = (elapsed_ms / 3600000);
-    int MM = (elapsed_ms % 3600000) / 60000;
-    int SS = (elapsed_ms % 60000)   / 1000;
-    int MS = (elapsed_ms % 1000);
-    sprintf(stopwatch, "%02d:%02d:%02d:%03d", HH, MM, SS, MS);
-    txt.win = TTF_RenderText_Blended(font, stopwatch, BLACK);
+
+    char stopwatch[260];
+
+    //* split the elapsed_ss long var to timer info
+    //! can put it in timer struct in the next update
+    int HH = (elapsed_ss / 36000) % 60;
+    int MM = (elapsed_ss / 3600)  % 60;
+    int SS = (elapsed_ss / 60)    % 60;
+    int MS = (elapsed_ss % 100);
+
+    //* convert the time info to a string var (stopwatch)
+    sprintf(stopwatch, "%02d:%02d:%02d:%02d", HH, MM, SS, MS);
+    txt.win = TTF_RenderText_Blended(font, stopwatch, WHITE);
+
+    //* stopwatch pos
+    txt.pos.x = 100; txt.pos.y = 100;
+    txt.pos.w = 200; txt.pos.h = 100;
+
+    //* del the old stopwatch time
+    SDL_BlitSurface(remover.win, &txt.pos, screen, &txt.pos);
 
     //* blit the stopwatch
-    //! testing part
-    txt.pos.x = 100;
-    txt.pos.y = 100;
     SDL_BlitSurface(txt.win, NULL, screen, &txt.pos);
 
     //* close the @code_font
     TTF_CloseFont(font);
+
+    //* close the txt surface
+    SDL_FreeSurface(txt.win);
+
+    SDL_Flip(screen);
 }

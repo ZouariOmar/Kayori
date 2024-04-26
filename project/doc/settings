@@ -17,8 +17,8 @@ cl_slide      SDLK_c
 ** other options **
 --
 fullscreen  -2147483648
-musicVolume 64
-soundVolume 64
+musicVolume 72
+soundVolume 128
 language    0
 gamePlay    0
 --
