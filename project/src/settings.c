@@ -10,8 +10,7 @@ TODO_01: working on the 5 usr_modification functions             :: @ZouariOmar 
     * fix the "volume bars view" in video(surface*) fn
     * load and test with test.mp3, test0.wav, test1.wav
 TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
-TODO_03: code the miniMap() void func                            :: @ZouariOmar
-TODO_04: code the controller_conf() void func                    :: @ZouariOmar
+TODO_03: code the keyboard_conf() void func                      :: @ZouariOmar
 */
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
@@ -39,13 +38,9 @@ InitFunc usr_modification[] = {
     gamePlay
 };
 
-/*
-? settings(int*) void func
-* quit_game can be 0 or 1
-*/
 void settings() {
     // * all 100 settings sub-surfaces
-    surface sub[52];
+    surface sub[54];
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
@@ -54,10 +49,10 @@ void settings() {
     loadResources(sub, "project/res/settings/RS/video_menu/img",    27, 37);
     loadResources(sub, "project/res/settings/RS/audio_menu/img",    37, 45);
     loadResources(sub, "project/res/settings/RS/language_menu/img", 45, 50);
-    loadResources(sub, "project/res/settings/RS/gamePlay_menu/img", 50, 52);
+    loadResources(sub, "project/res/settings/RS/gamePlay_menu/img", 50, 54);
 
     //* set potions for the other res
-    set_pos(sub, "project/doc/settings_ref", 52);
+    set_pos(sub, "project/doc/settings_ref", 54);
 
     //* initializing the settings resources
     initResources(sub);
@@ -138,10 +133,6 @@ void settings() {
     }
 }
 
-/*
-? scroll_UD(surface*, int*, int) void func
-* scroll the left menu up and down
-*/
 void scroll_UD(surface* sub, int* usrOpPos, int direction) {
     //* del the left menu
     SDL_BlitSurface(sub[0].win,  &sub[1].pos, screen, &sub[1].pos);
@@ -172,10 +163,6 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
 }
 
 //? ----------------------- INIT FUNCTIONS DEV PART -----------------------
-/*
-? --- initResources(surface*) void func ---
-* blit the first viewed res (not all them)
-*/
 void initResources(surface* sub) {
     sub[0].pos.x = 0; sub[0].pos.y = 0;
     //* LS sub_surfaces blit part
@@ -183,21 +170,13 @@ void initResources(surface* sub) {
         SDL_BlitSurface(sub[i].win,  NULL, screen, &sub[i].pos);
 }
 
-/*
-? --- init_rs_ctrl(surface*) void func ---
-* blit the controls option menu
-*/
 void init_rs_ctrl(surface* sub) {
     for (int i = 12; i < 15; i++)
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
 }
 
-/*
-? --- init_rs_vid(surface*) void func ---
-* blit the video option menu :: support the @autosave mode
-*/
 void init_rs_vid(surface* sub) {
-    //* blit the video std imgs (2 img) && blit the left and right video buttons
+    //* blit the video std imgs (2 img) && blit the L/R video buttons
     for (int i = 28; i < 32; i++)
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
     
@@ -205,10 +184,6 @@ void init_rs_vid(surface* sub) {
     (!scanValue("project/doc/settings", 18)) ? SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos) : SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
 }
 
-/*
-? --- init_rs_aud(surface*) void func ---
-* blit the audio option menu :: support the @autosave mode
-*/
 void init_rs_aud(surface* sub) {
     //* blit the contour_04
     SDL_BlitSurface(sub[12].win, NULL, screen, &sub[12].pos);
@@ -222,17 +197,13 @@ void init_rs_aud(surface* sub) {
     SDL_BlitSurface(sub[38].win, NULL, screen, &sub[38].pos);
     SDL_BlitSurface(sub[39].win, NULL, screen, &sub[39].pos);
 
-    //* blit the left and right "music" buttons
-    SDL_BlitSurface(sub[30].win, NULL, screen, &sub[30].pos);
-    SDL_BlitSurface(sub[31].win, NULL, screen, &sub[31].pos);
-
-    //* blit the left and right "sound" buttons
+    //* blit the L/R "sound" buttons
     SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 381, &sub[30].pos));
     SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 381, &sub[31].pos));
 
-    //* rest to the original values
-    sub[30].pos.y = 300;
-    sub[31].pos.y = 300;
+    //* blit the L/R "music" buttons
+    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 300, &sub[30].pos));
+    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
 
     //! X42 = X43 = X44 :: we choose X42
 
@@ -277,10 +248,6 @@ void init_rs_aud(surface* sub) {
     sub[42].pos.y = 284;
 }
 
-/*
-? --- init_rs_lang(surface*) void func ---
-* blit the language option menu :: support the @autosave mode
-*/
 void init_rs_lang(surface* sub) {
     //* blit the contour_03 and the shape
     SDL_BlitSurface(sub[28].win, NULL, screen, &sub[28].pos);
@@ -301,35 +268,30 @@ void init_rs_lang(surface* sub) {
     sub[42].pos.y = 284;
 }
 
-/*
-? --- init_rs_gmP(surface*) void func ---
-* blit the game_paly option menu :: support the @autosave mode
-*/
 void init_rs_gmP(surface* sub) {
-    //* blit the contour_03
-    SDL_BlitSurface(sub[28].win, NULL, screen, &sub[28].pos);
+    //* blit the contour_04
+    SDL_BlitSurface(sub[12].win, NULL, screen, &sub[12].pos);
 
-    //* blit the speedRun normal img
-    SDL_BlitSurface(sub[50].win, NULL, screen, (sub[50].pos.x = 971, sub[50].pos.y = 294, &sub[50].pos));
+    //* blit the speedRun/miniMap normal imgs
+    SDL_BlitSurface(sub[50].win, NULL, screen, &sub[50].pos);
+    SDL_BlitSurface(sub[52].win, NULL, screen, &sub[52].pos);
 
-    //* blit the left and right video buttons
+    //* blit the L/R normal buttons for miniMap op
+    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 381, &sub[30].pos));
+    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 381, &sub[31].pos));
+
+    //* blit the L/R normal buttons for speedRun op
     SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 300, &sub[30].pos));
     SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
 
-    //* blit off/on fullscreen mode state
-    if (!scanValue("project/doc/settings", 22))
-        SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
-    else
-        SDL_BlitSurface(sub[35].win, NULL, screen, &sub[36].pos);
+    //* blit off/on miniMap mode state
+    SDL_BlitSurface(sub[35 + !scanValue("project/doc/settings", 23)].win, NULL, screen, (sub[36].pos.y = 372, &sub[36].pos));
+
+    //* blit off/on speedRun mode state
+    SDL_BlitSurface(sub[35 + !scanValue("project/doc/settings", 22)].win, NULL, screen, (sub[36].pos.y = 292, &sub[36].pos));
 }
 
 //? ----------------------- USR_MODIFICATION FUNCTIONS DEV PART -----------------------
-/*
-? controls(surface*, int) void func
-* in this section the usr can change:
-    * keyboard_configuration
-    * controller_configuration
-*/
 void controls(surface* sub) {
     //* the curent user option position
     int ctrl_usrOpPos = 0;
@@ -396,11 +358,6 @@ void controls(surface* sub) {
     }
 }
 
-/*
-? scroll_UD(surface*, int*, int) void func
-* scroll the right menu up and down
-! support only the controls(surface*) function
-*/
 void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
@@ -429,14 +386,6 @@ void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     SDL_BlitSurface(sub[15 + *ctrl_usrOpPos].win,  NULL, screen, &sub[15 + *ctrl_usrOpPos].pos);
 }
 
-/*
-? --- video(surface*) void func ---
-* in this section the usr can change:
-    * fullscreen mode
-        * 0:              windowed(1920x1080)
-        * SDL_FULLSCREEN: fullscreen
-* support the @autosave mode
-*/
 void video(surface* sub) {
     //* init part
     SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
@@ -540,10 +489,6 @@ void video(surface* sub) {
     }
 }
 
-/*
-? --- rn_settings(surface*) void func ---
-* return to the main settings menu proccess
-*/
 void rn_settings(surface* sub) {
     //* del the old rs_surface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
@@ -555,14 +500,6 @@ void rn_settings(surface* sub) {
     SDL_BlitSurface(sub[7 + usrOpPos].win,  NULL, screen, &sub[7 + usrOpPos].pos);
 }
 
-/*
-? --- audio(surface*) void func ---
-* in this section the usr can change:
-    * audio volume
-        * music: usr can change the volume from 0 to 16
-        * sound: usr can change the volume from 0 to 16
-* support the @autosave mode
-*/
 void audio(surface* sub) {
     //* the curent @audio_user_option_position
     int audio_usrOpPos = 0;
@@ -731,14 +668,6 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
     sub[34].pos.y = 300;
 }
 
-/*
-? --- language(surface*) void func ---
-* in this section the usr can change:
-    * language
-        * 0: @English
-        * 1: @France
-* support the @autosave mode
-*/
 void language(surface* sub) {
     //* enter the @event_loop part
     while (1) {
@@ -806,16 +735,11 @@ void language(surface* sub) {
     }
 }
 
-/*
-? --- gamePlay(surface*) void func ---
-* in this section the usr can change:
-    * speedRun mode
-        * 0: speedRun in @off_mode
-        * 1: speedRun in @on_mode
-* support the @autosave mode
-*/
 void gamePlay(surface* sub) {
-    //* init part
+    //* init the curent @gamePlay_user_option_position in speedRun op by default
+    int gm_usrOpPos = 0;
+
+    //* select the speedRun op by default
     SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
 
     //* update the screen
@@ -828,37 +752,30 @@ void gamePlay(surface* sub) {
                 //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym) {
+                        //? --- UP CLICK OPTION ---
+                        case SDLK_UP:
+                            gm_scroll_UD(sub, &gm_usrOpPos, -1);
+                            break;
+
+                        //? --- DOWN CLICK OPTION ---
+                        case SDLK_DOWN:
+                            gm_scroll_UD(sub, &gm_usrOpPos, 1);
+                            break;
+
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
-                            //* del the old rs_interface
-                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
-
-                            //* change the gamePlay to @Off_mode
-                            editValue("%s    %d\n", "gamePlay", 0, 22);
-
-                            //* reset the current @sub_menu_surface
-                            init[usrOpPos](sub);
-                            SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
-
-                            //* blit left animated button
-                            SDL_BlitSurface(sub[33].win, NULL, screen, &sub[33].pos);
+                            if (gm_usrOpPos)
+                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 0);
+                            else
+                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 0);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
-                            //* del the old rs_interface
-                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
-
-                            //* change the gamePlay to @On_mode
-                            editValue("%s    %d\n", "gamePlay", 1, 22);
-
-                            //* reset the current @sub_menu_surface
-                            init[usrOpPos](sub);
-                            SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
-
-                            //* blit right animated button
-                            SDL_BlitSurface(sub[34].win, NULL, screen, &sub[34].pos);
-
+                            if (gm_usrOpPos)
+                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 1);
+                            else
+                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 1);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -878,12 +795,14 @@ void gamePlay(surface* sub) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* blit left normal button
+                            (gm_usrOpPos) ? (sub[30].pos.y = 378) : (sub[30].pos.y = 300);
                             SDL_BlitSurface(sub[30].win, NULL, screen, &sub[30].pos);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* blit right normal button
+                            (gm_usrOpPos) ? (sub[31].pos.y = 378) : (sub[31].pos.y = 300);
                             SDL_BlitSurface(sub[31].win, NULL, screen, &sub[31].pos);
                             break;
                         
@@ -910,4 +829,42 @@ void gamePlay(surface* sub) {
         //* wait 100 millisecond befor returning
         SDL_Delay(100);
     }
+}
+
+void gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction) {
+    //* del the old rs_interface
+    SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+    //* update the gm_usrOpPos value
+    *gm_usrOpPos += direction;
+
+    //* correct the gm_usrOpPos value
+    if (*gm_usrOpPos == 2)
+        *gm_usrOpPos = 0;
+    else if (*gm_usrOpPos == -1)
+        *gm_usrOpPos = 1;
+
+    //* reset the current @sub_menu_surface
+    init[usrOpPos](sub);
+
+    //* select the new option
+    SDL_BlitSurface(sub[51 + *gm_usrOpPos * 2].win, NULL, screen, &sub[51 + *gm_usrOpPos * 2].pos);
+}
+
+void gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf) {
+    //* del the old rs_interface
+    SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+    //* change the gamePlay to @On_mode
+    editValue(format, op_name, conf, line);
+
+    //* reset the current @sub_menu_surface
+    init[usrOpPos](sub);
+
+    //* blit/reset the current selected img
+    SDL_BlitSurface(sub[51 + 2 * (line == 23)].win, NULL, screen, &sub[51 + 2 * (line == 23)].pos);
+
+    //* blit R or L animated button
+    (line == 23) ? (sub[33 + conf].pos.y = 378) : (sub[33 + conf].pos.y = 300);
+    SDL_BlitSurface(sub[33 + conf].win, NULL, screen, &sub[33 + conf].pos);
 }
