@@ -1,7 +1,7 @@
 /* -----------------------------------------------
 * @team:   by_kayori_Nova_Grp
-* @update: 04/06/24
-? @file:   settings.c
+* @update: 04//24
+? @file:   settings.h
 ----------------------------------------------- */
 
 #ifndef __SETTINGS_H__
@@ -34,8 +34,16 @@ void settings();
 */
 void scroll_UD(surface*, int*, int);
 
+/*
+? - rn_settings(surface*) void fn -
+* return to the main settings menu proccess
+> usr_modification[#](sub)
+*/
+void rn_settings(surface *);
 
-//? -- INIT FUNCS DECLARATION PART --
+/* ----------------------------------
+? --- INIT FUNCS DECLARATION PART ---
+------------------------------------- */
 /*
 ? - initResources(surface*) void func -
 * > settings(int*)
@@ -82,8 +90,25 @@ void init_rs_lang(surface*);
 */
 void init_rs_gmP(surface*);
 
+/*
+? - init_kb_ctrl(surface *sub) void func -
+* initialize the keyboard conf
+> {controls(), kb_ctrls()}
+*/
+void init_kb_ctrl(surface *);
 
-//? -- USR_MODIFICATION FUNCS DECLARATION PART --
+/*
+? - init_cl_ctrl(surface *sub) void func -
+* initialize the controller conf
+> {controls(), kb_ctrls()}
+*/
+void init_cl_ctrl(surface *);
+
+/* ----------------------------------------------
+? --- USR_MODIFICATION FUNCS DECLARATION PART ---
+------------------------------------------------- */
+
+//? -- controls functions declaration part --
 /*
 ? - controls(surface*, int) void func -
 * in this section the usr can change:
@@ -92,6 +117,45 @@ void init_rs_gmP(surface*);
 > settings()
 */
 void controls(surface*);
+
+/*
+? - ctrl_scroll_UD(surface*, int*, int) void fn -
+* scroll the "controls" menu up and down
+> settings()
+! support only the controls(surface*) function
+*/
+void ctrl_scroll_UD(surface *, int *, int);
+
+/*
+? - kb_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
+* kb_sub_controls_option
+* usr can modify the keyboard configuration
+> controls()
+*/
+void kb_ctrl(surface *, int);
+
+/*
+? - kb_ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) void fn -
+* scroll the "keyboard conf" menu up and down
+> kb_ctrl()
+! support only the controls(surface*) function
+*/
+void kb_ctrl_scroll_UD(surface *, int *, int);
+
+/*
+? - cl_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
+* cl_sub_controls_option
+* usr can modify the controller configuration
+> controls()
+*/
+void cl_ctrl(surface *, int);
+
+/*
+? - rn_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
+* return to the controls settings menu proccess
+> controls()
+*/
+void rn_ctrl(surface *sub, int ctrl_usrOpPos);
 
 /*
 ? - video(surface*) void func -
@@ -126,6 +190,7 @@ void audio(surface*);
 */
 void language(surface*);
 
+//? -- gamePlay functions declaration part --
 /*
 ? - gamePlay(surface*) void func -
 * in this section the usr can change:
@@ -150,21 +215,6 @@ void gm_scroll_UD(surface *, int *, int);
 > gamePlay(surface*)
 */
 void gm_scroll_LR(surface *, char *, char *, int, int);
-
-/*
-? - scroll_UD(surface*, int*, int) void fn -
-* scroll the right menu up and down
-> settings()
-! support only the controls(surface*) function
-*/
-void rs_scroll_UD(surface *, int *, int);
-
-/*
-? - rn_settings(surface*) void fn -
-* return to the main settings menu proccess
-> usr_modification[#](sub)
-*/
-void rn_settings(surface *);
 
 /*
 ? - ctrl_volume(surface *sub, char *type_vol, int line, int conf) void fn -

@@ -19,10 +19,12 @@
 			"MOUSEBUTTONDOWN",
 			"MOUSEMOTION",
 			"nchallah",
+			"Ryannn",
 			"SDLK",
 			"SPRUN",
 			"SUCMSG",
-			"SWSURFACE"
+			"SWSURFACE",
+			"ttttp"
 		],
 		"files.associations": {
 			"inc.h": "c",

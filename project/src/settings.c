@@ -1,16 +1,15 @@
 /* -----------------------------------------------
 * @team:   by_kayori_Nova_Grp
-* @update: 04/11/24
+* @update: 04/27/24
 ? @file:   settings.c
 ----------------------------------------------- */
 
 //? ----------------------- TODO SECTION DECLARATION PART -----------------------
 /*
-TODO_01: working on the 5 usr_modification functions             :: @ZouariOmar :: 90%
-    * fix the "volume bars view" in video(surface*) fn
-    * load and test with test.mp3, test0.wav, test1.wav
-TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
-TODO_03: code the keyboard_conf() void func                      :: @ZouariOmar
+TODO_01: fix the "volume bars view" in video(surface*) fn        :: @ZouariOmar
+TODO_02: load a "music" and "chunk"                              :: @ZouariOmar @Ryannn26
+TODO_03: support the mouse events (motion and button down click) :: @ZouariOmar
+TODO_04: code the keyboard_conf() void func                      :: @ZouariOmar
 */
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
@@ -20,7 +19,7 @@ TODO_03: code the keyboard_conf() void func                      :: @ZouariOmar
 //* the curent user option position
 int usrOpPos = 0;
 
-//? init InitFunc public array var
+//* init InitFunc public array var
 InitFunc init[] = {
     init_rs_ctrl,
     init_rs_vid,
@@ -29,7 +28,7 @@ InitFunc init[] = {
     init_rs_gmP
 };
 
-//? usr_modification InitFunc public array var
+//* usr_modification InitFunc public array var
 InitFunc usr_modification[] = {
     controls,
     video,
@@ -44,12 +43,12 @@ void settings() {
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
-    loadResources(sub, "project/res/settings/LS/img",               0,  12);
-    loadResources(sub, "project/res/settings/RS/controls_menu/img", 12, 27);
-    loadResources(sub, "project/res/settings/RS/video_menu/img",    27, 37);
-    loadResources(sub, "project/res/settings/RS/audio_menu/img",    37, 45);
-    loadResources(sub, "project/res/settings/RS/language_menu/img", 45, 50);
-    loadResources(sub, "project/res/settings/RS/gamePlay_menu/img", 50, 54);
+    loadResources(sub, "project/res/img_settings/LS/img",               0,  12);
+    loadResources(sub, "project/res/img_settings/RS/controls_menu/img", 12, 28);
+    loadResources(sub, "project/res/img_settings/RS/video_menu/img",    28, 37);
+    loadResources(sub, "project/res/img_settings/RS/audio_menu/img",    37, 45);
+    loadResources(sub, "project/res/img_settings/RS/language_menu/img", 45, 50);
+    loadResources(sub, "project/res/img_settings/RS/gamePlay_menu/img", 50, 54);
 
     //* set potions for the other res
     set_pos(sub, "project/doc/settings_ref", 54);
@@ -162,6 +161,17 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
         SDL_BlitSurface(sub[7 + *usrOpPos].win,  NULL, screen, &sub[7 + *usrOpPos].pos);
 }
 
+void rn_settings(surface* sub) {
+    //* del the old rs_surface
+    SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+    //* reset the sub menu surface
+    init[usrOpPos](sub);
+
+    //* reset the settings menu selection
+    SDL_BlitSurface(sub[7 + usrOpPos].win,  NULL, screen, &sub[7 + usrOpPos].pos);
+}
+
 //? ----------------------- INIT FUNCTIONS DEV PART -----------------------
 void initResources(surface* sub) {
     sub[0].pos.x = 0; sub[0].pos.y = 0;
@@ -173,6 +183,19 @@ void initResources(surface* sub) {
 void init_rs_ctrl(surface* sub) {
     for (int i = 12; i < 15; i++)
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
+}
+
+void init_kb_ctrl(surface *sub) {
+    //* del the old rs_surface
+    SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+
+    for (int i = 12; i < 23; i++)
+        if (i != 15 && i != 16)
+            SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
+}
+
+void init_cl_ctrl(surface *) {
+    //! need resources :: @Ryannn26
 }
 
 void init_rs_vid(surface* sub) {
@@ -296,10 +319,11 @@ void controls(surface* sub) {
     //* the curent user option position
     int ctrl_usrOpPos = 0;
 
-    //* init part
+    //* init the kb_ctrl menu
+    init_kb_ctrl(sub);
+
+    //* blit the selected img (blit the animated "keyboard config" img by default)
     SDL_BlitSurface(sub[15].win, NULL, screen, &sub[15].pos);
-    for (int i = 17; i < 23; i++)
-        SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
 
     //* update the screen
     SDL_Flip(screen);
@@ -314,18 +338,19 @@ void controls(surface* sub) {
                         //? --- UP CLICK OPTION ---
                         case SDLK_UP:
                             //* blit the new ctrl ls_interface
-                            rs_scroll_UD(sub, &ctrl_usrOpPos, -1);
+                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, -1);
                             break;
 
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
                             //* blit the new ctrl ls_interface
-                            rs_scroll_UD(sub, &ctrl_usrOpPos, 1);
+                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, 1);
                             break;
 
                         //? --- ENTER CLICK OPTION ---
-                        case SDLK_KP_ENTER:
-                            // rest of code...
+                        case SDLK_SPACE:
+                            (ctrl_usrOpPos) ? init_cl_ctrl(sub)           : init_kb_ctrl(sub);
+                            (ctrl_usrOpPos) ? cl_ctrl(sub, ctrl_usrOpPos) : kb_ctrl(sub, ctrl_usrOpPos);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -358,7 +383,7 @@ void controls(surface* sub) {
     }
 }
 
-void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
+void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -386,6 +411,92 @@ void rs_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     SDL_BlitSurface(sub[15 + *ctrl_usrOpPos].win,  NULL, screen, &sub[15 + *ctrl_usrOpPos].pos);
 }
 
+void kb_ctrl(surface *sub, int ctrl_usrOpPos) {
+    //* the curent keyboard controls user option position
+    int kb_ctrl_usrOpPos = 0;
+
+    //* blit the selected img (blit the animated "Right" img by default)
+    SDL_BlitSurface(sub[23].win, NULL, screen, &sub[23].pos);
+
+    //* update the screen
+    SDL_Flip(screen);
+
+    //* enter the @event_loop part
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        //? --- UP CLICK OPTION ---
+                        case SDLK_UP:
+                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, -1);
+                            break;
+
+                        //? --- DOWN CLICK OPTION ---
+                        case SDLK_DOWN:
+                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, 1);
+                            break;
+
+                        //? --- ESCAPE CLICK OPTION ---
+                        case SDLK_ESCAPE:
+                            rn_ctrl(sub, ctrl_usrOpPos);
+                            return;
+
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
+
+                //? --------------------- QUIT CLICK EVENT ---------------------
+                case SDL_QUIT:
+                    freeResources(sub, NULL, 52);
+                    exit(EXIT_SUCCESS);
+                    break;
+
+                //? --------------------- OTHER CLICK EVENT ---------------------
+                default:
+                    break;
+            }
+        }
+        //* update the screen
+        SDL_Flip(screen);
+
+        //* wait 100 millisecond befor returning
+        SDL_Delay(100);
+    }
+}
+
+void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction) {
+    //* del the old rs_interface
+    init_kb_ctrl(sub);
+
+    //* update the usrOpPos
+    *kb_ctrl_usrOpPos += direction;
+
+    //* correct usr option postion
+    if (*kb_ctrl_usrOpPos == -1)
+        *kb_ctrl_usrOpPos = 4;
+    else if (*kb_ctrl_usrOpPos == 5)
+        *kb_ctrl_usrOpPos = 0;
+    
+    //* blit the @animated_img for the new usr option
+    SDL_BlitSurface(sub[23 + *kb_ctrl_usrOpPos].win,  NULL, screen, &sub[23 + *kb_ctrl_usrOpPos].pos);
+}
+
+void cl_ctrl(surface *sub, int ctrl_usrOpPos) {
+    //! need resources :: @Ryannn26
+}
+
+void rn_ctrl(surface *sub, int ctrl_usrOpPos) {
+    //* reset the kb/controller ctrl option menu
+    ctrl_usrOpPos ? init_cl_ctrl(sub) : init_kb_ctrl(sub);
+
+    //* reset the last selected button for the kb/controller ctrl option menu
+    SDL_BlitSurface(sub[15 + ctrl_usrOpPos].win,  NULL, screen, &sub[15 + ctrl_usrOpPos].pos);
+}
+
 void video(surface* sub) {
     //* init part
     SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
@@ -403,13 +514,13 @@ void video(surface* sub) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* blit left animated button
-                            SDL_BlitSurface(sub[33].win, NULL, screen, &sub[33].pos);
+                            SDL_BlitSurface(sub[33].win, NULL, screen, (sub[33].pos.y = 300, &sub[33].pos));
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* blit right animated button
-                            SDL_BlitSurface(sub[34].win, NULL, screen, &sub[34].pos);
+                            SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y = 300, &sub[34].pos));
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -487,17 +598,6 @@ void video(surface* sub) {
         //* wait 100 millisecond befor returning
         SDL_Delay(100);
     }
-}
-
-void rn_settings(surface* sub) {
-    //* del the old rs_surface
-    SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
-
-    //* reset the sub menu surface
-    init[usrOpPos](sub);
-
-    //* reset the settings menu selection
-    SDL_BlitSurface(sub[7 + usrOpPos].win,  NULL, screen, &sub[7 + usrOpPos].pos);
 }
 
 void audio(surface* sub) {
@@ -805,7 +905,7 @@ void gamePlay(surface* sub) {
                             (gm_usrOpPos) ? (sub[31].pos.y = 378) : (sub[31].pos.y = 300);
                             SDL_BlitSurface(sub[31].win, NULL, screen, &sub[31].pos);
                             break;
-                        
+
                         //? --- OTHER CLICK OPTION ---
                         default:
                             break;

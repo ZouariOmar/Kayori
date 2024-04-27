@@ -31,6 +31,7 @@
 #include "SDL_Msg.h"
 #include "settings.h"
 #include "speedRun.h"
+#include "__ttt_game__.h"
 #include "enigma.h"
 
 //* PUBLIC VARS

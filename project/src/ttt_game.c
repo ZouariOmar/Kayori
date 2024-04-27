@@ -188,6 +188,7 @@ void __ttt_game__() {
                             break;
 
                         case SDLK_ESCAPE:
+                            freeResources(sub, NULL, 16);
                             exit(EXIT_SUCCESS);
                             break;
 
@@ -250,6 +251,7 @@ void __ttt_game__() {
 
                     /* QUIT EVENT */
                 case SDL_QUIT:
+                    freeResources(sub, NULL, 16);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -293,11 +295,6 @@ void have_coordinate(Sint16* x, Sint16* y, int usr_pos) {
     *y += 205 * (usr_pos / 3);
 }
 
-/*
-? is_free() int func guide
-* available pos    :: return "the index of the available pos (0..8)"
-* no available pos :: return "-1"
-*/
 int is_free(int *t) {
     for (int i = 0; i < 9; i++) {
         if (t[i] == -1)
@@ -364,12 +361,4 @@ int check_diagonals(surface* sub, int* t, int x) {
         return 1;
     }
     return 0;
-}
-
-/*
-? freeResources() void func guide
-* free all res :: sub_surfaces and pip chunk
-*/
-void freeResources(surface *sub) {
-    for(int i = 0; i < 16; i++) SDL_FreeSurface(sub[i].win);
 }
