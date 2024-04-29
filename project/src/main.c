@@ -14,10 +14,7 @@ int main() {
     closeEverything();
 
     //* game lunching part
-    ////MainMenu();
-
-    //! testing part
-    settings();
+    MainMenu();
 
     //* free the main screen surface
     SDL_FreeSurface(screen);
