@@ -16,6 +16,12 @@ void InitialisationMM(MM* Main_Menu)
 
 	Main_Menu->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
+	//* load the @soundVolume
+	Mix_VolumeChunk(Main_Menu->Chunk, scanValue("project/doc/settings", 20));
+
+	//* load the @musicVolume
+	Mix_VolumeMusic(scanValue("project/doc/settings",      19));
+
 	// => Buttons
 
 	// Surface of the image

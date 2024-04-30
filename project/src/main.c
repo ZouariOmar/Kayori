@@ -11,6 +11,8 @@
 int main() {
     //* init part
 	initEverything();
+
+    //* close the prog at exit
     closeEverything();
 
     //* game lunching part

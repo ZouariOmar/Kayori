@@ -29,10 +29,6 @@ void initEverything() {
     //* upload the screen mode
     setScreen(scanValue("project/doc/settings", 18));
 
-    //* upload the music and chunk volume
-    ////Mix_VolumeMusic(scanValue(2));
-    ////Mix_VolumeChunk(pop, scanValue(3));
-
     //* set the game caption
     SDL_WM_SetCaption("Hollow Vessels", NULL);
 }
@@ -171,7 +167,8 @@ void loadResources(surface *sub, char *path, int begin_res, int nbr_res) {
     }
 }
 
-void freeResources(surface *sub, TTF_Font *font, int nb_res) {
+void freeResources(surface *sub, TTF_Font *font, Mix_Chunk *pip, int nb_res) {
     for(int i = 0; i < nb_res; i++) SDL_FreeSurface(sub[i].win);
     TTF_CloseFont(font);
+    Mix_FreeChunk(pip);
 }

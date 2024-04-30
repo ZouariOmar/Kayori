@@ -21,7 +21,7 @@ TODO_04: code the keyboard_conf() void func                      :: @ZouariOmar
 int usrOpPos = 0;
 
 //* init InitFunc public array var
-InitFunc init[] = {
+initFn init[] = {
     init_rs_ctrl,
     init_rs_vid,
     init_rs_aud,
@@ -30,7 +30,7 @@ InitFunc init[] = {
 };
 
 //* usr_modification InitFunc public array var
-InitFunc usr_modification[] = {
+lunchFn usr_modification[] = {
     controls,
     video,
     audio,
@@ -41,6 +41,12 @@ InitFunc usr_modification[] = {
 void settings() {
     // * all 100 settings sub-surfaces
     surface sub[54];
+
+    //* init the chunk 
+    Mix_Chunk *pip = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
+
+    //* load the @soundVolume
+    Mix_VolumeChunk(pip, scanValue("project/doc/settings", 20));
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
@@ -82,14 +88,14 @@ void settings() {
                     switch(event.key.keysym.sym) {
                         //? --- UP CLICK OPTION ---
                         case SDLK_UP:
-                            scroll_UD(sub, &usrOpPos, -1);
+                            scroll_UD(sub, &usrOpPos, -1, pip);
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
                             init[usrOpPos](sub);
                             break;
 
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
-                            scroll_UD(sub, &usrOpPos, 1);
+                            scroll_UD(sub, &usrOpPos, 1, pip);
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
                             init[usrOpPos](sub);
                             break;
@@ -97,15 +103,15 @@ void settings() {
                         //? --- ENTER CLICK OPTION ---
                         case SDLK_SPACE:
                             //* deselect the usr curent position
-                            scroll_UD(sub, &usrOpPos, 0);
+                            scroll_UD(sub, &usrOpPos, 0, pip);
 
                             //* activate the sub_menu mode (depending on the usr option position var)
-                            usr_modification[usrOpPos](sub);
+                            usr_modification[usrOpPos](sub, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            freeResources(sub, NULL, 52);
+                            freeResources(sub, NULL, pip, 52);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -116,7 +122,7 @@ void settings() {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -133,7 +139,10 @@ void settings() {
     }
 }
 
-void scroll_UD(surface* sub, int* usrOpPos, int direction) {
+void scroll_UD(surface* sub, int* usrOpPos, int direction, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
     //* del the left menu
     SDL_BlitSurface(sub[0].win,  &sub[1].pos, screen, &sub[1].pos);
 
@@ -162,7 +171,7 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction) {
         SDL_BlitSurface(sub[7 + *usrOpPos].win,  NULL, screen, &sub[7 + *usrOpPos].pos);
 }
 
-void rn_settings(surface* sub) {
+void rn_settings(surface* sub, Mix_Chunk *pip) {
     //* del the old rs_surface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -316,7 +325,7 @@ void init_rs_gmP(surface* sub) {
 }
 
 //? ----------------------- USR_MODIFICATION FUNCTIONS DEV PART -----------------------
-void controls(surface* sub) {
+void controls(surface* sub, Mix_Chunk *pip) {
     //* the curent user option position
     int ctrl_usrOpPos = 0;
 
@@ -339,24 +348,24 @@ void controls(surface* sub) {
                         //? --- UP CLICK OPTION ---
                         case SDLK_UP:
                             //* blit the new ctrl ls_interface
-                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, -1);
+                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, -1, pip);
                             break;
 
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
                             //* blit the new ctrl ls_interface
-                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, 1);
+                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, 1, pip);
                             break;
 
                         //? --- ENTER CLICK OPTION ---
                         case SDLK_SPACE:
                             (ctrl_usrOpPos) ? init_cl_ctrl(sub)           : init_kb_ctrl(sub);
-                            (ctrl_usrOpPos) ? cl_ctrl(sub, ctrl_usrOpPos) : kb_ctrl(sub, ctrl_usrOpPos);
+                            (ctrl_usrOpPos) ? cl_ctrl(sub, ctrl_usrOpPos) : kb_ctrl(sub, ctrl_usrOpPos, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            rn_settings(sub);
+                            rn_settings(sub, pip);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -367,7 +376,7 @@ void controls(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -384,7 +393,7 @@ void controls(surface* sub) {
     }
 }
 
-void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
+void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *pip) {
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -412,7 +421,7 @@ void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) {
     SDL_BlitSurface(sub[15 + *ctrl_usrOpPos].win,  NULL, screen, &sub[15 + *ctrl_usrOpPos].pos);
 }
 
-void kb_ctrl(surface *sub, int ctrl_usrOpPos) {
+void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
     //* the curent keyboard controls user option position
     int kb_ctrl_usrOpPos = 0;
 
@@ -431,12 +440,12 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos) {
                     switch(event.key.keysym.sym) {
                         //? --- UP CLICK OPTION ---
                         case SDLK_UP:
-                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, -1);
+                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, -1, pip);
                             break;
 
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
-                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, 1);
+                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, 1, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -452,7 +461,7 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -469,7 +478,7 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos) {
     }
 }
 
-void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction) {
+void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction, Mix_Chunk *) {
     //* del the old rs_interface
     init_kb_ctrl(sub);
 
@@ -498,7 +507,7 @@ void rn_ctrl(surface *sub, int ctrl_usrOpPos) {
     SDL_BlitSurface(sub[15 + ctrl_usrOpPos].win,  NULL, screen, &sub[15 + ctrl_usrOpPos].pos);
 }
 
-void video(surface* sub) {
+void video(surface* sub, Mix_Chunk *pip) {
     //* init part
     SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
 
@@ -526,7 +535,7 @@ void video(surface* sub) {
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            rn_settings(sub);
+                            rn_settings(sub, pip);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -584,7 +593,7 @@ void video(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -601,7 +610,7 @@ void video(surface* sub) {
     }
 }
 
-void audio(surface* sub) {
+void audio(surface* sub, Mix_Chunk *pip) {
     //* the curent @audio_user_option_position
     int audio_usrOpPos = 0;
 
@@ -663,18 +672,18 @@ void audio(surface* sub) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* reduce volume
-                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, -8) : ctrl_volume(sub, "soundVolume", 20, -8);
+                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, -8, pip) : ctrl_volume(sub, "soundVolume", 20, -8, pip);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* add volume
-                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, 8) : ctrl_volume(sub, "soundVolume", 20, 8);
+                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, 8, pip) : ctrl_volume(sub, "soundVolume", 20, 8, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            rn_settings(sub);
+                            rn_settings(sub, pip);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -711,7 +720,7 @@ void audio(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -728,7 +737,8 @@ void audio(surface* sub) {
     }
 }
 
-void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
+void ctrl_volume(surface* sub, char* type_vol, int line, int config, Mix_Chunk *pip) {
+
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
 
@@ -749,9 +759,9 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
         editValue("%s %d\n", type_vol, volume, line);
 
         //* set the new music/chunk volume
-        ////(line == 2) ? Mix_VolumeMusic(scanValue("project/doc/settings", 2)) : Mix_VolumeChunk(pop, scanValue("project/doc/settings", 3));
+        (line == 19) ? Mix_VolumeMusic(scanValue("project/doc/settings", 19)) : Mix_VolumeChunk(pip, scanValue("project/doc/settings", 20));
     }
-    
+
     //* reset the current @sub_menu_surface
     init[usrOpPos](sub);
 
@@ -769,7 +779,7 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config) {
     sub[34].pos.y = 300;
 }
 
-void language(surface* sub) {
+void language(surface* sub, Mix_Chunk *pip) {
     //* enter the @event_loop part
     while (1) {
         while (SDL_PollEvent(&event)) {
@@ -803,12 +813,12 @@ void language(surface* sub) {
 
                         //? --- SPACE CLICK OPTION ---
                         case SDLK_SPACE:
-                            rn_settings(sub);
+                            rn_settings(sub, pip);
                             return;
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            rn_settings(sub);
+                            rn_settings(sub, pip);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -819,7 +829,7 @@ void language(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -836,7 +846,7 @@ void language(surface* sub) {
     }
 }
 
-void gamePlay(surface* sub) {
+void gamePlay(surface* sub, Mix_Chunk *pip) {
     //* init the curent @gamePlay_user_option_position in speedRun op by default
     int gm_usrOpPos = 0;
 
@@ -855,33 +865,33 @@ void gamePlay(surface* sub) {
                     switch(event.key.keysym.sym) {
                         //? --- UP CLICK OPTION ---
                         case SDLK_UP:
-                            gm_scroll_UD(sub, &gm_usrOpPos, -1);
+                            gm_scroll_UD(sub, &gm_usrOpPos, -1, pip);
                             break;
 
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
-                            gm_scroll_UD(sub, &gm_usrOpPos, 1);
+                            gm_scroll_UD(sub, &gm_usrOpPos, 1, pip);
                             break;
 
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             if (gm_usrOpPos)
-                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 0);
+                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 0, pip);
                             else
-                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 0);
+                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 0, pip);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             if (gm_usrOpPos)
-                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 1);
+                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 1, pip);
                             else
-                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 1);
+                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 1, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            rn_settings(sub);
+                            rn_settings(sub, pip);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -915,7 +925,7 @@ void gamePlay(surface* sub) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, 52);
+                    freeResources(sub, NULL, pip, 52);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -932,7 +942,7 @@ void gamePlay(surface* sub) {
     }
 }
 
-void gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction) {
+void gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction, Mix_Chunk *pip) {
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -952,7 +962,7 @@ void gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction) {
     SDL_BlitSurface(sub[51 + *gm_usrOpPos * 2].win, NULL, screen, &sub[51 + *gm_usrOpPos * 2].pos);
 }
 
-void gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf) {
+void gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf, Mix_Chunk *pip) {
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 

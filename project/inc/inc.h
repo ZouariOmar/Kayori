@@ -105,6 +105,6 @@ void set_pos(surface *, char *, int);
 void loadResources(surface *, char *, int, int);
 
 //? freeResources(surface*) void fun
-void freeResources(surface *, TTF_Font *, int);
+void freeResources(surface *, TTF_Font *, Mix_Chunk *, int);
 
 #endif

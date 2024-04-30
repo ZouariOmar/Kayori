@@ -8,6 +8,9 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	
 	Quit->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
+	//* load the @soundVolume
+    Mix_VolumeChunk(Quit->Chunk, scanValue("project/doc/settings", 20));
+
 	// Background
 
 	Quit->Image_Background.pos.h=244;

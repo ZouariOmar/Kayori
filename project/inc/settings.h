@@ -15,7 +15,9 @@ typedef struct Surface {
     SDL_Rect     pos;
 } surface;
 
-typedef void (*InitFunc)(surface*);
+typedef void (*initFn)(surface *);
+
+typedef void (*lunchFn)(surface *, Mix_Chunk *);
 
 //? ----------------------- FUNCTIONS PROTOTYPE DECLARATION PART -----------------------
 /*
@@ -30,17 +32,17 @@ typedef void (*InitFunc)(surface*);
 void settings();
 
 /*
-? - scroll_UD(surface*, int*, int) void func -
+? - scroll_UD(surface*, int*, int, Mix_Chunk) void func -
 * scroll the left menu up and down
 */
-void scroll_UD(surface*, int*, int);
+void scroll_UD(surface*, int*, int, Mix_Chunk *);
 
 /*
 ? - rn_settings(surface*) void fn -
 * return to the main settings menu proccess
 > usr_modification[#](sub)
 */
-void rn_settings(surface *);
+void rn_settings(surface *, Mix_Chunk *);
 
 /* ----------------------------------
 ? --- INIT FUNCS DECLARATION PART ---
@@ -111,13 +113,13 @@ void init_cl_ctrl(surface *);
 
 //? -- controls functions declaration part --
 /*
-? - controls(surface*, int) void func -
+? - controls(surface *sub, Mix_Chunk *pip) void func -
 * in this section the usr can change:
     * keyboard_configuration
     * controller_configuration
 > settings()
 */
-void controls(surface*);
+void controls(surface*, Mix_Chunk *);
 
 /*
 ? - ctrl_scroll_UD(surface*, int*, int) void fn -
@@ -125,7 +127,7 @@ void controls(surface*);
 > settings()
 ! support only the controls(surface*) function
 */
-void ctrl_scroll_UD(surface *, int *, int);
+void ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
 
 /*
 ? - kb_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
@@ -133,15 +135,15 @@ void ctrl_scroll_UD(surface *, int *, int);
 * usr can modify the keyboard configuration
 > controls()
 */
-void kb_ctrl(surface *, int);
+void kb_ctrl(surface *, int, Mix_Chunk *);
 
 /*
-? - kb_ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction) void fn -
+? - kb_ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *pip) void fn -
 * scroll the "keyboard conf" menu up and down
 > kb_ctrl()
 ! support only the controls(surface*) function
 */
-void kb_ctrl_scroll_UD(surface *, int *, int);
+void kb_ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
 
 /*
 ? - cl_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
@@ -167,7 +169,7 @@ void rn_ctrl(surface *sub, int ctrl_usrOpPos);
 * support the @autosave mode
 > settings()
 */
-void video(surface*);
+void video(surface*, Mix_Chunk *);
 
 /*
 ? - audio(surface*) void func -
@@ -178,7 +180,7 @@ void video(surface*);
 * support the @autosave mode
 > settings()
 */
-void audio(surface*);
+void audio(surface*, Mix_Chunk *);
 
 /*
 ? - language(surface*) void func -
@@ -189,7 +191,7 @@ void audio(surface*);
 * support the @autosave mode
 > settings()
 */
-void language(surface*);
+void language(surface*, Mix_Chunk *);
 
 //? -- gamePlay functions declaration part --
 /*
@@ -201,26 +203,26 @@ void language(surface*);
 * support the @autosave mode
 > settings()
 */                  
-void gamePlay(surface*);
+void gamePlay(surface*, Mix_Chunk *);
 
 /*
 ? - gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction) void fn -
 * scroll up/down the gamePlay menu
 > gamePlay(surface*)
 */
-void gm_scroll_UD(surface *, int *, int);
+void gm_scroll_UD(surface *, int *, int, Mix_Chunk *);
 
 /*
 ? - gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf) void fn -
 * scroll left/right the gamePlay menu
 > gamePlay(surface*)
 */
-void gm_scroll_LR(surface *, char *, char *, int, int);
+void gm_scroll_LR(surface *, char *, char *, int, int, Mix_Chunk *);
 
 /*
 ? - ctrl_volume(surface *sub, char *type_vol, int line, int conf) void fn -
 > audio(surface*)
 */
-void ctrl_volume(surface *, char *, int, int);
+void ctrl_volume(surface *, char *, int, int, Mix_Chunk *);
 
 #endif

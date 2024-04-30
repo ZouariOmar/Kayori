@@ -8,6 +8,9 @@ void InitialisationSM(SM* Start_Menu,int* Quit_Game)
 
 	Start_Menu->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
+	//* load the @soundVolume
+    Mix_VolumeChunk(Start_Menu->Chunk, scanValue("project/doc/settings", 20));
+
 	// Quit Button
 
 	Start_Menu->Image_Quit_Button.pos.h=119;
