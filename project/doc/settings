@@ -1,25 +1,25 @@
 ** keyboard controller **
 --
-kb_move_left  SDLK_LEFT
-kb_move_right SDLK_RIGHT
-kb_jump       SDLK_SPACE
-kb_dash       SDLK_x
-kb_slide      SDLK_c
+kb_move_right 275
+kb_move_left  276
+kb_jump       32
+kb_slide      99
+kb_dash       119
 --
 ** console controller **
 --
-cl_move_left  SDLK_LEFT
-cl_move_right SDLK_RIGHT
-cl_jump       SDLK_SPACE
-cl_dash       SDLK_x
-cl_slide      SDLK_c
+cl_move_right 275
+cl_move_left  276
+cl_jump       32
+cl_slide      99
+cl_dash       119
 --
 ** other options **
 --
 fullscreen  -2147483648
-musicVolume 128
-soundVolume 128
+musicVolume 32
+soundVolume 8
 language    0
-speedRun    0
-miniMap     0
+speedRun    1
+miniMap     1
 --

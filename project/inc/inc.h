@@ -78,13 +78,19 @@ void closeEverything();
 ? --- SCANNING && EDITING FILES FUNCTIONS DECLARATION PART ---
 -------------------------------------------------------------- */
 /*
-? --- scanValue(int) int func ---
+? - scanValue(char *path, int line) int func -
 * scan the next format "%s %d"
 */
 int scanValue(char *, int);
 
 /*
-? editValue(int) void func
+? - *scanStr(char *path, char *info, int line) void func -
+* scan the next format "%s"
+*/
+void scanStr(char *, char*, int);
+
+/*
+? - editValue(char *, char *, int, int) void func -
 * update the changed option info
 */
 void editValue(char *, char *, int, int);

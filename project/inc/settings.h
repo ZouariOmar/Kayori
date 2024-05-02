@@ -62,6 +62,20 @@ void initResources(surface*);
 void init_rs_ctrl(surface*);
 
 /*
+? - init_kb_ctrl(surface *sub) void func -
+* initialize the keyboard conf
+> {controls(), kb_ctrls()}
+*/
+void init_kb_ctrl(surface *);
+
+/*
+? - init_cl_ctrl(surface *sub) void func -
+* initialize the controller conf
+> {controls(), kb_ctrls()}
+*/
+void init_cl_ctrl(surface *);
+
+/*
 ? - init_rs_vid(surface*) void func -
 * blit the video option menu
 * support the @autosave mode
@@ -78,6 +92,13 @@ void init_rs_vid(surface*);
 void init_rs_aud(surface*);
 
 /*
+? - bar_volume(surface *sub, int volume) void func -
+* blit the audio/music bars
+> init_rs_aud(surface*)
+*/
+void bar_volume(surface *, int);
+
+/*
 ? - init_rs_lang(surface*) void func -
 * blit the language option menu
 * support the @autosave mode
@@ -92,20 +113,6 @@ void init_rs_lang(surface*);
 > initResources(surface*)
 */
 void init_rs_gmP(surface*);
-
-/*
-? - init_kb_ctrl(surface *sub) void func -
-* initialize the keyboard conf
-> {controls(), kb_ctrls()}
-*/
-void init_kb_ctrl(surface *);
-
-/*
-? - init_cl_ctrl(surface *sub) void func -
-* initialize the controller conf
-> {controls(), kb_ctrls()}
-*/
-void init_cl_ctrl(surface *);
 
 /* ----------------------------------------------
 ? --- USR_MODIFICATION FUNCS DECLARATION PART ---
@@ -125,7 +132,7 @@ void controls(surface*, Mix_Chunk *);
 ? - ctrl_scroll_UD(surface*, int*, int) void fn -
 * scroll the "controls" menu up and down
 > settings()
-! support only the controls(surface*) function
+! support only the controls(surface*) function for now
 */
 void ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
 
@@ -183,6 +190,12 @@ void video(surface*, Mix_Chunk *);
 void audio(surface*, Mix_Chunk *);
 
 /*
+? - ctrl_volume(surface *sub, char *type_vol, int line, int conf) void fn -
+> audio(surface*)
+*/
+void ctrl_volume(surface *, char *, int, int, Mix_Chunk *);
+
+/*
 ? - language(surface*) void func -
 * in this section the usr can change:
     * language
@@ -218,11 +231,5 @@ void gm_scroll_UD(surface *, int *, int, Mix_Chunk *);
 > gamePlay(surface*)
 */
 void gm_scroll_LR(surface *, char *, char *, int, int, Mix_Chunk *);
-
-/*
-? - ctrl_volume(surface *sub, char *type_vol, int line, int conf) void fn -
-> audio(surface*)
-*/
-void ctrl_volume(surface *, char *, int, int, Mix_Chunk *);
 
 #endif

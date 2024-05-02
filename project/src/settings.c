@@ -11,6 +11,14 @@ TODO_01: fix the "volume bars view" in video(surface*) fn        :: @ZouariOmar
 TODO_02: load a "music" and "chunk"                              :: @ZouariOmar @Ryannn26
 TODO_03: support the mouse events (motion and button down click) :: @ZouariOmar
 TODO_04: code the keyboard_conf() void func                      :: @ZouariOmar
+TODO_05: fix the chunk code existence in settings.c              :: @ZouariOmar
+*/
+
+//? ----------------------- NOTE SECTION DECLARATION PART -----------------------
+/*
+* @init_kb_ctrl: if you want to make all the txt in the center ==> strlen(txt) * LEN_OF_ONE_CHARACTER_BY_PIXEL
+* @init_kb_ctrl: animate the key box (white / brown) to indicate the key changing process
+* X42 = X43 = X44 / Y42 = Y43 = Y44
 */
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
@@ -111,7 +119,11 @@ void settings() {
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            freeResources(sub, NULL, pip, 52);
+                            //* reset the user option postion in default postion (0 by default)
+                            usrOpPos = 0;
+
+                            //* free all settings res
+                            freeResources(sub, NULL, pip, 54);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -122,7 +134,13 @@ void settings() {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    //* reset the user option postion in default postion (0 by default)
+                    usrOpPos = 0;
+
+                    //* free all settings res
+                    freeResources(sub, NULL, pip, 54);
+
+                    //* exit from the game
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -199,9 +217,44 @@ void init_kb_ctrl(surface *sub) {
     //* del the old rs_surface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
+    //* blit the keyboard res
     for (int i = 12; i < 23; i++)
         if (i != 15 && i != 16)
             SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
+
+    //? blit the current used keys :: support the @autoSave mode
+    //! need the wall_jump res :: @Ryannn26
+    //* init the "Groundation Foundation.ttf"
+    TTF_Font *font = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 30);
+
+    //* init key var
+    surface key;
+
+    //* set the @key_pos
+    key.pos.x = 1474;
+    key.pos.y = 500;
+
+    //* init the key txt holder
+    char info[100];
+
+    //* i from 0 to 5 :: 5 indicate the @kb_moves
+    for (int i = 0; i < 5; i++) {
+        //* update info to take the current mvs
+        scanStr("project/doc/ref_SDLkey", info, scanValue("project/doc/settings", 2 + i));
+
+        //* render the @key_info
+        key.win = TTF_RenderText_Blended(font, info, BLACK);
+
+        //* blit the @key_surface
+        SDL_BlitSurface(key.win, NULL, screen, &key.pos);
+
+        //* update the Y for the next keys pos
+        key.pos.y += 70;
+    }
+
+    //* free the current used font
+    SDL_FreeSurface(key.win);
+    TTF_CloseFont(font);
 }
 
 void init_cl_ctrl(surface *) {
@@ -238,31 +291,19 @@ void init_rs_aud(surface* sub) {
     SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 300, &sub[30].pos));
     SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
 
-    //! X42 = X43 = X44 :: we choose X42
+    //* blit the music volume bars
+    bar_volume(sub, scanValue("project/doc/settings", 19) / 8);
 
-    //TODO: optimize the music and sound bars blit proccess in 1 fn
-    //* --- blit the music volume bars ---
-    for (int i = 1; i <= (scanValue("project/doc/settings", 19) / 8); i++) {
-        switch (i) {
-            case 1:
-                SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
-                break;
-            case 16:
-                SDL_BlitSurface(sub[43].win, NULL, screen, &sub[42].pos);
-                break;
-            default:
-                SDL_BlitSurface(sub[44].win, NULL, screen, &sub[42].pos);
-                break;
-        }
-        sub[42].pos.x += 16;
-    }
-    //* reset the X42;
-    sub[42].pos.x = 1341;
-
-    //* --- blit the sound volume bars ---
-    // Y42 = Y43 = Y44 :: we choose to change Y42
+    //* Y42 = Y43 = Y44 :: we choose to change Y42
     sub[42].pos.y = 365;
-    for (int i = 1; i <= (scanValue("project/doc/settings", 20) / 8); i++) {
+
+    //* blit the sound volume bars
+    bar_volume(sub, scanValue("project/doc/settings", 20) / 8);
+}
+
+void bar_volume(surface *sub, int volume) {
+    //* blit the music/sound volume bars
+    for (int i = 1; i <= volume; i++) {
         switch (i) {
             case 1:
                 SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
@@ -276,6 +317,7 @@ void init_rs_aud(surface* sub) {
         }
         sub[42].pos.x += 16;
     }
+
     //* reset the X42 and Y42
     sub[42].pos.x = 1341;
     sub[42].pos.y = 284;
@@ -376,7 +418,7 @@ void controls(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    freeResources(sub, NULL, pip, 54);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -406,16 +448,15 @@ void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *
     //* update the usrOpPos
     *ctrl_usrOpPos += direction;
 
-    //* fix usr option postion
+    //* correct usr option postion
     if (*ctrl_usrOpPos == -1)
         *ctrl_usrOpPos = 1;
     else if (*ctrl_usrOpPos == 2)
         *ctrl_usrOpPos = 0;
 
-    //* blit the sub left menu
+    //* blit the sub right menu
     //! support the kb_menu only (we don't have the controller resources)
-    for (int i = 17; i < 23 && !(*ctrl_usrOpPos); i++)
-        SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
+    (*ctrl_usrOpPos) ? init_cl_ctrl(sub) : init_kb_ctrl(sub);
     
     //* blit the @animated_img for the new usr option
     SDL_BlitSurface(sub[15 + *ctrl_usrOpPos].win,  NULL, screen, &sub[15 + *ctrl_usrOpPos].pos);
@@ -461,7 +502,7 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    freeResources(sub, NULL, pip, 54);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -593,7 +634,7 @@ void video(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    freeResources(sub, NULL, pip, 54);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -720,7 +761,7 @@ void audio(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    freeResources(sub, NULL, pip, 54);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -738,7 +779,6 @@ void audio(surface* sub, Mix_Chunk *pip) {
 }
 
 void ctrl_volume(surface* sub, char* type_vol, int line, int config, Mix_Chunk *pip) {
-
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
 
@@ -829,7 +869,7 @@ void language(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    freeResources(sub, NULL, pip, 54);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -925,7 +965,7 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 52);
+                    freeResources(sub, NULL, pip, 54);
                     exit(EXIT_SUCCESS);
                     break;
 

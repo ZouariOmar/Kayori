@@ -43,7 +43,7 @@ void closeEverything() {
 SDL_Surface *load_img(char* path) {
     SDL_Surface *loadedImg = IMG_Load(path),
                 *optimizedImg = NULL;
-    if(loadedImg) {
+    if (loadedImg) {
         optimizedImg = SDL_DisplayFormatAlpha(loadedImg);
         SDL_FreeSurface(loadedImg);
     }
@@ -92,6 +92,33 @@ int scanValue(char *path, int line) {
     fclose(file);
 
     return value;
+}
+
+void scanStr(char *path, char *info, int line) {
+    //* open the file
+    FILE* file = fopen(path, "r");
+    if (!file) {
+        perror("Error: can't open settings file !"); exit(EXIT_FAILURE);
+    }
+
+    /*
+    ? holder     :: to detect the newLine char ('\n')
+    ? info       :: to store the info
+    ? ln         :: to detect the file line number
+    */
+    char holder;
+    int ln = 1;
+
+    while ((holder = fgetc(file)) != EOF) {
+        if (holder == '\n') ln++;
+        if (ln == line) {
+            fscanf(file, "%s", info);
+            break;
+        }
+    }
+
+    //* close the settings file
+    fclose(file);
 }
 
 void editValue(char *format, char *option, int value, int line) {
