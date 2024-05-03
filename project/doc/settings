@@ -3,7 +3,7 @@
 kb_move_right 275
 kb_move_left  276
 kb_jump       32
-kb_slide      99
+kb_slide      1
 kb_dash       119
 --
 ** console controller **
@@ -17,7 +17,7 @@ cl_dash       119
 ** other options **
 --
 fullscreen  -2147483648
-musicVolume 32
+musicVolume 128
 soundVolume 8
 language    0
 speedRun    1

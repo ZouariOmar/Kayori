@@ -1,0 +1,6 @@
+{
+    "sketch": "project/arduino/sketch_may2a/sketch_may2a.ino",
+    "board": "arduino:avr:uno",
+    "output": "build",
+    "port": "/dev/ttyS0"
+}

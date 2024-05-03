@@ -1,0 +1,11 @@
+{
+  "additionalFiles": "",
+  "builtInToolsFolders": "",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "",
+  "fqbn": "arduino:avr:uno",
+  "hardwareFolders": "/home/zouari/.arduino15/packages",
+  "otherLibrariesFolders": "/home/zouari/Arduino/libraries",
+  "runtime.ide.version": "10607",
+  "sketchLocation": "/mnt/c/Users/zouar/OneDrive - ESPRIT/Daily/My Projects/Games Project/Kayori/project/arduino/sketch_may2a"
+}
