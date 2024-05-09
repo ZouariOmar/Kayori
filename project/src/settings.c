@@ -23,6 +23,7 @@ TODO_05: fix the chunk code existence in settings.c              :: @ZouariOmar
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
+#include "serie.c"
 
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 //* the curent user option position
@@ -74,11 +75,31 @@ void settings() {
 
     //* ctrl button selected by default
     SDL_BlitSurface(sub[7].win,  NULL, screen, &sub[7].pos);
+    
+    //? - open the arduino serial port -
+    //* declaration of the buffer str var
+    char buffer[100];
+
+    //* open the "ttyACM0" serial port
+    int fd = serialport_init("/dev/ttyACM0", 9600);
+    if (fd == -1) {
+        perror("Error opening serial port");
+        return;
+    }
 
     // * update the screen
     SDL_Flip(screen);
-    
+
     while (1) {
+        //* scan the line from the serial monitor
+        serialport_read_until(fd, buffer, '\r', sizeof(buffer), 1000);
+
+        //! testing part
+        printf("%s\n", buffer);
+        
+        //* reset the buffer var
+        buffer[0] = '\0';
+
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 //? ----------------------- MOUSE MOTION EVENT -----------------------
@@ -122,8 +143,16 @@ void settings() {
                             //* reset the user option postion in default postion (0 by default)
                             usrOpPos = 0;
 
+                            // fermeture du port
+                            serialport_flush(fd);
+                            serialport_close(fd);
+
                             //* free all settings res
                             freeResources(sub, NULL, pip, 54);
+
+                            // fermeture du port
+                            serialport_flush(fd);
+                            serialport_close(fd);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -136,6 +165,10 @@ void settings() {
                 case SDL_QUIT:
                     //* reset the user option postion in default postion (0 by default)
                     usrOpPos = 0;
+
+                    // fermeture du port
+                    serialport_flush(fd);
+                    serialport_close(fd);
 
                     //* free all settings res
                     freeResources(sub, NULL, pip, 54);

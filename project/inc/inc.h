@@ -19,6 +19,10 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <sys/ioctl.h>
 
 //* SDL1.2 INCLUDE PART
 #include <SDL/SDL.h>
@@ -33,6 +37,7 @@
 #include "speedRun.h"
 #include "__ttt_game__.h"
 #include "enigma.h"
+#include "serie.h"
 
 //* PUBLIC VARS
 SDL_Surface *screen;
