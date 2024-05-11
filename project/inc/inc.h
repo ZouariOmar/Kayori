@@ -35,7 +35,7 @@
 #include "SDL_Msg.h"
 #include "settings.h"
 #include "speedRun.h"
-#include "__ttt_game__.h"
+#include "tic_tac_toe.h"
 #include "enigma.h"
 #include "serie.h"
 

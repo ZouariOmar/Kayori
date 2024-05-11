@@ -78,25 +78,34 @@ void settings() {
     
     //? - open the arduino serial port -
     //* declaration of the buffer str var
-    char buffer[100];
+    char buffer[5 ];
 
     //* open the "ttyACM0" serial port
-    int fd = serialport_init("/dev/ttyACM0", 9600);
-    if (fd == -1) {
+    int fd = serialport_init("/dev/ttyACM0", 115200);
+    if (fd == -1)
         perror("Error opening serial port");
-        return;
-    }
 
     // * update the screen
     SDL_Flip(screen);
 
     while (1) {
         //* scan the line from the serial monitor
-        serialport_read_until(fd, buffer, '\r', sizeof(buffer), 1000);
+        serialport_read_until(fd, buffer, '\0', sizeof(buffer), 1);
 
         //! testing part
         printf("%s\n", buffer);
-        
+        if (strstr(buffer, "j")) {
+            scroll_UD(sub, &usrOpPos, -1, pip);
+            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+            init[usrOpPos](sub);
+        }
+
+        if (strstr(buffer, "d")) {
+            scroll_UD(sub, &usrOpPos, 1, pip);
+            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+            init[usrOpPos](sub);
+        }
+
         //* reset the buffer var
         buffer[0] = '\0';
 
@@ -111,7 +120,6 @@ void settings() {
                 case SDL_MOUSEBUTTONDOWN:
                     // rest of code...
                     break;
-                
                 //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym) {

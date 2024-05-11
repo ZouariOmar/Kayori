@@ -2,11 +2,11 @@
 * @author: by_kayori_Nova_Grp
 * @author: zouari_omar
 * @date:   03/18/2024
-? @file:   __ttt_game__.h
+? @file:   tic_tac_toe.h
 ----------------------------------------------- */
 
-#ifndef __TTT_GAME_H__
-#define __TTT_GAME_H__
+#ifndef __TIC_TAC_TOE_H__
+#define __TIC_TAC_TOE_H__
 
 //? ----------------------- STRUCT PROTOTYPE DECLARATION PART ------------------------
 
@@ -18,6 +18,13 @@
 void __ttt_game__();
 
 /*
+? scroll_UD() void fn
+* scroll up and down the contour usr_current_position indicator
+> __ttt_game__()
+*/
+void ttt_scroll_UD(surface *, int *, int *, int);
+
+/*
 ? initResources(surface *sub) void fn
 * blit the first viewed interface of thr program
 */
@@ -26,6 +33,8 @@ void initResources(surface *);
 /*
 ? have_coordinate(Sint16 *x, Sint16 *y, int pos) void fn
 * change the (x, y) values depending on the curent usr_pos
+* the "initial_usr_pos = 0" ==> (662, 282)
+! we can define x and y as "int*"
 */
 void have_coordinate(Sint16 *, Sint16 *, int);
 

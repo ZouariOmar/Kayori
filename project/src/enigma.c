@@ -1,6 +1,6 @@
 /* -----------------------------------------------
 * @team:   by_kayori_Nova_Grp
-* @author: zouari_omar
+* @author: @ZouariOmar @kouka12345
 * @update: 04/24/24
 ? @file:   enigma.c
 ----------------------------------------------- */
@@ -95,7 +95,7 @@ void enigma() {
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            freeResources(sub, font, 30);
+                            freeResources(sub, font, NULL, 30);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -129,7 +129,7 @@ void enigma() {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, font, 30);
+                    freeResources(sub, font, NULL, 30);
                     exit(EXIT_SUCCESS);
                     break;
 

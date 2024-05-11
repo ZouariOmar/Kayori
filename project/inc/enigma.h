@@ -1,6 +1,6 @@
 /* -----------------------------------------------
 * @team:   by_kayori_Nova_Grp
-* @author: zouari_omar
+* @author: @ZouariOmar @kouka12345
 * @update: 04/24/24
 ? @file:   enigma.h
 ----------------------------------------------- */

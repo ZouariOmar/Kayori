@@ -33,7 +33,7 @@ const int dash_pin         = 12;
 const int interaction_pin  = 11;
 
 //* define the pause/resume  switch button pin
-const int pr_pin           = 10;
+const int pr_pin           = 10;                                                        
 
 //? -------------- PUBLIC VARS PROTOTYPE DECLARATION PART --------------
 //* define the X/Y vars
@@ -47,7 +47,7 @@ int dt = 500;
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 void setup() {
     //* set the @serial_monitor_reading_speed
-    Serial.begin(9600);
+    Serial.begin(115200);
 
     //? -- init the LCD --
     lcd.init();
@@ -85,32 +85,22 @@ void loop() {
     //* detect the Ry_pin actions
     y = analogRead(Ry_pin);
 
-    ////Serial.println(x, y);
+    Serial.println(x, y);
 
     //* detect the 2 moves pins actions    :: active in LOW mode
     if (!digitalRead(jump_pin))
-        Serial.println("is_jump");
+        Serial.println("j");
 
     if (!digitalRead(dash_pin))
-        Serial.println("is_dash");
+        Serial.println("d");
 
     //* detect the interaction_pin actions :: active in LOW mode
     if (!digitalRead(interaction_pin))
-        Serial.println("is_interact");
+        Serial.println("i");
 
     //* detect the pr_pin actions          :: active in LOW mode
     if (!digitalRead(pr_pin))
-        Serial.println("is_pause");
-
-    //* test the execution of the joystick
-    /*
-    Serial.print("X: ");
-    Serial.print(x);
-    Serial.print(" Y: ");
-    Serial.print(y);
-    Serial.print(" SWITCH: ");
-    Serial.println(sw);
-    */
+        Serial.println("p");
 
     delay(dt);
 }
