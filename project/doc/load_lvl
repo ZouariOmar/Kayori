@@ -1,0 +1,10 @@
+0 0 0 0
+0 0 0 0
+0 0 0 0
+---
+? - GAME STATUS -
+--
+(int)(current_lvl) (int)(estimated_time_ms) (int)(death_time) (int)(collected_items)
+--
+! if (int)(estimated_time_ms) == 0: load the "new_game"    res
+! if (int)(estimated_time_ms) != 0: load the "resume_game" res

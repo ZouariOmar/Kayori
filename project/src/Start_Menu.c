@@ -9,18 +9,18 @@ void InitialisationSM(SM* Start_Menu,int* Quit_Game)
 	Start_Menu->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
 	//* load the @soundVolume
-    Mix_VolumeChunk(Start_Menu->Chunk, scanValue("project/doc/settings", 20));
+    Mix_VolumeChunk(Start_Menu->Chunk, scanValue("project/doc/settings", 24));
 
 	// Quit Button
 
-	Start_Menu->Image_Quit_Button.pos.h=119;
-	Start_Menu->Image_Quit_Button.pos.w=151;
+	Start_Menu->Image_Quit_Button.pos.h=65;
+	Start_Menu->Image_Quit_Button.pos.w=130;
 
-	Start_Menu->Image_Quit_Button.pos.x=69;
-	Start_Menu->Image_Quit_Button.pos.y=43;
+	Start_Menu->Image_Quit_Button.pos.x=0;
+	Start_Menu->Image_Quit_Button.pos.y=1018;
 
-	Start_Menu->Image_Quit_Button.UC_B = load_img("project/res/img_menu/UCReturn.png");
-	Start_Menu->Image_Quit_Button.C_B = load_img("project/res/img_menu/CReturn.png");
+	Start_Menu->Image_Quit_Button.UC_B = load_img("project/res/img_start_menu/UCReturn.png");
+	Start_Menu->Image_Quit_Button.C_B = load_img("project/res/img_start_menu/CReturn.png");
 
 	// Bouton save 1
 
@@ -72,7 +72,7 @@ void InitialisationSM(SM* Start_Menu,int* Quit_Game)
 
 	// Position & Click
 
-	Start_Menu->Actual_Position=2;
+	Start_Menu->Actual_Position=1;
 	Start_Menu->Last_Position=0;
 	Start_Menu->Clicked_Button=0;
 
@@ -89,33 +89,30 @@ void KeyboardEventSM(SM* Start_Menu)
 {
 	// Verification Keyboard movement
 
-	if( event.key.keysym.sym == SDLK_UP && (Start_Menu->Actual_Position>1) )
-		(Start_Menu->Actual_Position)--;
-
-	else if( event.key.keysym.sym == SDLK_DOWN )
+	if( event.key.keysym.sym == SDLK_UP )
 	{
-		if(Start_Menu->Actual_Position<4)
-			(Start_Menu->Actual_Position)++;
+		if(Start_Menu->Actual_Position == 1)
+			Start_Menu->Actual_Position = 3;
 		else
-			Start_Menu->Actual_Position=2;
-	}	
+			(Start_Menu->Actual_Position)--;
+	}
+
+	else if( event.key.keysym.sym == SDLK_DOWN && (Start_Menu->Actual_Position<4))
+			(Start_Menu->Actual_Position)++;
 }
 
 ////////////////////////////////////////
 
 void MouseEventSM(SM* Start_Menu)
 {
-	if(event.motion.y>=43 && event.motion.y<=162 && event.motion.x>=69 && event.motion.x<=220)
-	{
-		// Initialisation bouton position
+	// Initialisation bouton position
 
-		Start_Menu->Actual_Position=1;
+	Start_Menu->Actual_Position=4;
 
-		// Test position curseur bouton 1
+	// Test position curseur bouton 1
 
-		if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-			Start_Menu->Clicked_Button=1;
-	}
+	if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+		Start_Menu->Clicked_Button=1;
 
 	else if(event.motion.x>=510 && event.motion.x<=1370)
 	{
@@ -123,7 +120,7 @@ void MouseEventSM(SM* Start_Menu)
 		{
 			// Initialisation bouton position
 
-			Start_Menu->Actual_Position=2;
+			Start_Menu->Actual_Position=1;
 
 			// Test position curseur bouton 2
 
@@ -135,7 +132,7 @@ void MouseEventSM(SM* Start_Menu)
 		{
 			// Initialisation bouton position
 
-			Start_Menu->Actual_Position=3;
+			Start_Menu->Actual_Position=2;
 
 			// Test position curseur bouton 3
 
@@ -147,7 +144,7 @@ void MouseEventSM(SM* Start_Menu)
 		{
 			// Initialisation bouton position
 
-			Start_Menu->Actual_Position=4;
+			Start_Menu->Actual_Position=3;
 
 			// Test position curseur bouton 4
 
@@ -200,34 +197,34 @@ void UpdateButtonsStartMenu(SM* Start_Menu)
 
 	switch(Start_Menu->Actual_Position)
 	{
-		// Return button selected
-		case 1:
-			if(Start_Menu->Last_Position!=1)
-			{
-				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
-							  Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Chunk );
-
-				Start_Menu->Last_Position=1;
-			}
-			break;
-
 		// Save 2 selected
-		case 3:
-			if(Start_Menu->Last_Position!=3)
+		case 2:
+			if(Start_Menu->Last_Position!=2)
 			{
 				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
 							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save2.C_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Chunk );
+
+				Start_Menu->Last_Position=2;
+			}
+			break;
+
+		// Save 3 selected
+		case 3:
+			if(Start_Menu->Last_Position!=3)
+			{
+				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
+							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Chunk );
 
 				Start_Menu->Last_Position=3;
 			}
 			break;
 
-		// Save 3 selected
+		// Return button selected
 		case 4:
 			if(Start_Menu->Last_Position!=4)
 			{
 				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
-							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Chunk );
+							  Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Chunk );
 
 				Start_Menu->Last_Position=4;
 			}
@@ -235,12 +232,12 @@ void UpdateButtonsStartMenu(SM* Start_Menu)
 
 		// Save 1 selected ( default )
 		default:
-			if(Start_Menu->Last_Position!=2)
+			if(Start_Menu->Last_Position!=1)
 			{
 				ButtonUpdate(Start_Menu, Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
 							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save1.C_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Chunk );
 
-				Start_Menu->Last_Position=2;
+				Start_Menu->Last_Position=1;
 			}
 			break;
 	}
@@ -300,23 +297,23 @@ void StartMenu(int* Quit_Game)
 					switch(Start_Menu.Actual_Position)
 					{
 						case 1:
-							//Return to main menu
-							Quit_SM=1;
-							break;
-
-						case 2:
 							//Save 1
 							Start_Menu.Clicked_Button=0;
 							break;
 
-						case 3:
+						case 2:
 							//Save 2
 							Start_Menu.Clicked_Button=0;
 							break;
 
-						case 4:
+						case 3:
 							//Save 3
-							Start_Menu.Clicked_Button=0;	
+							Start_Menu.Clicked_Button=0;
+							break;
+
+						case 4:
+							//Return to main menu
+							Quit_SM=1;	
 							break;
 
 						default:

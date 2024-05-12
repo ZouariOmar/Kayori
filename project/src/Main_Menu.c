@@ -1,10 +1,8 @@
-#include <stdio.h>
-#include <SDL/SDL_image.h>
-#include "..//inc//Main_Menu.h"
-#include "..//inc//Structures_MM.h"
+#include "../inc/inc.h"
 #include "Start_Menu.c"
 #include "Quit_Verification.c"
 #include "settings.c"
+#include "Multiplayer.c"
 
 ////////////////////////////////////////
 
@@ -17,10 +15,10 @@ void InitialisationMM(MM* Main_Menu)
 	Main_Menu->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
 	//* load the @soundVolume
-	Mix_VolumeChunk(Main_Menu->Chunk, scanValue("project/doc/settings", 20));
+	Mix_VolumeChunk(Main_Menu->Chunk, scanValue("project/doc/settings", 24));
 
 	//* load the @musicVolume
-	Mix_VolumeMusic(scanValue("project/doc/settings",      19));
+	Mix_VolumeMusic(scanValue("project/doc/settings", 23));
 
 	// => Buttons
 
@@ -346,7 +344,7 @@ void MainMenu(void)
 						// Multiplayer
 						case 2:
 
-							Main_Menu.Clicked_Button=0;
+							MenuMP(&Quit_Loop);
 
 							break;
 

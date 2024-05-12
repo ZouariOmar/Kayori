@@ -3,14 +3,6 @@
 
 ////////////////////////////////////////
 
-typedef struct Image_Background
-{
-	SDL_Surface* Image;
-	SDL_Rect pos;
-}IBG;
-
-////////////////////////////////////////
-
 typedef struct Quit
 {
 	//Initialisation music and chunk
@@ -18,11 +10,14 @@ typedef struct Quit
 	Mix_Chunk* Chunk;
 	
 	//Initialisation background
-	IBG Image_Background;
+	SDL_Rect Rect_quit;
+	SDL_Surface* Img_bg;
+	SDL_Surface* Img_quit_Yes;
+	SDL_Surface* Img_quit_No;
 
 	//Initialisation button images
-	Surface_test Image_Yes,
-				 Image_No;
+	SDL_Rect Image_Yes,
+			 Image_No;
 
 	//Initialisation position button Start menu & clicked button
 	int Actual_Position,

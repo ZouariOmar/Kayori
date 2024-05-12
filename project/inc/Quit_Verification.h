@@ -9,10 +9,6 @@ void InitialisationQV(QV* Quit,int* Quit_Game);
 
 ////////////////////////////////////////
 
-void ButtonUpdateQV(SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk);
-
-////////////////////////////////////////
-
 void UpdateButtonsQV(QV* Quit);
 
 ////////////////////////////////////////

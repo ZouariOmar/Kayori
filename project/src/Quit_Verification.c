@@ -9,43 +9,39 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	Quit->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
 	//* load the @soundVolume
-    Mix_VolumeChunk(Quit->Chunk, scanValue("project/doc/settings", 20));
+	Mix_VolumeChunk(Quit->Chunk, scanValue("project/doc/settings", 24));
 
 	// Background
 
-	Quit->Image_Background.pos.h=244;
-	Quit->Image_Background.pos.w=641;
+	Quit->Rect_quit.h=574;
+	Quit->Rect_quit.w=1205;
 
-	Quit->Image_Background.pos.x=621;
-	Quit->Image_Background.pos.y=467;
+	Quit->Rect_quit.x=358;
+	Quit->Rect_quit.y=253;
 
-	Quit->Image_Background.Image = load_img("project/res/img_menu/Quit_verification copie.png");
+	Quit->Img_bg = load_img("project/res/img_main_menu/MainMenu.png");
+	Quit->Img_quit_Yes = load_img("project/res/img_quit_verification/Quit verification yes S.png");
+	Quit->Img_quit_No = load_img("project/res/img_quit_verification/Quit verification no S.png");
 
 	// Yes Button
 
-	Quit->Image_Yes.pos.h=63;
-	Quit->Image_Yes.pos.w=88;
+	Quit->Image_Yes.h=82;
+	Quit->Image_Yes.w=81;
 
-	Quit->Image_Yes.pos.x=784;
-	Quit->Image_Yes.pos.y=585;
-
-	Quit->Image_Yes.UC_B = load_img("project/res/img_menu/US_Yes.png");
-	Quit->Image_Yes.C_B = load_img("project/res/img_menu/S_Yes.png");
+	Quit->Image_Yes.x=792;
+	Quit->Image_Yes.y=619;
 
 	// No Button
 
-	Quit->Image_No.pos.h=63;
-	Quit->Image_No.pos.w=88;
+	Quit->Image_No.h=82;
+	Quit->Image_No.w=82;
 
-	Quit->Image_No.pos.x=1011;
-	Quit->Image_No.pos.y=585;
-
-	Quit->Image_No.UC_B = load_img("project/res/img_menu/US_No.png");
-	Quit->Image_No.C_B = load_img("project/res/img_menu/S_No.png");
+	Quit->Image_No.x=1018;
+	Quit->Image_No.y=619;
 
 	// Image pointer verification
 
-	if( !(Quit->Image_Background.Image && Quit->Image_Yes.UC_B && Quit->Image_Yes.C_B && Quit->Image_No.UC_B && Quit->Image_No.C_B) )
+	if( !(Quit->Img_quit_Yes && Quit->Img_quit_No && Quit->Img_bg) )
 	{
 		printf("Erreur allocation initialisation image\n");
 		ClearQV(Quit);
@@ -55,27 +51,10 @@ void InitialisationQV(QV* Quit,int* Quit_Game)
 	// Initialisation position bouton & bouton cliqué
 
 	Quit->Actual_Position=2;
-	Quit->Last_Position=0;	
+	Quit->Last_Position=0;
 	Quit->Clicked_Button=0;
 
-	// Blitting of the quit verification
-
-	// Draw background
-	SDL_BlitSurface(Quit->Image_Background.Image,NULL,screen,&(Quit->Image_Background.pos));
-}
-
-////////////////////////////////////////
-
-void ButtonUpdateQV(SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk)
-{
-	// Image blitting
-
-	SDL_BlitSurface(UC_Image1,NULL,screen,UC_Rect1);
-	SDL_BlitSurface(C_Image,NULL,screen,C_Rect);
-
-	// Play chunk
-
-	Mix_PlayChannel(-1,Chunk,0);
+	SDL_BlitSurface(Quit->Img_bg,NULL,screen,NULL);
 }
 
 ////////////////////////////////////////
@@ -89,7 +68,9 @@ void UpdateButtonsQV(QV* Quit)
 		case 2:
 			if(Quit->Last_Position!=2)
 			{
-				ButtonUpdateQV(Quit->Image_Yes.UC_B, &(Quit->Image_Yes.pos), Quit->Image_No.C_B, &(Quit->Image_No.pos), Quit->Chunk );
+				SDL_BlitSurface(Quit->Img_bg,&(Quit->Rect_quit),screen,&(Quit->Rect_quit));
+				SDL_BlitSurface(Quit->Img_quit_No,NULL,screen,&(Quit->Rect_quit));
+				Mix_PlayChannel(-1,Quit->Chunk,0);
 
 				Quit->Last_Position=2;		
 			}
@@ -98,7 +79,9 @@ void UpdateButtonsQV(QV* Quit)
 		default:
 			if(Quit->Last_Position!=1)
 			{
-				ButtonUpdateQV(Quit->Image_No.UC_B, &(Quit->Image_No.pos), Quit->Image_Yes.C_B, &(Quit->Image_Yes.pos), Quit->Chunk );
+				SDL_BlitSurface(Quit->Img_bg,&(Quit->Rect_quit),screen,&(Quit->Rect_quit));
+				SDL_BlitSurface(Quit->Img_quit_Yes,NULL,screen,&(Quit->Rect_quit));
+				Mix_PlayChannel(-1,Quit->Chunk,0);
 
 				Quit->Last_Position=1;
 			}
@@ -124,12 +107,12 @@ void KeyboardEventQV(QV* Quit)
 
 void MouseEventQV(QV* Quit)
 {
-	if(event.motion.y>=585 && event.motion.y<=648)
+	if( (event.motion.y >= Quit->Image_Yes.y) && (event.motion.y <= Quit->Image_Yes.y + Quit->Image_Yes.h) )
 	{
-		if(event.motion.x>=784 && event.motion.x<=872)
+		if( (event.motion.x >= Quit->Image_No.x) && (event.motion.x <= Quit->Image_No.x + Quit->Image_No.w) )
 		{
 			// Initialisation bouton position
-			Quit->Actual_Position=1;
+			Quit->Actual_Position=2;
 
 			// Test position curseur bouton 1
 
@@ -137,10 +120,10 @@ void MouseEventQV(QV* Quit)
 				Quit->Clicked_Button=1;
 		}
 
-		else if(event.motion.x>=1011 && event.motion.x<=1099)
+		else if( (event.motion.x >= Quit->Image_Yes.x) && (event.motion.x <= Quit->Image_Yes.x + Quit->Image_Yes.w) )
 		{
 			// Initialisation bouton position
-			Quit->Actual_Position=2;
+			Quit->Actual_Position=1;
 
 			// Test position curseur bouton 2
 
@@ -250,11 +233,8 @@ void QuitVerification(int* Quit_Game)
 
 void ClearQV(QV* Quit)
 {
-	SDL_FreeSurface(Quit->Image_Background.Image);
-	SDL_FreeSurface(Quit->Image_Yes.UC_B);
-	SDL_FreeSurface(Quit->Image_Yes.C_B);
-	SDL_FreeSurface(Quit->Image_No.UC_B);
-	SDL_FreeSurface(Quit->Image_No.C_B);
+	SDL_FreeSurface(Quit->Img_quit_Yes);
+	SDL_FreeSurface(Quit->Img_quit_No);
 	Mix_FreeChunk(Quit->Chunk);
 }
 

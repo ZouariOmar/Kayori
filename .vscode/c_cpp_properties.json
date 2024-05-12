@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "Arduino",
-            "compilerPath": "/home/zouari_omar/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
+            "compilerPath": "/usr/bin/gcc",
             "compilerArgs": [
                 "-w",
                 "-std=gnu++11",
@@ -534,6 +534,16 @@
                 "__BUILTIN_AVR_FMUL=1",
                 "USBCON"
             ]
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ]
 }

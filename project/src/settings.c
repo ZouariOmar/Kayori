@@ -1,17 +1,16 @@
 /* -----------------------------------------------
 * @team:   by_kayori_Nova_Grp
 * @author: zouari_omar
+* @IDE:    vsc
 * @update: 04/27/24
 ? @file:   settings.c
 ----------------------------------------------- */
 
 //? ----------------------- TODO SECTION DECLARATION PART -----------------------
 /*
-TODO_01: fix the "volume bars view" in video(surface*) fn        :: @ZouariOmar
-TODO_02: load a "music" and "chunk"                              :: @ZouariOmar @Ryannn26
-TODO_03: support the mouse events (motion and button down click) :: @ZouariOmar
-TODO_04: code the keyboard_conf() void func                      :: @ZouariOmar
-TODO_05: fix the chunk code existence in settings.c              :: @ZouariOmar
+TODO_01: update the keyboard_conf() void func (new res)          :: @ZouariOmar
+TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
+TODO_03: fix the "volume bars view" in video(surface*) fn        :: @ZouariOmar
 */
 
 //? ----------------------- NOTE SECTION DECLARATION PART -----------------------
@@ -49,76 +48,57 @@ lunchFn usr_modification[] = {
 
 void settings() {
     // * all 100 settings sub-surfaces
-    surface sub[54];
+    surface sub[58];
 
     //* init the chunk 
     Mix_Chunk *pip = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
     //* load the @soundVolume
-    Mix_VolumeChunk(pip, scanValue("project/doc/settings", 20));
+    Mix_VolumeChunk(pip, scanValue("project/doc/settings", 24));
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
     loadResources(sub, "project/res/img_settings/LS/img",               0,  12);
-    loadResources(sub, "project/res/img_settings/RS/controls_menu/img", 12, 28);
-    loadResources(sub, "project/res/img_settings/RS/video_menu/img",    28, 37);
-    loadResources(sub, "project/res/img_settings/RS/audio_menu/img",    37, 45);
-    loadResources(sub, "project/res/img_settings/RS/language_menu/img", 45, 50);
-    loadResources(sub, "project/res/img_settings/RS/gamePlay_menu/img", 50, 54);
+    loadResources(sub, "project/res/img_settings/RS/controls_menu/img", 12, 32);
+    loadResources(sub, "project/res/img_settings/RS/video_menu/img",    32, 41);
+    loadResources(sub, "project/res/img_settings/RS/audio_menu/img",    41, 49);
+    loadResources(sub, "project/res/img_settings/RS/language_menu/img", 49, 54);
+    loadResources(sub, "project/res/img_settings/RS/gamePlay_menu/img", 54, 58);
 
     //* set potions for the other res
-    set_pos(sub, "project/doc/settings_ref", 54);
+    set_pos(sub, "project/doc/settings_ref", 58);
 
     //* initializing the settings resources
     initResources(sub);
     init_rs_ctrl(sub);
 
     //* ctrl button selected by default
-    SDL_BlitSurface(sub[7].win,  NULL, screen, &sub[7].pos);
-    
-    //? - open the arduino serial port -
-    //* declaration of the buffer str var
-    char buffer[5 ];
-
-    //* open the "ttyACM0" serial port
-    int fd = serialport_init("/dev/ttyACM0", 115200);
-    if (fd == -1)
-        perror("Error opening serial port");
+    SDL_BlitSurface(sub[7].win, NULL, screen, &sub[7].pos);
 
     // * update the screen
     SDL_Flip(screen);
 
     while (1) {
-        //* scan the line from the serial monitor
-        serialport_read_until(fd, buffer, '\0', sizeof(buffer), 1);
-
-        //! testing part
-        printf("%s\n", buffer);
-        if (strstr(buffer, "j")) {
-            scroll_UD(sub, &usrOpPos, -1, pip);
-            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
-            init[usrOpPos](sub);
-        }
-
-        if (strstr(buffer, "d")) {
-            scroll_UD(sub, &usrOpPos, 1, pip);
-            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
-            init[usrOpPos](sub);
-        }
-
-        //* reset the buffer var
-        buffer[0] = '\0';
-
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 //? ----------------------- MOUSE MOTION EVENT -----------------------
                 case SDL_MOUSEMOTION:
-                    // rest of code...
+                    for (int i = 2; i < 7; i++)
+                        if (event.motion.x >= sub[i].pos.x && event.motion.x <= sub[i].pos.x + sub[i].pos.w && event.motion.y >= sub[i].pos.y && event.motion.y <= sub[i].pos.y + sub[i].pos.h && (i - 2) != usrOpPos) {
+                            scroll_UD(sub, &usrOpPos, i - 2 - usrOpPos, pip);
+                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
+                            init[usrOpPos](sub);
+                        }
                     break;
 
                 //? ------------------ MOUSE BUTTON DOWN CLICK EVENT ------------------
                 case SDL_MOUSEBUTTONDOWN:
-                    // rest of code...
+                    //* deselect the usr curent position
+                    scroll_UD(sub, &usrOpPos, 0, pip);
+
+                    //* activate the sub_menu mode (depending on the usr option position var)
+                    usr_modification[usrOpPos](sub, pip);
+
                     break;
                 //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
                 case SDL_KEYDOWN:
@@ -151,16 +131,9 @@ void settings() {
                             //* reset the user option postion in default postion (0 by default)
                             usrOpPos = 0;
 
-                            // fermeture du port
-                            serialport_flush(fd);
-                            serialport_close(fd);
-
                             //* free all settings res
-                            freeResources(sub, NULL, pip, 54);
+                            freeResources(sub, NULL, pip, 58);
 
-                            // fermeture du port
-                            serialport_flush(fd);
-                            serialport_close(fd);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -174,12 +147,8 @@ void settings() {
                     //* reset the user option postion in default postion (0 by default)
                     usrOpPos = 0;
 
-                    // fermeture du port
-                    serialport_flush(fd);
-                    serialport_close(fd);
-
                     //* free all settings res
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
 
                     //* exit from the game
                     exit(EXIT_SUCCESS);
@@ -220,9 +189,9 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction, Mix_Chunk *pip) {
     *usrOpPos += direction;
 
     //* fix usr option postion
-    if (*usrOpPos == -1)
+    if (*usrOpPos < 0)
         *usrOpPos = 4;
-    else if (*usrOpPos == 5)
+    else if (*usrOpPos > 4)
         *usrOpPos = 0;
 
     //* blit the @animated_img for the new usr option
@@ -231,6 +200,9 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction, Mix_Chunk *pip) {
 }
 
 void rn_settings(surface* sub, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
     //* del the old rs_surface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -258,13 +230,12 @@ void init_kb_ctrl(surface *sub) {
     //* del the old rs_surface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
-    //* blit the keyboard res
-    for (int i = 12; i < 23; i++)
+    //* blit the normal select keyboard res
+    for (int i = 12; i < 25; i++)
         if (i != 15 && i != 16)
             SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
 
-    //? blit the current used keys :: support the @autoSave mode
-    //! need the wall_jump res :: @Ryannn26
+    //? - blit the current used keys :: support the @autoSave mode -
     //* init the "Groundation Foundation.ttf"
     TTF_Font *font = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 30);
 
@@ -272,14 +243,14 @@ void init_kb_ctrl(surface *sub) {
     surface key;
 
     //* set the @key_pos
-    key.pos.x = 1474;
-    key.pos.y = 500;
+    key.pos.x = 1430;
+    key.pos.y = 465;
 
     //* init the key txt holder
     char info[100];
 
     //* i from 0 to 5 :: 5 indicate the @kb_moves
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 7; i++) {
         //* update info to take the current mvs
         scanStr("project/doc/ref_SDLkey", info, scanValue("project/doc/settings", 2 + i));
 
@@ -290,7 +261,7 @@ void init_kb_ctrl(surface *sub) {
         SDL_BlitSurface(key.win, NULL, screen, &key.pos);
 
         //* update the Y for the next keys pos
-        key.pos.y += 70;
+        key.pos.y += 72;
     }
 
     //* free the current used font
@@ -304,11 +275,11 @@ void init_cl_ctrl(surface *) {
 
 void init_rs_vid(surface* sub) {
     //* blit the video std imgs (2 img) && blit the L/R video buttons
-    for (int i = 28; i < 32; i++)
+    for (int i = 32; i < 36; i++)
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
     
     //* blit off/on fullscreen mode state
-    (!scanValue("project/doc/settings", 18)) ? SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos) : SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
+    (!scanValue("project/doc/settings", 22)) ? SDL_BlitSurface(sub[40].win, NULL, screen, &sub[40].pos) : SDL_BlitSurface(sub[39].win, NULL, screen, &sub[39].pos);
 }
 
 void init_rs_aud(surface* sub) {
@@ -316,30 +287,30 @@ void init_rs_aud(surface* sub) {
     SDL_BlitSurface(sub[12].win, NULL, screen, &sub[12].pos);
     
     //* blit the 2 rounded bar
-    sub[37].pos.x = 1341;
-    SDL_BlitSurface(sub[37].win, NULL, screen, (sub[37].pos.y = 283, &sub[37].pos));
-    SDL_BlitSurface(sub[37].win, NULL, screen, (sub[37].pos.y = 364, &sub[37].pos));
+    sub[41].pos.x = 1341;
+    SDL_BlitSurface(sub[41].win, NULL, screen, (sub[41].pos.y = 283, &sub[41].pos));
+    SDL_BlitSurface(sub[41].win, NULL, screen, (sub[41].pos.y = 364, &sub[41].pos));
 
     //* blit the music and sound txt imgs
-    SDL_BlitSurface(sub[38].win, NULL, screen, &sub[38].pos);
-    SDL_BlitSurface(sub[39].win, NULL, screen, &sub[39].pos);
+    SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
+    SDL_BlitSurface(sub[43].win, NULL, screen, &sub[43].pos);
 
     //* blit the L/R "sound" buttons
-    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 381, &sub[30].pos));
-    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 381, &sub[31].pos));
+    SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y = 381, &sub[34].pos));
+    SDL_BlitSurface(sub[35].win, NULL, screen, (sub[35].pos.y = 381, &sub[35].pos));
 
     //* blit the L/R "music" buttons
-    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 300, &sub[30].pos));
-    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
+    SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y = 300, &sub[34].pos));
+    SDL_BlitSurface(sub[35].win, NULL, screen, (sub[35].pos.y = 300, &sub[35].pos));
 
     //* blit the music volume bars
-    bar_volume(sub, scanValue("project/doc/settings", 19) / 8);
+    bar_volume(sub, scanValue("project/doc/settings", 23) / 8);
 
     //* Y42 = Y43 = Y44 :: we choose to change Y42
-    sub[42].pos.y = 365;
+    sub[46].pos.y = 365;
 
     //* blit the sound volume bars
-    bar_volume(sub, scanValue("project/doc/settings", 20) / 8);
+    bar_volume(sub, scanValue("project/doc/settings", 24) / 8);
 }
 
 void bar_volume(surface *sub, int volume) {
@@ -347,41 +318,41 @@ void bar_volume(surface *sub, int volume) {
     for (int i = 1; i <= volume; i++) {
         switch (i) {
             case 1:
-                SDL_BlitSurface(sub[42].win, NULL, screen, &sub[42].pos);
+                SDL_BlitSurface(sub[46].win, NULL, screen, &sub[46].pos);
                 break;
             case 16:
-                SDL_BlitSurface(sub[43].win, NULL, screen, &sub[42].pos);
+                SDL_BlitSurface(sub[47].win, NULL, screen, &sub[46].pos);
                 break;
             default:
-                SDL_BlitSurface(sub[44].win, NULL, screen, &sub[42].pos);
+                SDL_BlitSurface(sub[48].win, NULL, screen, &sub[46].pos);
                 break;
         }
-        sub[42].pos.x += 16;
+        sub[46].pos.x += 16;
     }
 
     //* reset the X42 and Y42
-    sub[42].pos.x = 1341;
-    sub[42].pos.y = 284;
+    sub[46].pos.x = 1341;
+    sub[46].pos.y = 284;
 }
 
 void init_rs_lang(surface* sub) {
     //* blit the contour_03 and the shape
-    SDL_BlitSurface(sub[28].win, NULL, screen, &sub[28].pos);
-    SDL_BlitSurface(sub[49].win, NULL, screen, (sub[49].pos.x = 1319, sub[49].pos.y = 274, &sub[49].pos));
+    SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
+    SDL_BlitSurface(sub[53].win, NULL, screen, (sub[53].pos.x = 1319, sub[53].pos.y = 274, &sub[53].pos));
 
     //* blit the Eng and Frc normal imgs
-    if (!scanValue("project/doc/settings", 21)) {
+    if (!scanValue("project/doc/settings", 25)) {
         //* Eng option selected
-        SDL_BlitSurface(sub[47].win, NULL, screen, (sub[47].pos.x = 952,  sub[47].pos.y = 275, &sub[47].pos));
-        SDL_BlitSurface(sub[46].win, NULL, screen, (sub[46].pos.x = 1451, sub[46].pos.y = 292, &sub[46].pos));
+        SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
+        SDL_BlitSurface(sub[50].win, NULL, screen, &sub[50].pos);
     } else {
         //* Frc option selected
-        SDL_BlitSurface(sub[48].win, NULL, screen, (sub[48].pos.x = 1320, sub[48].pos.y = 275, &sub[48].pos));
-        SDL_BlitSurface(sub[45].win, NULL, screen, (sub[45].pos.x = 1062, sub[45].pos.y = 292, &sub[45].pos));
+        SDL_BlitSurface(sub[52].win, NULL, screen, &sub[52].pos);
+        SDL_BlitSurface(sub[49].win, NULL, screen, &sub[49].pos);
     }
     // reset the X42 and Y42
-    sub[42].pos.x = 1341;
-    sub[42].pos.y = 284;
+    sub[46].pos.x = 1341;
+    sub[46].pos.y = 284;
 }
 
 void init_rs_gmP(surface* sub) {
@@ -389,22 +360,22 @@ void init_rs_gmP(surface* sub) {
     SDL_BlitSurface(sub[12].win, NULL, screen, &sub[12].pos);
 
     //* blit the speedRun/miniMap normal imgs
-    SDL_BlitSurface(sub[50].win, NULL, screen, &sub[50].pos);
-    SDL_BlitSurface(sub[52].win, NULL, screen, &sub[52].pos);
+    SDL_BlitSurface(sub[54].win, NULL, screen, &sub[54].pos);
+    SDL_BlitSurface(sub[56].win, NULL, screen, &sub[56].pos);
 
     //* blit the L/R normal buttons for miniMap op
-    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 381, &sub[30].pos));
-    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 381, &sub[31].pos));
+    SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y = 381, &sub[34].pos));
+    SDL_BlitSurface(sub[35].win, NULL, screen, (sub[35].pos.y = 381, &sub[35].pos));
 
     //* blit the L/R normal buttons for speedRun op
-    SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y = 300, &sub[30].pos));
-    SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y = 300, &sub[31].pos));
+    SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y = 300, &sub[34].pos));
+    SDL_BlitSurface(sub[35].win, NULL, screen, (sub[35].pos.y = 300, &sub[35].pos));
 
     //* blit off/on miniMap mode state
-    SDL_BlitSurface(sub[35 + !scanValue("project/doc/settings", 23)].win, NULL, screen, (sub[36].pos.y = 372, &sub[36].pos));
+    SDL_BlitSurface(sub[39 + !scanValue("project/doc/settings", 27)].win, NULL, screen, (sub[39].pos.y = 372, &sub[39].pos));
 
     //* blit off/on speedRun mode state
-    SDL_BlitSurface(sub[35 + !scanValue("project/doc/settings", 22)].win, NULL, screen, (sub[36].pos.y = 292, &sub[36].pos));
+    SDL_BlitSurface(sub[39 + !scanValue("project/doc/settings", 26)].win, NULL, screen, (sub[39].pos.y = 292, &sub[39].pos));
 }
 
 //? ----------------------- USR_MODIFICATION FUNCTIONS DEV PART -----------------------
@@ -425,6 +396,19 @@ void controls(surface* sub, Mix_Chunk *pip) {
     while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
+                //? ----------------------- MOUSE MOTION EVENT -----------------------
+                case SDL_MOUSEMOTION:
+                    for (int i = 13; i < 15; i++)
+                        if (event.motion.x >= sub[i].pos.x && event.motion.x <= sub[i].pos.x + sub[i].pos.w && event.motion.y >= sub[i].pos.y && event.motion.y <= sub[i].pos.y + sub[i].pos.h && (i - 13) != ctrl_usrOpPos)
+                            ctrl_scroll_UD(sub, &ctrl_usrOpPos, i - 13 - ctrl_usrOpPos, pip);
+                    break;
+
+                //? ------------------ MOUSE BUTTON DOWN CLICK EVENT ------------------
+                case SDL_MOUSEBUTTONDOWN:
+                    (ctrl_usrOpPos) ? init_cl_ctrl(sub)           : init_kb_ctrl(sub);
+                    (ctrl_usrOpPos) ? cl_ctrl(sub, ctrl_usrOpPos) : kb_ctrl(sub, ctrl_usrOpPos, pip);
+                    break;
+
                 //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym) {
@@ -459,7 +443,7 @@ void controls(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -477,6 +461,9 @@ void controls(surface* sub, Mix_Chunk *pip) {
 }
 
 void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -508,7 +495,7 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
     int kb_ctrl_usrOpPos = 0;
 
     //* blit the selected img (blit the animated "Right" img by default)
-    SDL_BlitSurface(sub[23].win, NULL, screen, &sub[23].pos);
+    SDL_BlitSurface(sub[25].win, NULL, screen, &sub[25].pos);
 
     //* update the screen
     SDL_Flip(screen);
@@ -517,6 +504,18 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
     while (1) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
+                //? ----------------------- MOUSE MOTION EVENT -----------------------
+                case SDL_MOUSEMOTION:
+                    for (int i = 25; i < 32; i++)
+                        if (event.motion.x >= sub[i].pos.x && event.motion.x <= sub[i].pos.x + sub[i].pos.w && event.motion.y >= sub[i].pos.y && event.motion.y <= sub[i].pos.y + sub[i].pos.h && (i - 25) != kb_ctrl_usrOpPos)
+                            kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, i - 25 - kb_ctrl_usrOpPos, pip);
+                    break;
+
+                //? ------------------ MOUSE BUTTON DOWN CLICK EVENT ------------------
+                case SDL_MOUSEBUTTONDOWN:
+                    // rest of code ...
+                    break;
+
                 //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym) {
@@ -528,6 +527,11 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
                             kb_ctrl_scroll_UD(sub, &kb_ctrl_usrOpPos, 1, pip);
+                            break;
+
+                        //? --- ENTER CLICK OPTION ---
+                        case SDLK_SPACE:
+                            edit_kb(sub, pip, kb_ctrl_usrOpPos);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -543,7 +547,7 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -560,7 +564,10 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
     }
 }
 
-void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction, Mix_Chunk *) {
+void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
     //* del the old rs_interface
     init_kb_ctrl(sub);
 
@@ -569,12 +576,12 @@ void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction, Mix_C
 
     //* correct usr option postion
     if (*kb_ctrl_usrOpPos == -1)
-        *kb_ctrl_usrOpPos = 4;
-    else if (*kb_ctrl_usrOpPos == 5)
+        *kb_ctrl_usrOpPos = 6;
+    else if (*kb_ctrl_usrOpPos == 7)
         *kb_ctrl_usrOpPos = 0;
     
     //* blit the @animated_img for the new usr option
-    SDL_BlitSurface(sub[23 + *kb_ctrl_usrOpPos].win,  NULL, screen, &sub[23 + *kb_ctrl_usrOpPos].pos);
+    SDL_BlitSurface(sub[25 + *kb_ctrl_usrOpPos].win,  NULL, screen, &sub[25 + *kb_ctrl_usrOpPos].pos);
 }
 
 void cl_ctrl(surface *sub, int ctrl_usrOpPos) {
@@ -589,9 +596,77 @@ void rn_ctrl(surface *sub, int ctrl_usrOpPos) {
     SDL_BlitSurface(sub[15 + ctrl_usrOpPos].win,  NULL, screen, &sub[15 + ctrl_usrOpPos].pos);
 }
 
+void edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos) {
+    //* enter the @event_loop part
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYDOWN:
+                    //* hold the key input
+                    int key_value = event.key.keysym.sym;
+
+                    //* escape the @key_change_event
+                    if (key_value == SDLK_ESCAPE)
+                        return;
+                    else {
+                        //* get the key name
+                        char key_name[21];
+                        scanStr("project/doc/settings", key_name, kb_ctrl_usrOpPos + 3);
+
+                        //* the @new_key_value is not used by another move in the @keyboard_controller_keys
+                        if (!is_exist(key_value)) {
+                            //* update the settings file
+                            editValue("%s %d\n", key_name, key_value, kb_ctrl_usrOpPos + 2);
+
+                        //* the @new_key_value is currently used by another move in the @keyboard_controller_keys (max 2 keys)
+                        } else {
+                            //* get the used key name
+                            char used_key_name[21];
+                            scanStr("project/doc/settings", used_key_name, is_exist(key_value) + 1);
+
+                            //* update the settings file with @keys_switching_mode
+                            editValue("%s %d\n", used_key_name, scanValue("project/doc/settings", kb_ctrl_usrOpPos + 2), is_exist(key_value));
+                            editValue("%s %d\n", key_name, key_value, kb_ctrl_usrOpPos + 2);
+                        }
+
+                        //* update the keyboard menu
+                        init_kb_ctrl(sub);
+
+                        //* blit the @current_selected_key img
+                        SDL_BlitSurface(sub[25 + kb_ctrl_usrOpPos].win,  NULL, screen, &sub[25 + kb_ctrl_usrOpPos].pos);
+                        return;
+                    }
+                    break;
+                //? --------------------- QUIT CLICK EVENT ---------------------
+                case SDL_QUIT:
+                    freeResources(sub, NULL, pip, 58);
+                    exit(EXIT_SUCCESS);
+                    break;
+
+                //? --------------------- OTHER CLICK EVENT ---------------------
+                default:
+                    break;
+            }
+        }
+        //* update the screen
+        SDL_Flip(screen);
+
+        //* wait 100 millisecond befor returning
+        SDL_Delay(100);
+    }
+}
+
+int is_exist(int key) {
+    for (int i = 2; i < 9; i++)
+        if (scanValue("project/doc/settings", i) == key)
+            return i;
+    return 0;
+}
+
 void video(surface* sub, Mix_Chunk *pip) {
     //* init part
-    SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
+    SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
 
     //* update the screen
     SDL_Flip(screen);
@@ -605,14 +680,20 @@ void video(surface* sub, Mix_Chunk *pip) {
                     switch(event.key.keysym.sym) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
+                            //* play the pip chunk
+                            Mix_PlayChannel(-1, pip, 0);
+
                             //* blit left animated button
-                            SDL_BlitSurface(sub[33].win, NULL, screen, (sub[33].pos.y = 300, &sub[33].pos));
+                            SDL_BlitSurface(sub[37].win, NULL, screen, (sub[37].pos.y = 300, &sub[37].pos));
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
+                            //* play the pip chunk
+                            Mix_PlayChannel(-1, pip, 0);
+
                             //* blit right animated button
-                            SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y = 300, &sub[34].pos));
+                            SDL_BlitSurface(sub[38].win, NULL, screen, (sub[38].pos.y = 300, &sub[38].pos));
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -635,17 +716,17 @@ void video(surface* sub, Mix_Chunk *pip) {
                             setScreen(0);
 
                             //* change to windowed mode
-                            editValue("%s  %d\n", "fullscreen", 0, 18);
+                            editValue("%s  %d\n", "fullscreen", 0, 22);
 
                             //* reset the screen
                             initResources(sub);
 
                             //* reset the video menu surface
                             init[usrOpPos](sub);
-                            SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
+                            SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
 
                             //* blit left normal button
-                            SDL_BlitSurface(sub[30].win, NULL, screen, &sub[30].pos);
+                            SDL_BlitSurface(sub[34].win, NULL, screen, &sub[34].pos);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
@@ -654,17 +735,17 @@ void video(surface* sub, Mix_Chunk *pip) {
                             setScreen(SDL_FULLSCREEN);
                             
                             //* change to fullscreen mode
-                            editValue("%s  %d\n", "fullscreen", SDL_FULLSCREEN, 18);
+                            editValue("%s  %d\n", "fullscreen", SDL_FULLSCREEN, 22);
 
                             //* reset the screen
                             initResources(sub);
 
                             //* reset the video menu surface
                             init[usrOpPos](sub);
-                            SDL_BlitSurface(sub[32].win, NULL, screen, &sub[32].pos);
+                            SDL_BlitSurface(sub[36].win, NULL, screen, &sub[36].pos);
 
                             //* blit right normal button
-                            SDL_BlitSurface(sub[31].win, NULL, screen, &sub[31].pos);
+                            SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
                             break;
                         
                         //? --- OTHER CLICK OPTION ---
@@ -675,7 +756,7 @@ void video(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -697,7 +778,7 @@ void audio(surface* sub, Mix_Chunk *pip) {
     int audio_usrOpPos = 0;
 
     //* init part
-    SDL_BlitSurface(sub[40].win, NULL, screen, &sub[40].pos);
+    SDL_BlitSurface(sub[44].win, NULL, screen, &sub[44].pos);
 
     //* update the screen
     SDL_Flip(screen);
@@ -711,6 +792,9 @@ void audio(surface* sub, Mix_Chunk *pip) {
                     switch(event.key.keysym.sym) {
                         //? --- UP CLICK OPTION ---
                         case SDLK_UP:
+                            //* play the pip chunk
+                            Mix_PlayChannel(-1, pip, 0);
+
                             //* update the @audio_usrOpPos
                             audio_usrOpPos--;
 
@@ -727,11 +811,14 @@ void audio(surface* sub, Mix_Chunk *pip) {
                             init[usrOpPos](sub);
                             
                             //* blit the selected @sub_option
-                            SDL_BlitSurface(sub[40 + audio_usrOpPos].win, NULL, screen, &sub[40 + audio_usrOpPos].pos);
+                            SDL_BlitSurface(sub[44 + audio_usrOpPos].win, NULL, screen, &sub[44 + audio_usrOpPos].pos);
                             break;
 
                         //? --- DOWN CLICK OPTION ---
                         case SDLK_DOWN:
+                            //* play the pip chunk
+                            Mix_PlayChannel(-1, pip, 0);
+
                             //* update the @audio_usrOpPos
                             audio_usrOpPos++;
 
@@ -748,19 +835,19 @@ void audio(surface* sub, Mix_Chunk *pip) {
                             init[usrOpPos](sub);
                             
                             //* blit the selected @sub_option
-                            SDL_BlitSurface(sub[40 + audio_usrOpPos].win, NULL, screen, &sub[40 + audio_usrOpPos].pos);
+                            SDL_BlitSurface(sub[44 + audio_usrOpPos].win, NULL, screen, &sub[44 + audio_usrOpPos].pos);
                             break;
 
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* reduce volume
-                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, -8, pip) : ctrl_volume(sub, "soundVolume", 20, -8, pip);
+                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 23, -8, pip) : ctrl_volume(sub, "soundVolume", 24, -8, pip);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* add volume
-                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 19, 8, pip) : ctrl_volume(sub, "soundVolume", 20, 8, pip);
+                            (!audio_usrOpPos) ? ctrl_volume(sub, "musicVolume", 23, 8, pip) : ctrl_volume(sub, "soundVolume", 24, 8, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -779,19 +866,19 @@ void audio(surface* sub, Mix_Chunk *pip) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* blit left normal button
-                            SDL_BlitSurface(sub[30].win, NULL, screen, (sub[30].pos.y += (sub[30].pos.h + 49) * audio_usrOpPos, &sub[30].pos));
+                            SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y += (sub[34].pos.h + 49) * audio_usrOpPos, &sub[34].pos));
 
                             //* reset the Y31
-                            sub[30].pos.y = 300;
+                            sub[34].pos.y = 300;
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* blit right normal button
-                            SDL_BlitSurface(sub[31].win, NULL, screen, (sub[31].pos.y += (sub[31].pos.h + 49) * audio_usrOpPos, &sub[31].pos));
+                            SDL_BlitSurface(sub[35].win, NULL, screen, (sub[35].pos.y += (sub[35].pos.h + 49) * audio_usrOpPos, &sub[35].pos));
 
                             //* reset the Y31
-                            sub[31].pos.y = 300;
+                            sub[35].pos.y = 300;
                             break;
                         
                         //? --- OTHER CLICK OPTION ---
@@ -802,7 +889,7 @@ void audio(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -827,37 +914,38 @@ void ctrl_volume(surface* sub, char* type_vol, int line, int config, Mix_Chunk *
     int volume = scanValue("project/doc/settings", line);
 
     //* add/reduce the volume process
-    if (volume >= 0 && volume <= 128) {
-        volume += config;
+    volume += config;
 
-        //* correct the volume in mute or max volume situation
-        if (volume == -8)
-            volume = 0;
-        else if(volume == 136)
-            volume = 128;
+    //* correct the volume in mute or max volume situation
+    if (volume == -8)
+        volume = 0;
+    else if(volume == 136)
+        volume = 128;
 
-        //* update the new volume
-        editValue("%s %d\n", type_vol, volume, line);
+    //* update the new volume
+    editValue("%s %d\n", type_vol, volume, line);
 
-        //* set the new music/chunk volume
-        (line == 19) ? Mix_VolumeMusic(scanValue("project/doc/settings", 19)) : Mix_VolumeChunk(pip, scanValue("project/doc/settings", 20));
-    }
+    //* set the new music/chunk volume
+    (line == 23) ? Mix_VolumeMusic(scanValue("project/doc/settings", 23)) : Mix_VolumeChunk(pip, scanValue("project/doc/settings", 24));
+
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
 
     //* reset the current @sub_menu_surface
     init[usrOpPos](sub);
 
     //* blit the selected @audio_sub_option
-    SDL_BlitSurface(sub[41 - (line % 2)].win, NULL, screen, &sub[41 - (line % 2)].pos);
+    SDL_BlitSurface(sub[45 - (line % 2)].win, NULL, screen, &sub[45 - (line % 2)].pos);
 
     //* blit L/R animated button
     if (config == -8)
-        SDL_BlitSurface(sub[33].win, NULL, screen, (sub[33].pos.y += (sub[33].pos.h + 49) * (line - 2), &sub[33].pos));
+        SDL_BlitSurface(sub[37].win, NULL, screen, (sub[37].pos.y += (sub[37].pos.h + 49) * (line - 2), &sub[37].pos));
     else
-        SDL_BlitSurface(sub[34].win, NULL, screen, (sub[34].pos.y += (sub[34].pos.h + 49) * (line - 2), &sub[34].pos));
+        SDL_BlitSurface(sub[38].win, NULL, screen, (sub[38].pos.y += (sub[38].pos.h + 49) * (line - 2), &sub[38].pos));
 
     //* reset the Y33/Y34
-    sub[33].pos.y = 300;
-    sub[34].pos.y = 300;
+    sub[37].pos.y = 300;
+    sub[38].pos.y = 300;
 }
 
 void language(surface* sub, Mix_Chunk *pip) {
@@ -870,11 +958,14 @@ void language(surface* sub, Mix_Chunk *pip) {
                     switch(event.key.keysym.sym) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
+                            //* play the pip chunk
+                            Mix_PlayChannel(-1, pip, 0);
+
                             //* del the old rs_interface
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
                             //* change the language to @Eng
-                            editValue("%s    %d\n", "language", 0, 21);
+                            editValue("%s    %d\n", "language", 0, 25);
 
                             //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
@@ -882,11 +973,14 @@ void language(surface* sub, Mix_Chunk *pip) {
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
+                            //* play the pip chunk
+                            Mix_PlayChannel(-1, pip, 0);
+
                             //* del the old rs_interface
                             SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
                             //* change the language to @Frc
-                            editValue("%s    %d\n", "language", 1, 21);
+                            editValue("%s    %d\n", "language", 1, 25);
 
                             //* reset the current @sub_menu_surface
                             init[usrOpPos](sub);
@@ -910,7 +1004,7 @@ void language(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -932,7 +1026,7 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
     int gm_usrOpPos = 0;
 
     //* select the speedRun op by default
-    SDL_BlitSurface(sub[51].win, NULL, screen, &sub[51].pos);
+    SDL_BlitSurface(sub[55].win, NULL, screen, &sub[55].pos);
 
     //* update the screen
     SDL_Flip(screen);
@@ -957,17 +1051,17 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             if (gm_usrOpPos)
-                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 0, pip);
+                                gm_scroll_LR(sub, "miniMap",  "%s     %d\n", 27, 0, pip);
                             else
-                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 0, pip);
+                                gm_scroll_LR(sub, "speedRun", "%s    %d\n",  26, 0, pip);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             if (gm_usrOpPos)
-                                gm_scroll_LR(sub, "miniMap", "%s     %d\n", 23, 1, pip);
+                                gm_scroll_LR(sub, "miniMap",  "%s     %d\n", 27, 1, pip);
                             else
-                                gm_scroll_LR(sub, "speedRun", "%s    %d\n", 22, 1, pip);
+                                gm_scroll_LR(sub, "speedRun", "%s    %d\n",  26, 1, pip);
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -987,15 +1081,15 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
                         //? --- LEFT CLICK OPTION ---
                         case SDLK_LEFT:
                             //* blit left normal button
-                            (gm_usrOpPos) ? (sub[30].pos.y = 378) : (sub[30].pos.y = 300);
-                            SDL_BlitSurface(sub[30].win, NULL, screen, &sub[30].pos);
+                            (gm_usrOpPos) ? (sub[34].pos.y = 378) : (sub[34].pos.y = 300);
+                            SDL_BlitSurface(sub[34].win, NULL, screen, &sub[34].pos);
                             break;
 
                         //? --- RIGHT CLICK OPTION ---
                         case SDLK_RIGHT:
                             //* blit right normal button
-                            (gm_usrOpPos) ? (sub[31].pos.y = 378) : (sub[31].pos.y = 300);
-                            SDL_BlitSurface(sub[31].win, NULL, screen, &sub[31].pos);
+                            (gm_usrOpPos) ? (sub[35].pos.y = 378) : (sub[35].pos.y = 300);
+                            SDL_BlitSurface(sub[35].win, NULL, screen, &sub[35].pos);
                             break;
 
                         //? --- OTHER CLICK OPTION ---
@@ -1006,7 +1100,7 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 54);
+                    freeResources(sub, NULL, pip, 58);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -1024,6 +1118,9 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
 }
 
 void gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -1040,10 +1137,13 @@ void gm_scroll_UD(surface *sub, int *gm_usrOpPos, int direction, Mix_Chunk *pip)
     init[usrOpPos](sub);
 
     //* select the new option
-    SDL_BlitSurface(sub[51 + *gm_usrOpPos * 2].win, NULL, screen, &sub[51 + *gm_usrOpPos * 2].pos);
+    SDL_BlitSurface(sub[55 + *gm_usrOpPos * 2].win, NULL, screen, &sub[55 + *gm_usrOpPos * 2].pos);
 }
 
 void gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
     //* del the old rs_interface
     SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 274, &sub[0].pos), screen, &sub[0].pos);
 
@@ -1054,9 +1154,9 @@ void gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf,
     init[usrOpPos](sub);
 
     //* blit/reset the current selected img
-    SDL_BlitSurface(sub[51 + 2 * (line == 23)].win, NULL, screen, &sub[51 + 2 * (line == 23)].pos);
+    SDL_BlitSurface(sub[55 + 2 * (line == 27)].win, NULL, screen, &sub[55 + 2 * (line == 27)].pos);
 
     //* blit R or L animated button
-    (line == 23) ? (sub[33 + conf].pos.y = 378) : (sub[33 + conf].pos.y = 300);
-    SDL_BlitSurface(sub[33 + conf].win, NULL, screen, &sub[33 + conf].pos);
+    (line == 27) ? (sub[37 + conf].pos.y = 378) : (sub[37 + conf].pos.y = 300);
+    SDL_BlitSurface(sub[37 + conf].win, NULL, screen, &sub[37 + conf].pos);
 }

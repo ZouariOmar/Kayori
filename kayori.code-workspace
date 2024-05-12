@@ -42,7 +42,10 @@
 			"type_traits": "c",
 			"utility": "c",
 			"errno.h": "c",
-			"stdint.h": "c"
+			"stdint.h": "c",
+			"sdl.h": "c",
+			"termios.h": "c",
+			"sdl_image.h": "c"
 		}
 	}
 }

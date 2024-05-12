@@ -27,7 +27,7 @@ void initEverything() {
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
     //* upload the screen mode
-    setScreen(scanValue("project/doc/settings", 18));
+    setScreen(scanValue("project/doc/settings", 22));
 
     //* set the game caption
     SDL_WM_SetCaption("Hollow Vessels", NULL);

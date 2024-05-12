@@ -33,10 +33,14 @@
 
 //* OUR INC FILES
 #include "SDL_Msg.h"
+#include "Main_Menu.h"
+#include "Start_Menu.h"
+#include "Structures_MM.h"
 #include "settings.h"
 #include "speedRun.h"
 #include "tic_tac_toe.h"
 #include "enigma.h"
+#include "Multiplayer.h"
 #include "serie.h"
 
 //* PUBLIC VARS
