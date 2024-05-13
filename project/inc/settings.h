@@ -105,7 +105,7 @@ void bar_volume(surface *, int);
 * support the @autosave mode
 > initResources(surface*)
 */
-void init_rs_lang(surface*);
+void init_rs_lang(surface *);
 
 /*
 ? - init_rs_gmP(surface*) void func -
@@ -113,7 +113,14 @@ void init_rs_lang(surface*);
 * support the @autosave mode
 > initResources(surface*)
 */
-void init_rs_gmP(surface*);
+void init_rs_gmP(surface *);
+
+/*
+? - quit_settings(surface *sub) void func -
+* quit the settings interface
+> initResources(surface *)
+*/
+void quit_settings(surface *);
 
 /* ----------------------------------------------
 ? --- USR_MODIFICATION FUNCS DECLARATION PART ---
@@ -146,6 +153,22 @@ void ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
 void kb_ctrl(surface *, int, Mix_Chunk *);
 
 /*
+? - edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos) void fn -
+* usr can change the keyboard keys
+> kb_ctrl()
+*/
+void edit_kb(surface *, Mix_Chunk *, int);
+
+/*
+? - is_exist(int key) int fn -
+* verify if the @new_key is already used
+* if the @new_key is used      :: return the postion (line) of the @used_key in settings file
+* if the @new_key is available :: return 0 (empty key)
+> kb_ctrl()
+*/
+int is_exist(int key);
+
+/*
 ? - kb_ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *pip) void fn -
 * scroll the "keyboard conf" menu up and down
 > kb_ctrl()
@@ -159,7 +182,7 @@ void kb_ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
 * usr can modify the controller configuration
 > controls()
 */
-void cl_ctrl(surface *, int);
+////void cl_ctrl(surface *, int);
 
 /*
 ? - rn_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
@@ -232,5 +255,12 @@ void gm_scroll_UD(surface *, int *, int, Mix_Chunk *);
 > gamePlay(surface*)
 */
 void gm_scroll_LR(surface *, char *, char *, int, int, Mix_Chunk *);
+
+/*
+? - quit(surface *sub, Mix_Chunk *pip) void fn -
+* quit the settings interface
+> settings(surface*)
+*/
+void quit(surface *, Mix_Chunk *);
 
 #endif

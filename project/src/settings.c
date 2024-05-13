@@ -8,9 +8,8 @@
 
 //? ----------------------- TODO SECTION DECLARATION PART -----------------------
 /*
-TODO_01: update the keyboard_conf() void func (new res)          :: @ZouariOmar
-TODO_02: support the mouse events (motion and button down click) :: @ZouariOmar
-TODO_03: fix the "volume bars view" in video(surface*) fn        :: @ZouariOmar
+TODO_01: support the mouse events (motion and button down click) :: @ZouariOmar
+TODO_02: fix the "volume bars view" in video(surface*) fn        :: @ZouariOmar
 */
 
 //? ----------------------- NOTE SECTION DECLARATION PART -----------------------
@@ -34,7 +33,8 @@ initFn init[] = {
     init_rs_vid,
     init_rs_aud,
     init_rs_lang,
-    init_rs_gmP
+    init_rs_gmP,
+    quit_settings
 };
 
 //* usr_modification InitFunc public array var
@@ -43,12 +43,13 @@ lunchFn usr_modification[] = {
     video,
     audio,
     language,
-    gamePlay
+    gamePlay,
+    quit
 };
 
 void settings() {
     // * all 100 settings sub-surfaces
-    surface sub[58];
+    surface sub[61];
 
     //* init the chunk 
     Mix_Chunk *pip = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
@@ -58,15 +59,17 @@ void settings() {
 
     //? ----------------------- initializing part -----------------------
     //* load the settings resources
-    loadResources(sub, "project/res/img_settings/LS/img",               0,  12);
-    loadResources(sub, "project/res/img_settings/RS/controls_menu/img", 12, 32);
-    loadResources(sub, "project/res/img_settings/RS/video_menu/img",    32, 41);
-    loadResources(sub, "project/res/img_settings/RS/audio_menu/img",    41, 49);
-    loadResources(sub, "project/res/img_settings/RS/language_menu/img", 49, 54);
-    loadResources(sub, "project/res/img_settings/RS/gamePlay_menu/img", 54, 58);
+    loadResources(sub, "project/res/img_settings/LS/img",                              0,  12);
+    loadResources(sub, "project/res/img_settings/RS/controls_menu/img_keyboard/img",   12, 32);
+    loadResources(sub, "project/res/img_settings/RS/video_menu/img",                   32, 41);
+    loadResources(sub, "project/res/img_settings/RS/audio_menu/img",                   41, 49);
+    loadResources(sub, "project/res/img_settings/RS/language_menu/img",                49, 54);
+    loadResources(sub, "project/res/img_settings/RS/gamePlay_menu/img",                54, 58);
+    loadResources(sub, "project/res/img_settings/RS/controls_menu/img_controller/img", 58, 59);
+    loadResources(sub, "project/res/img_settings/img",                                 59, 61);
 
     //* set potions for the other res
-    set_pos(sub, "project/doc/settings_ref", 58);
+    set_pos(sub, "project/doc/settings_ref", 61);
 
     //* initializing the settings resources
     initResources(sub);
@@ -121,9 +124,15 @@ void settings() {
                         case SDLK_SPACE:
                             //* deselect the usr curent position
                             scroll_UD(sub, &usrOpPos, 0, pip);
-
+                            
                             //* activate the sub_menu mode (depending on the usr option position var)
                             usr_modification[usrOpPos](sub, pip);
+
+                            if (usrOpPos == 5) {
+                                //* reset the user option postion in default postion (0 by default)
+                                usrOpPos = 0;
+                                return;
+                            }
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -132,7 +141,7 @@ void settings() {
                             usrOpPos = 0;
 
                             //* free all settings res
-                            freeResources(sub, NULL, pip, 58);
+                            freeResources(sub, NULL, pip, 61);
 
                             return;
 
@@ -148,7 +157,7 @@ void settings() {
                     usrOpPos = 0;
 
                     //* free all settings res
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
 
                     //* exit from the game
                     exit(EXIT_SUCCESS);
@@ -173,25 +182,28 @@ void scroll_UD(surface* sub, int* usrOpPos, int direction, Mix_Chunk *pip) {
 
     //* del the left menu
     SDL_BlitSurface(sub[0].win,  &sub[1].pos, screen, &sub[1].pos);
+    SDL_BlitSurface(sub[0].win,  &sub[60].pos, screen, &sub[60].pos);
 
     //* blit the contour img
     SDL_BlitSurface(sub[1].win,  NULL, screen, &sub[1].pos);
 
     //* blit the @normal_img for the curent usr option
-    SDL_BlitSurface(sub[2 + *usrOpPos].win,  NULL, screen, &sub[2 + *usrOpPos].pos);
+    if (*usrOpPos != 5)
+        SDL_BlitSurface(sub[2 + *usrOpPos].win,  NULL, screen, &sub[2 + *usrOpPos].pos);
 
     //* blit the left menu
     for (int i = 0; i < 5; i++)
         if (i != *usrOpPos)
             SDL_BlitSurface(sub[2 + i].win,  NULL, screen, &sub[2 + i].pos);
+    SDL_BlitSurface(sub[59].win,  NULL, screen, &sub[59].pos);
 
     //* update the usrOpPos
     *usrOpPos += direction;
 
     //* fix usr option postion
     if (*usrOpPos < 0)
-        *usrOpPos = 4;
-    else if (*usrOpPos > 4)
+        *usrOpPos = 5;
+    else if (*usrOpPos > 5)
         *usrOpPos = 0;
 
     //* blit the @animated_img for the new usr option
@@ -219,6 +231,7 @@ void initResources(surface* sub) {
     //* LS sub_surfaces blit part
     for (int i = 0; i < 7; i++)
         SDL_BlitSurface(sub[i].win,  NULL, screen, &sub[i].pos);
+    SDL_BlitSurface(sub[59].win,  NULL, screen, &sub[59].pos);
 }
 
 void init_rs_ctrl(surface* sub) {
@@ -269,8 +282,8 @@ void init_kb_ctrl(surface *sub) {
     TTF_CloseFont(font);
 }
 
-void init_cl_ctrl(surface *) {
-    //! need resources :: @Ryannn26
+void init_cl_ctrl(surface *sub) {
+    SDL_BlitSurface(sub[58].win, NULL, screen, &sub[58].pos);
 }
 
 void init_rs_vid(surface* sub) {
@@ -378,6 +391,10 @@ void init_rs_gmP(surface* sub) {
     SDL_BlitSurface(sub[39 + !scanValue("project/doc/settings", 26)].win, NULL, screen, (sub[39].pos.y = 292, &sub[39].pos));
 }
 
+void quit_settings(surface *sub) {
+    SDL_BlitSurface(sub[60].win, NULL, screen, &sub[60].pos);
+}
+
 //? ----------------------- USR_MODIFICATION FUNCTIONS DEV PART -----------------------
 void controls(surface* sub, Mix_Chunk *pip) {
     //* the curent user option position
@@ -406,7 +423,7 @@ void controls(surface* sub, Mix_Chunk *pip) {
                 //? ------------------ MOUSE BUTTON DOWN CLICK EVENT ------------------
                 case SDL_MOUSEBUTTONDOWN:
                     (ctrl_usrOpPos) ? init_cl_ctrl(sub)           : init_kb_ctrl(sub);
-                    (ctrl_usrOpPos) ? cl_ctrl(sub, ctrl_usrOpPos) : kb_ctrl(sub, ctrl_usrOpPos, pip);
+                    (ctrl_usrOpPos) ? 0 : kb_ctrl(sub, ctrl_usrOpPos, pip);
                     break;
 
                 //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
@@ -426,8 +443,10 @@ void controls(surface* sub, Mix_Chunk *pip) {
 
                         //? --- ENTER CLICK OPTION ---
                         case SDLK_SPACE:
-                            (ctrl_usrOpPos) ? init_cl_ctrl(sub)           : init_kb_ctrl(sub);
-                            (ctrl_usrOpPos) ? cl_ctrl(sub, ctrl_usrOpPos) : kb_ctrl(sub, ctrl_usrOpPos, pip);
+                            if (!ctrl_usrOpPos) {
+                                init_kb_ctrl(sub); 
+                                kb_ctrl(sub, ctrl_usrOpPos, pip);
+                            }
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---
@@ -443,7 +462,7 @@ void controls(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -483,7 +502,6 @@ void ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *
         *ctrl_usrOpPos = 0;
 
     //* blit the sub right menu
-    //! support the kb_menu only (we don't have the controller resources)
     (*ctrl_usrOpPos) ? init_cl_ctrl(sub) : init_kb_ctrl(sub);
     
     //* blit the @animated_img for the new usr option
@@ -547,7 +565,7 @@ void kb_ctrl(surface *sub, int ctrl_usrOpPos, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -584,19 +602,21 @@ void kb_ctrl_scroll_UD(surface* sub, int* kb_ctrl_usrOpPos, int direction, Mix_C
     SDL_BlitSurface(sub[25 + *kb_ctrl_usrOpPos].win,  NULL, screen, &sub[25 + *kb_ctrl_usrOpPos].pos);
 }
 
-void cl_ctrl(surface *sub, int ctrl_usrOpPos) {
-    //! need resources :: @Ryannn26
-}
-
-void rn_ctrl(surface *sub, int ctrl_usrOpPos) {
-    //* reset the kb/controller ctrl option menu
-    ctrl_usrOpPos ? init_cl_ctrl(sub) : init_kb_ctrl(sub);
-
-    //* reset the last selected button for the kb/controller ctrl option menu
-    SDL_BlitSurface(sub[15 + ctrl_usrOpPos].win,  NULL, screen, &sub[15 + ctrl_usrOpPos].pos);
-}
-
 void edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos) {
+    surface key;
+
+    //* set the @key_pos
+    key.pos.x = 1430;
+    key.pos.y = 460 + 73 * kb_ctrl_usrOpPos;
+    key.pos.w = 115;
+    key.pos.h = 40;
+
+    //* del the key surface
+    SDL_BlitSurface(sub[0].win, &key.pos, screen, &key.pos);
+
+    //* cover the key surface
+    SDL_BlitSurface(sub[27].win, &key.pos, screen, &key.pos);
+
     //* enter the @event_loop part
     while (1) {
         while (SDL_PollEvent(&event)) {
@@ -607,9 +627,15 @@ void edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos) {
                     int key_value = event.key.keysym.sym;
 
                     //* escape the @key_change_event
-                    if (key_value == SDLK_ESCAPE)
+                    if (key_value == SDLK_ESCAPE) {
+                        //* update the keyboard menu
+                        init_kb_ctrl(sub);
+
+                        //* blit the @current_selected_key img
+                        SDL_BlitSurface(sub[25 + kb_ctrl_usrOpPos].win,  NULL, screen, &sub[25 + kb_ctrl_usrOpPos].pos);
                         return;
-                    else {
+
+                    } else {
                         //* get the key name
                         char key_name[21];
                         scanStr("project/doc/settings", key_name, kb_ctrl_usrOpPos + 3);
@@ -640,7 +666,7 @@ void edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos) {
                     break;
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -662,6 +688,14 @@ int is_exist(int key) {
         if (scanValue("project/doc/settings", i) == key)
             return i;
     return 0;
+}
+
+void rn_ctrl(surface *sub, int ctrl_usrOpPos) {
+    //* reset the kb/controller ctrl option menu
+    ctrl_usrOpPos ? init_cl_ctrl(sub) : init_kb_ctrl(sub);
+
+    //* reset the last selected button for the kb/controller ctrl option menu
+    SDL_BlitSurface(sub[15 + ctrl_usrOpPos].win,  NULL, screen, &sub[15 + ctrl_usrOpPos].pos);
 }
 
 void video(surface* sub, Mix_Chunk *pip) {
@@ -756,7 +790,7 @@ void video(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -827,7 +861,7 @@ void audio(surface* sub, Mix_Chunk *pip) {
                                 audio_usrOpPos = 1;
                             else if (audio_usrOpPos == 2)
                                 audio_usrOpPos = 0;
-                            
+
                             //* del the old rs_interface
                             SDL_BlitSurface(sub[0].win, &sub[12].pos, screen, &sub[12].pos);
 
@@ -880,7 +914,7 @@ void audio(surface* sub, Mix_Chunk *pip) {
                             //* reset the Y31
                             sub[35].pos.y = 300;
                             break;
-                        
+
                         //? --- OTHER CLICK OPTION ---
                         default:
                             break;
@@ -889,7 +923,7 @@ void audio(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -1004,7 +1038,7 @@ void language(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -1100,7 +1134,7 @@ void gamePlay(surface* sub, Mix_Chunk *pip) {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, NULL, pip, 58);
+                    freeResources(sub, NULL, pip, 61);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -1159,4 +1193,12 @@ void gm_scroll_LR(surface *sub, char *op_name, char *format, int line, int conf,
     //* blit R or L animated button
     (line == 27) ? (sub[37 + conf].pos.y = 378) : (sub[37 + conf].pos.y = 300);
     SDL_BlitSurface(sub[37 + conf].win, NULL, screen, &sub[37 + conf].pos);
+}
+
+void quit(surface *sub, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
+
+    //* free resources
+    freeResources(sub, NULL, pip, 61);
 }
