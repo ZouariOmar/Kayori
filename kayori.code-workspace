@@ -45,7 +45,8 @@
 			"stdint.h": "c",
 			"sdl.h": "c",
 			"termios.h": "c",
-			"sdl_image.h": "c"
+			"sdl_image.h": "c",
+			"mechanics.h": "c"
 		}
 	}
 }

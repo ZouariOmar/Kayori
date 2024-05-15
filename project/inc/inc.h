@@ -41,6 +41,19 @@
 #include "enigma.h"
 #include "Multiplayer.h"
 #include "serie.h"
+#include "Best_Score.h"
+#include "Game.h"
+#include "Mechanics.h"
+#include "Struct_Player.h"
+#include "Collisions_Struct.h"
+#include "Collisions.h"
+#include "Background.h"
+#include "Mini_Map.h"
+#include "Background.h"
+#include "Collisions.h"
+#include "Pause.h"
+#include "Multiplayer.h"
+#include "Multiplayer_Skins.h"
 
 //* PUBLIC VARS
 SDL_Surface *screen;

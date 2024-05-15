@@ -28,7 +28,7 @@ void ttt_scroll_UD(surface *, int *, int *, int);
 ? initResources(surface *sub) void fn
 * blit the first viewed interface of thr program
 */
-void initResources(surface *);
+void ttt_initResources(surface *);
 
 /*
 ? have_coordinate(Sint16 *x, Sint16 *y, int pos) void fn

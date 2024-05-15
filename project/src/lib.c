@@ -10,9 +10,13 @@
 /*
 * NONE...
 */
-
+#ifndef LIB
+#define LIB
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
+#include "Mechanics.c"
+#include "MiniMap.c"
+#include "Background.c"
 #include "Main_Menu.c"
 
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
@@ -67,6 +71,336 @@ void setScreen(int x) {
         fprintf(stderr, "%s: %s !", SDL_ERRMSG07, SDL_GetError()); exit(1);
     }
 }
+
+void loadGameResources(SDL_Surface* sub[], char* path, int begin_res, int nbr_res) {
+    while (begin_res <= nbr_res) {
+        char tmp_path[260];
+        sprintf(tmp_path, "%s%d%s", path, begin_res, ".png");
+        sub[begin_res-1] = load_img(tmp_path);
+        begin_res++;
+    }
+}
+// ================== Single player ================== //
+
+///////////////////////////////////
+
+void InitSave(int Lvl, SM* P1, SM* P2, BGC* BG_Camera, MAP* Mini_Map, Col** C_Tab, int* N_Collision, int* Quit)
+{
+    switch(Lvl)
+    {
+        case 1:
+            // ================= PLAYER =================
+
+            // ----- P1 -----
+
+            // Default position
+            P1->Default_X = 963;
+            P1->Default_Y = 2981;
+
+            // Players actual position
+            P1->A_Pos.x=P1->Default_X;
+            P1->A_Pos.y=P1->Default_Y;
+
+            // Players last position
+            P1->L_Pos.x=P1->Default_X;
+            P1->L_Pos.y=P1->Default_Y;
+
+            // ----- P2 -----
+
+            // Default position
+            P2->Default_X = 963;
+            P2->Default_Y = 2981;
+
+            // Players actual position
+            P2->A_Pos.x=P2->Default_X;
+            P2->A_Pos.y=P2->Default_Y;
+
+            // Players last position
+            P2->L_Pos.x=P2->Default_X;
+            P2->L_Pos.y=P1->Default_Y;
+
+            // ================= BACKGROUND =================
+
+            // Initialisation background size
+            BG_Camera->WBG = 7781;
+            BG_Camera->HBG = 3263;
+
+            // Initialisation background image
+            BG_Camera->Normal_bg = load_img("pkg//Testlevel//Tuto.png");
+            BG_Camera->Dynamic_bg = load_img("pkg//Testlevel//Tuto.png");
+            BG_Camera->Dynamic_2 = BG_Camera->Dynamic_bg;
+            BG_Camera->Dynamic_3 = BG_Camera->Dynamic_bg;
+
+            // ================= MINI MAP =================
+
+            // Init mini map image
+            Mini_Map->Normal_MM = load_img("pkg//Testlevel//Mini map tuto.png");
+            Mini_Map->Dynamic_MM = load_img("pkg//Testlevel//Mini map tuto.png");
+            
+            // Init mini map position
+            Mini_Map->Rect_IP.x = 0;
+            Mini_Map->Rect_IP.y = 0;
+
+            // ================= COLLISIONS =================
+
+            InitCollisions(C_Tab, N_Collision, 1, Quit);
+
+            break;
+
+        case 2:
+            // ================= PLAYER =================
+
+            // ----- P1 -----
+
+            // Default position
+            P1->Default_X = 1032;
+            P1->Default_Y = 1699;
+
+            // Players actual position
+            P1->A_Pos.x=P1->Default_X;
+            P1->A_Pos.y=P1->Default_Y;
+
+            // Players last position
+            P1->L_Pos.x=P1->Default_X;
+            P1->L_Pos.y=P1->Default_Y;
+
+            // ----- P2 -----
+
+            // Default position
+            P2->Default_X = 1032;
+            P2->Default_Y = 1699;
+
+            // Players actual position
+            P2->A_Pos.x=P2->Default_X;
+            P2->A_Pos.y=P2->Default_Y;
+
+            // Players last position
+            P2->L_Pos.x=P2->Default_X;
+            P2->L_Pos.y=P2->Default_Y;
+
+            // ================= BACKGROUND =================
+
+            // Initialisation background size
+            BG_Camera->WBG = 7205;
+            BG_Camera->HBG = 3787;
+
+            // Initialisation background image
+            BG_Camera->Normal_bg = load_img("pkg//Testlevel//LEVEL1.png");
+            BG_Camera->Dynamic_bg = load_img("pkg//Testlevel//LEVEL1.png");
+            BG_Camera->Dynamic_2 = BG_Camera->Dynamic_bg;
+            BG_Camera->Dynamic_3 = BG_Camera->Dynamic_bg;
+
+            // ================= MINI MAP =================
+
+            // Init mini map image
+            Mini_Map->Normal_MM = load_img("pkg//Testlevel//Mini map level1.png");
+            Mini_Map->Dynamic_MM = load_img("pkg//Testlevel//Mini map level1.png");
+            
+            // Init mini map position
+            Mini_Map->Rect_IP.x = 1067;
+            Mini_Map->Rect_IP.y = 616;
+
+            // ================= COLLISIONS =================
+
+            InitCollisions(C_Tab, N_Collision, 2, Quit);
+            break;
+
+        case 3:
+            // ================= PLAYER =================
+
+            // ----- P1 -----
+
+            // Default position
+            P1->Default_X = 199;
+            P1->Default_Y = 2582;
+
+            // Players actual position
+            P1->A_Pos.x=P1->Default_X;
+            P1->A_Pos.y=P1->Default_Y;
+
+            // Players last position
+            P1->L_Pos.x=P1->Default_X;
+            P1->L_Pos.y=P1->Default_Y;
+
+            // ----- P2 -----
+
+            // Default position
+            P2->Default_X = 199;
+            P2->Default_Y = 2582;
+
+            // Players actual position
+            P2->A_Pos.x=P2->Default_X;
+            P2->A_Pos.y=P2->Default_Y;
+
+            // Players last position
+            P2->L_Pos.x=P2->Default_X;
+            P2->L_Pos.y=P2->Default_Y;
+
+            // ================= BACKGROUND =================
+
+            // Initialisation background size
+            BG_Camera->WBG = 13467;
+            BG_Camera->HBG = 5191;
+
+            // Initialisation background image
+            BG_Camera->Normal_bg   = load_img("pkg//Testlevel//Level 2 no shoot.png");
+            BG_Camera->Dynamic_bg  = load_img("pkg//Testlevel//Level 2 no shoot.png");
+            BG_Camera->Dynamic_2 = load_img("pkg//Testlevel//Level 2 shoot1.png");
+            BG_Camera->Dynamic_3 = load_img("pkg//Testlevel//Level 2 shoot2.png");
+
+            // ================= MINI MAP =================
+
+            // Init mini map image
+            Mini_Map->Normal_MM = load_img("pkg//Testlevel//Mini map level2.png");
+            Mini_Map->Dynamic_MM = load_img("pkg//Testlevel//Mini map level2.png"); 
+            
+            // Init mini map position
+            Mini_Map->Rect_IP.x = 1646;
+            Mini_Map->Rect_IP.y = 789;
+
+            // ================= COLLISIONS =================
+
+            InitCollisions(C_Tab, N_Collision, 3, Quit);
+            break;
+
+        default:
+            break;
+    }
+}
+
+///////////////////////////////////
+
+void LvlTransition(int* Lvl, SM* P1, SM* P2, BGC* BG_Camera, MAP* Mini_Map, Col** C_Tab, int* N_Collision, int* Quit)
+{
+    (*Lvl)++;
+
+    if(*Lvl < 4)
+    {
+        SDL_FreeSurface(BG_Camera->Normal_bg);
+        SDL_FreeSurface(BG_Camera->Dynamic_bg);
+        
+        if(*Lvl == 4)
+        {
+            SDL_FreeSurface(BG_Camera->Dynamic_2);
+            SDL_FreeSurface(BG_Camera->Dynamic_3);
+        }
+        
+        SDL_FreeSurface(Mini_Map->Normal_MM);
+        SDL_FreeSurface(Mini_Map->Dynamic_MM);
+        FreeCollisions(*C_Tab);
+
+        InitSave(*Lvl, P1, P2, BG_Camera, Mini_Map, C_Tab, N_Collision, Quit);
+    }
+
+    P1->Lvl_Trans = 0;
+    P2->Lvl_Trans = 0;
+}
+
+///////////////////////////////////
+
+void InitGameSP(int Lvl, SM* P1, SM* P2, BGC* BG_Camera, MAP* Mini_Map, Col** C_Tab, int* N_Collision, int* Quit)
+{
+    // Initialiser save
+
+    InitSave(Lvl, P1, P2, BG_Camera, Mini_Map, C_Tab, N_Collision, Quit);
+
+    // Initialisation of the player
+
+    InitPlayer(P1, P2);
+
+    // Initialiser background camera
+
+    InitBackgroundSP(BG_Camera, Quit);
+
+    // Initialiser Mini Map
+
+    InitMiniMapSP(Mini_Map, Quit);
+}
+
+///////////////////////////////////
+
+void UpdateScreenSP(SM* P, MAP* Mini_Map, BGC* BG_Camera, int* Quit_Game)
+{
+    // Enter in the background update function
+    UpdateBackgroundSP(BG_Camera, P, Quit_Game);
+
+    if(!(P->Lvl_Trans))
+    {
+        // Mini Map
+        UpdateMMSolo(Mini_Map, BG_Camera, P);
+    }
+
+    // Refresh the screen
+    SDL_Flip(screen);
+    SDL_Delay(7);
+}
+
+///////////////////////////////////
+
+// ================== Multiplayer ================== //
+
+///////////////////////////////////
+
+void InitGameMP(int Lvl, SM* P1, SM* P2, BGC* BG_Camera, MAP* Mini_Map, Col** C_Tab, int* N_Collision, int* Quit)
+{
+    // Initialiser save
+
+    InitSave(Lvl, P1, P2, BG_Camera, Mini_Map, C_Tab, N_Collision, Quit);
+
+    // Initialisation of the player
+
+    InitPlayer(P1, P2);
+
+    // Initialiser background camera
+
+    InitBackgroundMP(BG_Camera, Quit);
+
+    // Initialiser Mini Map
+ 
+    InitMiniMapMP(Mini_Map, Quit);
+}
+
+///////////////////////////////////
+
+void UpdateScreenMP(SM* P1, SM* P2, MAP* Mini_Map, BGC* BG_Camera, int* Quit_Game)
+{
+    // Enter in the background update function
+    UpdateBackgroundMP(BG_Camera, P1, P2, Quit_Game);
+
+    if(!(P1->Lvl_Trans && P2->Lvl_Trans))
+    {
+        // Mini Map
+        UpdateMMMulti(Mini_Map, BG_Camera, P1, P2);
+    }
+
+    // Refresh the screen
+    SDL_Flip(screen);
+    SDL_Delay(7);
+}
+
+// =============================================== //
+
+///////////////////////////////////
+
+void FreeGameSP(int Lvl, Col* Tab, BGC* BG_Camera, MAP* Mini_Map)
+{
+    FreeCollisions(Tab);
+    FreeBackgroundSP(Lvl, BG_Camera);
+    FreeMM(Mini_Map);
+    SDL_FreeSurface(screen);
+}
+
+///////////////////////////////////
+
+void FreeGameMP(int Lvl, Col* Tab, BGC* BG_Camera, MAP* Mini_Map)
+{
+    FreeCollisions(Tab);
+    FreeBackgroundMP(Lvl, BG_Camera);
+    FreeMM(Mini_Map);
+    SDL_FreeSurface(screen);
+}
+
+///////////////////////////////////
 
 //? ------------------ SCANNING && EDITING FILES FUNCTIONS DEV PART ------------------
 int scanValue(char *path, int line) {
@@ -206,3 +540,5 @@ void freeResources(surface *sub, TTF_Font *font, Mix_Chunk *pip, int nb_res) {
     TTF_CloseFont(font);
     Mix_FreeChunk(pip);
 }
+
+#endif

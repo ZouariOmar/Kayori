@@ -1,5 +1,6 @@
 #include "../inc/inc.h"
 #include "Best_Score.c"
+#include "Multiplayer_Skins.c"
 
 ////////////////////////////////////////
 
@@ -14,7 +15,7 @@ void InitialisationMP(MP* Multi,int* Quit_Game)
 
 	// Background
 
-	Multi->Rect_MP.h=389;
+	Multi->Rect_MP.h=3;
 	Multi->Rect_MP.w=633;
 
 	Multi->Rect_MP.x=636;
@@ -237,20 +238,18 @@ void MenuMP(int* Quit_Game)
 
 				else if( event.key.keysym.sym == SDLK_SPACE || Multi.Clicked_Button )
 				{
+					ClearMP(&Multi);
 					switch(Multi.Actual_Position)
 					{
 						case 1:
-							//Start multiplayer
+							// Multiplayer skins
+							MenuMPS(Quit_Game);
 							break;
 
 						case 2:
-							ClearMP(&Multi);
 
 							//Best score
 							MenuBS(Quit_Game);
-
-							if(!(*Quit_Game))
-								InitialisationMP(&Multi,Quit_Game);
 
 							break;
 
@@ -261,6 +260,9 @@ void MenuMP(int* Quit_Game)
 						default:
 							break;
 					}
+					
+					if(!(*Quit_Game))
+						InitialisationMP(&Multi,Quit_Game);
 				}					
 			}
 

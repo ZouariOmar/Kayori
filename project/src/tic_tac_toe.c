@@ -333,7 +333,7 @@ int check_diagonals(surface* sub, int* t, int x) {
     return 0;
 }
 
-void initResources(surface *sub) {
+void ttt_initResources(surface *sub) {
     SDL_BlitSurface(sub[0].win, NULL, screen, (sub[0].pos.x = 0,   sub[0].pos.y = 0,   &sub[0].pos));
     SDL_BlitSurface(sub[1].win, NULL, screen, (sub[1].pos.x = 603, sub[1].pos.y = 186, &sub[1].pos));
     SDL_BlitSurface(sub[6].win, NULL, screen, (sub[6].pos.x = 662, sub[6].pos.y = 282, &sub[6].pos));

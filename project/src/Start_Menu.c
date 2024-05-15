@@ -13,7 +13,7 @@
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
-
+#include "Game.c"
 
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 
@@ -89,7 +89,7 @@ void start_menu() {
                             if (usrOpPos == 3)
                                 return;
                             else
-                                //* load/new game part...
+                                SoloPlayer();
                             break;
 
                         //? --- ESCAPE CLICK OPTION ---

@@ -1,4 +1,4 @@
-#include "../inc/Best_Score.h"
+#include "../inc/inc.h"
 
 ////////////////////////////////////////
 
@@ -13,6 +13,16 @@ void InitialisationBS(BS* Best_Score,int* Quit_Game)
 
 	// Background
 	Best_Score->Score = load_img("project/res/img_score/best scores menu copie.png");
+
+	// TTF rect
+	Best_Score->Rect_S1.x = 730;
+	Best_Score->Rect_S1.y = 456;
+
+	Best_Score->Rect_S2.x = 725;
+	Best_Score->Rect_S2.y = 553;
+
+	Best_Score->Rect_S3.x = 715;
+	Best_Score->Rect_S3.y = 667;
 
 	// Return button
 
@@ -35,6 +45,101 @@ void InitialisationBS(BS* Best_Score,int* Quit_Game)
 	Best_Score->Clicked_Button=0;
 
 	SDL_BlitSurface(Best_Score->Score,NULL,screen,NULL);
+	BestScore(Best_Score,Quit_Game);
+}
+
+////////////////////////////////////////
+
+void BlitBS(BS* Best_Score, int S1, int S2, int S3)
+{
+	char Txt1[20], Txt2[20], Txt3[20];
+
+	// TTF font
+	TTF_Font* Font = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 79);
+
+	// Color text
+	SDL_Color Text_Color = {0, 0, 0, 0};
+
+	//
+	sprintf(Txt1, "%s%d", "1. ", S1);
+	sprintf(Txt2, "%s%d", "2. ", S2);
+	sprintf(Txt3, "%s%d", "3. ", S3);
+
+	//
+	Best_Score->Txt_S1 = TTF_RenderText_Blended(Font,Txt1,Text_Color);
+	Best_Score->Txt_S2 = TTF_RenderText_Blended(Font,Txt2,Text_Color);
+	Best_Score->Txt_S3 = TTF_RenderText_Blended(Font,Txt3,Text_Color);
+
+	SDL_BlitSurface(Best_Score->Txt_S1,NULL,screen,&(Best_Score->Rect_S1));
+	SDL_BlitSurface(Best_Score->Txt_S2,NULL,screen,&(Best_Score->Rect_S2));
+	SDL_BlitSurface(Best_Score->Txt_S3,NULL,screen,&(Best_Score->Rect_S3));
+}
+
+////////////////////////////////////////
+
+void BestScore(BS* Best_Score, int* Quit)
+{
+// Open the collision file and initialisation of the variables
+
+	FILE* file = fopen("project/doc/Scores","r");
+	int* S_Tab;
+	int Score, T=0, i=0, j=0, c=0;
+
+	if(file==NULL)
+	{
+		printf("ERREUR : Echec de l'ouverture fichier Score\n");
+		*Quit = 1;
+		return;
+	}
+
+	// Get the number of rect to allocate
+
+	while(!feof(file))
+	{
+		fscanf(file,"%d",&Score);
+		T++;
+	}
+
+	// Reinitialisation of the position of the cursor
+
+	rewind(file);
+
+	// Allocation of the rects
+
+	S_Tab = malloc(sizeof(int)*(T));
+
+	if(S_Tab == NULL)
+	{
+		printf("ERREUR : Echec de l'allocation dynamique des scores\n");
+		*Quit = 1;
+		return;
+	}
+
+	// Fill the rects
+
+	while(!feof(file))
+	{
+		fscanf(file,"%d",&Score);
+		S_Tab[j]=Score;
+		j++;
+	}
+
+	// Tri tab
+
+	for(i=0;i<T-1;i++)
+	{
+	    for(j=i+1;j<T;j++)
+	        if ( S_Tab[i] < S_Tab[j] ) {
+	            c = S_Tab[i];
+	            S_Tab[i] = S_Tab[j];
+	            S_Tab[j] = c;
+	        }
+	}
+
+	//
+	BlitBS(Best_Score,S_Tab[0],S_Tab[1],S_Tab[2]);
+
+	free(S_Tab);
 }
 
 ////////////////////////////////////////

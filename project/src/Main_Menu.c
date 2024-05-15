@@ -3,6 +3,7 @@
 #include "Quit_Verification.c"
 #include "settings.c"
 #include "Multiplayer.c"
+#include "../inc/Structures_MM.h"
 
 ////////////////////////////////////////
 
