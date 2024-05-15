@@ -1,13 +1,19 @@
 /* -----------------------------------------------
 * @team:   by_kayori_Nova_Grp
-* @update: 04/06/24
+* @author: @ZouariOmar
+* @IDE:    @vsc
+* @update: 05/15/24
 ? @file:   lib.c
 ----------------------------------------------- */
+
+//? ----------------------- NOTE SECTION DECLARATION PART -----------------------
+/*
+* NONE...
+*/
 
 //? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
 #include "../inc/inc.h"
 #include "Main_Menu.c"
-
 
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 void initEverything() {

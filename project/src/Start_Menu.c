@@ -1,353 +1,250 @@
-#include "../inc/Start_Menu.h"
+/* -----------------------------------------------
+* @team:   by_kayori_Nova_Grp
+* @author: @ZouariOmar @Fraddosse1
+* @IDE:    @vsc @sublime
+* @update: 05/15/24
+? @file:   start_menu.c
+----------------------------------------------- */
 
-////////////////////////////////////////
+//? ----------------------- NOTE SECTION DECLARATION PART -----------------------
+/*
+* NONE...
+*/
 
-void InitialisationSM(SM* Start_Menu,int* Quit_Game)
-{
-	// Music and Chunk
+//? -------------------- INCLUDE PROTOTYPE DECLARATION PART --------------------
+#include "../inc/inc.h"
 
-	Start_Menu->Chunk = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
-	//* load the @soundVolume
-    Mix_VolumeChunk(Start_Menu->Chunk, scanValue("project/doc/settings", 24));
+//? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 
-	// Quit Button
+void start_menu() {
+    //* the curent user option position
+    int usrOpPos = 0;
 
-	Start_Menu->Image_Quit_Button.pos.h=65;
-	Start_Menu->Image_Quit_Button.pos.w=130;
+    // * all 10 start_menu sub-surfaces
+    surface sub[11];
 
-	Start_Menu->Image_Quit_Button.pos.x=0;
-	Start_Menu->Image_Quit_Button.pos.y=1018;
+    //* load all 3 saves info
+    load_info info[3];
+    scanLvlInfo("project/doc/load_lvl", info);
 
-	Start_Menu->Image_Quit_Button.UC_B = load_img("project/res/img_start_menu/UCReturn.png");
-	Start_Menu->Image_Quit_Button.C_B = load_img("project/res/img_start_menu/CReturn.png");
+    //* init the chunk 
+    Mix_Chunk *pip = Mix_LoadWAV("project/res/music/rac_menu_beep.wav");
 
-	// Bouton save 1
+    //* load the @soundVolume
+    Mix_VolumeChunk(pip, scanValue("project/doc/settings", 24));
 
-	Start_Menu->Image_Save1.pos.h=204;
-	Start_Menu->Image_Save1.pos.w=860;
+    //? ----------------------- initializing part -----------------------
+    //* load the start_menu resources
+    loadResources(sub, "project/res/img_start_menu/img", 0, 11);
 
-	Start_Menu->Image_Save1.pos.x=510;
-	Start_Menu->Image_Save1.pos.y=130;
+    //* set potions for the other res
+    set_pos(sub, "project/doc/start_menu_ref", 11);
 
-	Start_Menu->Image_Save1.UC_B = load_img("project/res/img_start_menu/StartMenuNewGame.png");
-	Start_Menu->Image_Save1.C_B = load_img("project/res/img_start_menu/StartMenuNewGame2.png");
+    //* initializing the start_menu resources
+    SDL_BlitSurface(sub[0].win, NULL, screen, &sub[0].pos);
+    SDL_BlitSurface(sub[1].win, NULL, screen, &sub[1].pos);
+    sm_initResources(sub, info[0], 0, 1);
+    sm_initResources(sub, info[1], 1, 0);
+    sm_initResources(sub, info[2], 2, 0);
 
-	// Bouton save 2
+    // * update the screen
+    SDL_Flip(screen);
 
-	Start_Menu->Image_Save2.pos.h=204;
-	Start_Menu->Image_Save2.pos.w=860;
+    while (1) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                //? ----------------------- MOUSE MOTION EVENT -----------------------
+                case SDL_MOUSEMOTION:
+                    for (int i = 2; i < 7; i++)
+                        if (event.motion.x >= sub[i].pos.x && event.motion.x <= sub[i].pos.x + sub[i].pos.w && event.motion.y >= sub[i].pos.y && event.motion.y <= sub[i].pos.y + sub[i].pos.h && (i - 2) != usrOpPos) {
+                            scroll_UD(sub, &usrOpPos, i - 2 - usrOpPos, pip);
+                            SDL_BlitSurface(sub[0].win, (sub[0].pos.x = 952, sub[0].pos.y = 230, &sub[0].pos), screen, &sub[0].pos);
+                        }
+                    break;
 
-	Start_Menu->Image_Save2.pos.x=510;
-	Start_Menu->Image_Save2.pos.y=428;
+                //? ------------------ MOUSE BUTTON DOWN CLICK EVENT ------------------
+                case SDL_MOUSEBUTTONDOWN:
+                    //* deselect the usr curent position
+                    scroll_UD(sub, &usrOpPos, 0, pip);
 
-	Start_Menu->Image_Save2.UC_B = load_img("project/res/img_start_menu/StartMenuNewGame.png");
-	Start_Menu->Image_Save2.C_B = load_img("project/res/img_start_menu/StartMenuNewGame2.png");
+                    //* activate the sub_menu mode (depending on the usr option position var)
 
-	// Bouton save 3
+                    break;
+                //? ------------------- KB BUTTON DOWN CLICK EVENT -------------------
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        //? --- UP CLICK OPTION ---
+                        case SDLK_UP:
+                            sm_scroll_UD(sub, info, &usrOpPos, -1, pip);
+                            break;
 
-	Start_Menu->Image_Save3.pos.h=204;
-	Start_Menu->Image_Save3.pos.w=860;
+                        //? --- DOWN CLICK OPTION ---
+                        case SDLK_DOWN:
+                            sm_scroll_UD(sub, info, &usrOpPos, 1, pip);
+                            break;
 
-	Start_Menu->Image_Save3.pos.x=510;
-	Start_Menu->Image_Save3.pos.y=733;
+                        //? --- ENTER CLICK OPTION ---
+                        case SDLK_SPACE:
+                            if (usrOpPos == 3)
+                                return;
+                            else
+                                //* load/new game part...
+                            break;
 
-	Start_Menu->Image_Save3.UC_B = load_img("project/res/img_start_menu/StartMenuNewGame.png");
-	Start_Menu->Image_Save3.C_B = load_img("project/res/img_start_menu/StartMenuNewGame2.png");
+                        //? --- ESCAPE CLICK OPTION ---
+                        case SDLK_ESCAPE:
+                            //* free all settings res
+                            freeResources(sub, NULL, pip, 11);
+                            return;
 
-	// Background image
+                        //? --- OTHER CLICK OPTION ---
+                        default:
+                            break;
+                    }
+                    break;
 
-	Start_Menu->Image_background_SM = load_img("project/res/img_start_menu/Start Menu.png");
+                //? --------------------- QUIT CLICK EVENT ---------------------
+                case SDL_QUIT:
+                    //* free all settings res
+                    freeResources(sub, NULL, pip, 11);
 
-	// Image pointer verification
+                    //* exit from the game
+                    exit(EXIT_SUCCESS);
+                    break;
 
-	if(!(Start_Menu->Image_Save1.UC_B && Start_Menu->Image_Save1.C_B && Start_Menu->Image_Save2.UC_B &&
-	   Start_Menu->Image_Save2.C_B && Start_Menu->Image_Save3.UC_B && Start_Menu->Image_Save3.C_B &&
-	   Start_Menu->Image_Quit_Button.UC_B && Start_Menu->Image_Quit_Button.C_B && Start_Menu->Image_background_SM)) 
-	{
-		printf("Erreur allocation initialisation image\n");
-		ClearStartMenu(Start_Menu);
-		*Quit_Game=1;
-	}
+                //? --------------------- OTHER CLICK EVENT ---------------------
+                default:
+                    break;
+            }
+        }
+        //* update the screen
+        SDL_Flip(screen);
 
-	// Position & Click
-
-	Start_Menu->Actual_Position=1;
-	Start_Menu->Last_Position=0;
-	Start_Menu->Clicked_Button=0;
-
-	// Blitting of the start menu
-
-	// Draw background
-
-	SDL_BlitSurface(Start_Menu->Image_background_SM,NULL,screen,NULL);
+        //* wait 100 millisecond befor returning
+        SDL_Delay(100);
+    }
 }
 
-////////////////////////////////////////
+void sm_scroll_UD(surface *sub, load_info *info, int *usrOpPos, int direction, Mix_Chunk *pip) {
+    //* play the pip chunk
+    Mix_PlayChannel(-1, pip, 0);
 
-void KeyboardEventSM(SM* Start_Menu)
-{
-	// Verification Keyboard movement
+    //* del the old surface
+    SDL_BlitSurface(sub[0].win, NULL, screen, &sub[0].pos);
 
-	if( event.key.keysym.sym == SDLK_UP )
-	{
-		if(Start_Menu->Actual_Position == 1)
-			Start_Menu->Actual_Position = 3;
-		else
-			(Start_Menu->Actual_Position)--;
-	}
+    //* update the @usrOpPos var
+    (*usrOpPos) += direction;
+    if (*usrOpPos == -1)
+        *usrOpPos = 3;
+    else if (*usrOpPos == 4)
+        *usrOpPos = 0;
 
-	else if( event.key.keysym.sym == SDLK_DOWN && (Start_Menu->Actual_Position<4))
-			(Start_Menu->Actual_Position)++;
+    switch (*usrOpPos) {
+        //* display the button number 1
+        case 0:
+            SDL_BlitSurface(sub[1].win, NULL, screen, &sub[1].pos);
+            sm_initResources(sub, info[0], 0, 1);
+            sm_initResources(sub, info[1], 1, 0);
+            sm_initResources(sub, info[2], 2, 0);
+            break;
+
+        //* display the button number 2
+        case 1:
+            SDL_BlitSurface(sub[1].win, NULL, screen, &sub[1].pos);
+            sm_initResources(sub, info[0], 0, 0);
+            sm_initResources(sub, info[1], 1, 1);
+            sm_initResources(sub, info[2], 2, 0);
+            break;
+
+        //* display the button number 2
+        case 2:
+            SDL_BlitSurface(sub[1].win, NULL, screen, &sub[1].pos);
+            sm_initResources(sub, info[0], 0, 0);
+            sm_initResources(sub, info[1], 1, 0);
+            sm_initResources(sub, info[2], 2, 1);
+            break;
+
+        //* display the quit button
+        case 3:
+            SDL_BlitSurface(sub[2].win, NULL, screen, &sub[2].pos);
+            sm_initResources(sub, info[0], 0, 0);
+            sm_initResources(sub, info[1], 1, 0);
+            sm_initResources(sub, info[2], 2, 0);
+            break;
+
+        //* none
+        default:
+            break;
+    }
 }
 
-////////////////////////////////////////
+void sm_initResources(surface *sub, load_info info, int save_nbr, int usrOpPos) {
+    if (save_nbr == 0)
+        set_pos(sub, "project/doc/start_menu_ref", 11);
 
-void MouseEventSM(SM* Start_Menu)
-{
-	// Initialisation bouton position
+    else if (save_nbr == 1) {
+        sub[3 + usrOpPos].pos.y  = 430;
+        sub[5 + usrOpPos].pos.y  = 400;
+        sub[7].pos.y  = 446;
+        sub[8].pos.y  = 493;
+        sub[9].pos.y  = 546;
+        sub[10].pos.y = 590;
 
-	Start_Menu->Actual_Position=4;
+    } else {
+        sub[3 + usrOpPos].pos.y  = 735;
+        sub[5 + usrOpPos].pos.y  = 705;
+        sub[7].pos.y  = 750;
+        sub[8].pos.y  = 797;
+        sub[9].pos.y  = 850;
+        sub[10].pos.y = 894;
+    }
 
-	// Test position curseur bouton 1
+    if (info.estimated_time_ms) {
+        SDL_BlitSurface(sub[5 + usrOpPos].win, NULL, screen, &sub[5 + usrOpPos].pos);
+        for (int i = 0; i < 4; i++) {
+            //* init the "Groundation Foundation.ttf"
+            TTF_Font *font = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 30);
 
-	if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-		Start_Menu->Clicked_Button=1;
+            //* cast the info to txt char
+            char txt[4][11];
+            sprintf(txt[0], "%d",   info.current_lvl);
+            sprintf(txt[1], "%d%s", info.estimated_time_ms, "ms");
+            sprintf(txt[2], "%d",   info.death_time);
+            sprintf(txt[3], "%d",   info.collected_items);
 
-	else if(event.motion.x>=510 && event.motion.x<=1370)
-	{
-		if(event.motion.y>=130 && event.motion.y<=334)
-		{
-			// Initialisation bouton position
+            surface inf[4];
+            for (int i = 0; i < 4; i++)
+                inf[i].win = TTF_RenderText_Blended(font, txt[i], BLACK);
 
-			Start_Menu->Actual_Position=1;
+            SDL_BlitSurface(inf[i].win, NULL, screen, (inf[i].pos.x = sub[7 + i].pos.x + 50, inf[i].pos.y = sub[7 + i].pos.y + 10, &inf[i].pos));
+            SDL_BlitSurface(sub[7 + i].win, NULL, screen, &sub[7 + i].pos);
+        }
 
-			// Test position curseur bouton 2
-
-			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-				Start_Menu->Clicked_Button=1;
-		}
-
-		else if(event.motion.y>=428 && event.motion.y<=632)
-		{
-			// Initialisation bouton position
-
-			Start_Menu->Actual_Position=2;
-
-			// Test position curseur bouton 3
-
-			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-				Start_Menu->Clicked_Button=1;
-		}
-
-		else if(event.motion.y>=733 && event.motion.y<=937)
-		{
-			// Initialisation bouton position
-
-			Start_Menu->Actual_Position=3;
-
-			// Test position curseur bouton 4
-
-			if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-				Start_Menu->Clicked_Button=1;
-		}
-	}
-
+    } else
+        SDL_BlitSurface(sub[3 + usrOpPos].win, NULL, screen, &sub[3 + usrOpPos].pos);
 }
 
-////////////////////////////////////////
+void scanLvlInfo(char *path, load_info *info) {
+	//* open the settings file
+    FILE* file = fopen(path, "r");
+    if (!file) {
+        perror("Error: can't open load_lvl file !"); exit(EXIT_FAILURE);
+    }
 
-void MovementEventSM(SM* Start_Menu)
-{
-	if(event.type == SDL_KEYDOWN)
-		KeyboardEventSM(Start_Menu);
+    /*
+    ? holder     :: to detect the newLine char ('\n')
+    ? ln         :: to detect the file line number
+    */
+    char holder[MAX_PATH];
+    int ln = 0;
 
-	else if(event.type==SDL_MOUSEMOTION || event.type==SDL_MOUSEBUTTONDOWN)
-		MouseEventSM(Start_Menu);
+	//* scan info from file and put into @holder
+    while (ln < 3 && fgets(holder, sizeof(holder), file))
+		//* scan info from @holder and put it into @info_struct
+        if (sscanf(holder, "%d%d%d%d", &info[ln].current_lvl, &info[ln].estimated_time_ms, &info[ln].death_time, &info[ln].collected_items) == 4)
+            ln++;
+
+    //* close the settings file
+    fclose(file);
 }
-
-////////////////////////////////////////
-
-void ButtonUpdate( SM* Start_Menu, SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* UC_Image2, SDL_Rect* UC_Rect2, SDL_Surface* UC_Image3, SDL_Rect* UC_Rect3, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk)
-{
-	// Reset the blitted surface
-	SDL_BlitSurface(Start_Menu->Image_background_SM,&(Start_Menu->Image_Save1.pos),screen,&(Start_Menu->Image_Save1.pos));
-	SDL_BlitSurface(Start_Menu->Image_background_SM,&(Start_Menu->Image_Save2.pos),screen,&(Start_Menu->Image_Save2.pos));
-	SDL_BlitSurface(Start_Menu->Image_background_SM,&(Start_Menu->Image_Save3.pos),screen,&(Start_Menu->Image_Save3.pos));
-	SDL_BlitSurface(Start_Menu->Image_background_SM,&(Start_Menu->Image_Quit_Button.pos),screen,&(Start_Menu->Image_Quit_Button.pos));
-
-	// Image blitting
-	SDL_BlitSurface(UC_Image1,NULL,screen,UC_Rect1);
-	SDL_BlitSurface(UC_Image2,NULL,screen,UC_Rect2);
-	SDL_BlitSurface(UC_Image3,NULL,screen,UC_Rect3);
-	SDL_BlitSurface(C_Image,NULL,screen,C_Rect);
-
-	// Play chunk
-	Mix_PlayChannel(-1,Chunk,0);
-}
-
-// A changer lors de review code 
-// % Taille des boutons et positions
-
-////////////////////////////////////////
-
-void UpdateButtonsStartMenu(SM* Start_Menu)
-{
-	// Visuel des boutons
-
-	switch(Start_Menu->Actual_Position)
-	{
-		// Save 2 selected
-		case 2:
-			if(Start_Menu->Last_Position!=2)
-			{
-				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
-							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save2.C_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Chunk );
-
-				Start_Menu->Last_Position=2;
-			}
-			break;
-
-		// Save 3 selected
-		case 3:
-			if(Start_Menu->Last_Position!=3)
-			{
-				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
-							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save3.C_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Chunk );
-
-				Start_Menu->Last_Position=3;
-			}
-			break;
-
-		// Return button selected
-		case 4:
-			if(Start_Menu->Last_Position!=4)
-			{
-				ButtonUpdate(Start_Menu, Start_Menu->Image_Save1.UC_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos),
-							  Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos), Start_Menu->Image_Quit_Button.C_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Chunk );
-
-				Start_Menu->Last_Position=4;
-			}
-			break;
-
-		// Save 1 selected ( default )
-		default:
-			if(Start_Menu->Last_Position!=1)
-			{
-				ButtonUpdate(Start_Menu, Start_Menu->Image_Save2.UC_B, &(Start_Menu->Image_Save2.pos), Start_Menu->Image_Save3.UC_B, &(Start_Menu->Image_Save3.pos),
-							  Start_Menu->Image_Quit_Button.UC_B, &(Start_Menu->Image_Quit_Button.pos), Start_Menu->Image_Save1.C_B, &(Start_Menu->Image_Save1.pos), Start_Menu->Chunk );
-
-				Start_Menu->Last_Position=1;
-			}
-			break;
-	}
-}
-
-////////////////////////////////////////
-
-void StartMenu(int* Quit_Game)
-{
-	// Quit loop verification
-
-	int Quit_SM=0;
-
-	// Création Start Menu
-
-	SM Start_Menu;
-
-	// Initialisation Start Menu && Blitting of the background
-
-	InitialisationSM(&Start_Menu, Quit_Game);
-
-	// If no error occured in the initialisation => Enter Start menu loop
-
-	while(!Quit_SM && !(*Quit_Game))
-	{
-		while(SDL_PollEvent(&event))
-		{
-			// Check Main Menu position
-						
-			MovementEventSM(&Start_Menu);
-
-			// Draw Buttons
-
-			UpdateButtonsStartMenu(&Start_Menu);
-
-			// If the quit cross is pressed
-			
-			if(event.type==SDL_QUIT)
-			{
-				Quit_SM=1;
-				*Quit_Game=1;
-			}
-		
-			// If a button is clicked/pressed
-
-			else if(event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN)
-			{
-				// Return to main menu by pressing "ESCAPE"
-
-				if(event.key.keysym.sym == SDLK_ESCAPE)
-					Quit_SM=1;
-
-				// Mouse click / Space button pressed
-						
-				else if( event.key.keysym.sym == SDLK_SPACE || Start_Menu.Clicked_Button )
-				{
-					switch(Start_Menu.Actual_Position)
-					{
-						case 1:
-							//Save 1
-							Start_Menu.Clicked_Button=0;
-							break;
-
-						case 2:
-							//Save 2
-							Start_Menu.Clicked_Button=0;
-							break;
-
-						case 3:
-							//Save 3
-							Start_Menu.Clicked_Button=0;
-							break;
-
-						case 4:
-							//Return to main menu
-							Quit_SM=1;	
-							break;
-
-						default:
-							break;
-					}
-				}						
-			}
-
-			// Flip screen
-			SDL_Flip(screen);
-		}
-
-		// Frame regulation
-		SDL_Delay(6);
-	}
-
-	// Clear memory
-	ClearStartMenu(&Start_Menu);
-}
-
-////////////////////////////////////////
-
-void ClearStartMenu(SM* Start_Menu)
-{
-	SDL_FreeSurface(Start_Menu->Image_background_SM);
-	SDL_FreeSurface(Start_Menu->Image_Save1.UC_B);
-	SDL_FreeSurface(Start_Menu->Image_Save1.C_B);
-	SDL_FreeSurface(Start_Menu->Image_Save2.UC_B);
-	SDL_FreeSurface(Start_Menu->Image_Save2.C_B);
-	SDL_FreeSurface(Start_Menu->Image_Save3.UC_B);
-	SDL_FreeSurface(Start_Menu->Image_Save3.C_B);
-	SDL_FreeSurface(Start_Menu->Image_Quit_Button.UC_B);
-	SDL_FreeSurface(Start_Menu->Image_Quit_Button.C_B);
-	Mix_FreeChunk(Start_Menu->Chunk);
-}
-
-////////////////////////////////////////

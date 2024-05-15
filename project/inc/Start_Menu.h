@@ -1,40 +1,31 @@
-#include "Structures_SM.h"
+/* -----------------------------------------------
+* @team:   by_kayori_Nova_Grp
+* @author: @ZouariOmar @Fraddosse1
+* @IDE:    @vsc @sublime
+* @update: 04/27/24
+? @file:   start_menu.h
+----------------------------------------------- */
+#include "settings.h"
 
-#ifndef START_MENU
-#define START_MENU
+#ifndef __START_MENU__H
+#define __START_MENU__H
 
-////////////////////////////////////////
+//? --------------------- STRUCT PROTOTYPE DECLARATION PART ----------------------
+//? load_lvl struct (size = 16bit)
+typedef struct load_lvl {
+	int current_lvl,
+		estimated_time_ms,
+		death_time,
+		collected_items;
+} load_info;
 
-void InitialisationSM(SM* Start_Menu,int* Quit_Game);
+//? -------------------- FUNCTIONS PROTOTYPE DECLARATION PART --------------------
 
-////////////////////////////////////////
 
-void KeyboardEventSM(SM* Start_Menu);
+void sm_initResources(surface *, load_info, int, int);
 
-////////////////////////////////////////
+void scanLvlInfo(char *, load_info *);
 
-void MouseEventSM(SM* Start_Menu);
-
-////////////////////////////////////////
-
-void MovementEventSM(SM* Main_Menu);
-
-////////////////////////////////////////
-
-void ButtonUpdate( SM* Start_Menu, SDL_Surface* UC_Image1, SDL_Rect* UC_Rect1, SDL_Surface* UC_Image2, SDL_Rect* UC_Rect2, SDL_Surface* UC_Image3, SDL_Rect* UC_Rect3, SDL_Surface* C_Image, SDL_Rect* C_Rect, Mix_Chunk* Chunk);
-
-////////////////////////////////////////
-
-void UpdateButtonsStartMenu(SM* Start_Menu);
-
-////////////////////////////////////////
-
-void StartMenu(int* Quit_Game);
-
-////////////////////////////////////////
-
-void ClearStartMenu(SM* Start_Menu);
-
-////////////////////////////////////////
+void sm_scroll_UD(surface *, load_info *, int *, int, Mix_Chunk *);
 
 #endif

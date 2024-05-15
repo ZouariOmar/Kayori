@@ -337,7 +337,7 @@ void MainMenu(void)
 						// Start menu
 						case 1:
 
-							StartMenu(&Quit_Loop);
+							start_menu();
 								
 							break;
 
