@@ -472,7 +472,11 @@ void MenuMPS(int* Quit_Game)
 						case 2:
 							// Multi function
 							Multiplayer();
-							
+
+							// Init default images
+							SDL_BlitSurface(Skin.Background,NULL,screen,NULL);
+							SDL_BlitSurface(Skin.Img_Skin1,NULL,screen,&(Skin.P1.Rect_Skin));
+							SDL_BlitSurface(Skin.Img_Skin1,NULL,screen,&(Skin.P2.Rect_Skin));
 							break;
 
 						case 3:

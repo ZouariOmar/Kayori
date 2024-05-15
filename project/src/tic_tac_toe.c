@@ -153,7 +153,7 @@ void __ttt_game__() {
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
                             freeResources(sub, NULL, NULL, 15);
-                            exit(EXIT_SUCCESS);
+                            return;
                             break;
 
                         default:

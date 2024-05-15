@@ -574,6 +574,7 @@ void UpdateBackgroundSP(BGC* BG_Camera, SM* P, int* Quit_Game)
 		P->Keys.Interact = 0;
 
 		// ================ TO UPODATE ================
+		srand(NULL);
 		if(rand()%2)
 			__ttt_game__();
 		else

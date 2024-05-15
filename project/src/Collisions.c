@@ -101,7 +101,6 @@ void CollisionCheck(int Lvl, SM* P, Col* C_Tab, int i)
 			C_Tab[30].Spec_Col.x = 0; C_Tab[30].Spec_Col.y = 0;
 			C_Tab[30].Spec_Col.w = 0; C_Tab[30].Spec_Col.h = 0;
 
-
 			// reset the dyn_collision number 1
 			C_Tab[21].Spec_Col.x = 4079; C_Tab[21].Spec_Col.y = 1308;
 			C_Tab[21].Spec_Col.w = 38;   C_Tab[21].Spec_Col.h = 766;

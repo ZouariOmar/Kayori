@@ -26,7 +26,7 @@ void SoloPlayer(void) {
 
     Col* C_Tab;
 
-    int Lvl = 1;
+    int Lvl = 3;
     int Quit = 0;
     int N_Collision = 0;
 

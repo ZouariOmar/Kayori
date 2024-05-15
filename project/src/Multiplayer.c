@@ -15,7 +15,7 @@ void InitialisationMP(MP* Multi,int* Quit_Game)
 
 	// Background
 
-	Multi->Rect_MP.h=3;
+	Multi->Rect_MP.h=389;
 	Multi->Rect_MP.w=633;
 
 	Multi->Rect_MP.x=636;
@@ -51,7 +51,7 @@ void InitialisationMP(MP* Multi,int* Quit_Game)
 
 	// Image pointer verification
 
-	if( !(Multi->Img_Start && Multi->Img_Score) )
+	if( !(Multi->Img_Start && Multi->Img_Score && Multi->Img_Arrow) )
 	{
 		printf("Erreur allocation initialisation image\n");
 		ClearMP(Multi);
@@ -239,11 +239,13 @@ void MenuMP(int* Quit_Game)
 				else if( event.key.keysym.sym == SDLK_SPACE || Multi.Clicked_Button )
 				{
 					ClearMP(&Multi);
+
 					switch(Multi.Actual_Position)
 					{
 						case 1:
 							// Multiplayer skins
 							MenuMPS(Quit_Game);
+
 							break;
 
 						case 2:
@@ -260,7 +262,7 @@ void MenuMP(int* Quit_Game)
 						default:
 							break;
 					}
-					
+
 					if(!(*Quit_Game))
 						InitialisationMP(&Multi,Quit_Game);
 				}					
@@ -286,6 +288,7 @@ void ClearMP(MP* Multi)
 {
 	SDL_FreeSurface(Multi->Img_Start);
 	SDL_FreeSurface(Multi->Img_Score);
+	SDL_FreeSurface(Multi->Img_Arrow);
 	Mix_FreeChunk(Multi->Chunk);
 }
 

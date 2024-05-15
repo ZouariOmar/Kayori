@@ -6,25 +6,25 @@ void InitKeys(SM* P1, SM* P2)
 {
 	// Player 1
 
-	P1->Keys.Right = SDLK_RIGHT;
-	P1->Keys.Left  = SDLK_LEFT;
-	P1->Keys.Up = SDLK_UP;
-	P1->Keys.Down = SDLK_DOWN;
-	P1->Keys.Jump = SDLK_SPACE;
-	P1->Keys.Dash = SDLK_c;
-	P1->Keys.Inter = SDLK_x;
-	P1->Keys.Pause=0;
+	P1->Keys.Right = scanValue("project/doc/settings", 2);
+	P1->Keys.Left  = scanValue("project/doc/settings", 3);;
+	P1->Keys.Up = scanValue("project/doc/settings", 4);
+	P1->Keys.Down = scanValue("project/doc/settings", 5);
+	P1->Keys.Jump = scanValue("project/doc/settings", 6);
+	P1->Keys.Dash = scanValue("project/doc/settings", 7);
+	P1->Keys.Inter = scanValue("project/doc/settings", 8);
+	P1->Keys.Pause = 0;
 	P1->Keys.Interact = 0;
 	// Player 2
 
-	P2->Keys.Right = SDLK_d;
-	P2->Keys.Left  = SDLK_q;
-	P2->Keys.Up = SDLK_z;
-	P2->Keys.Down = SDLK_s;
-	P2->Keys.Jump = SDLK_o;
-	P2->Keys.Dash = SDLK_p;
-	P2->Keys.Inter = SDLK_i;
-	P2->Keys.Pause=0;
+	P2->Keys.Right = scanValue("project/doc/settings", 12);
+	P2->Keys.Left  = scanValue("project/doc/settings", 13);
+	P2->Keys.Up = scanValue("project/doc/settings", 14);
+	P2->Keys.Down = scanValue("project/doc/settings", 15);
+	P2->Keys.Jump = scanValue("project/doc/settings", 16);
+	P2->Keys.Dash = scanValue("project/doc/settings", 17);
+	P2->Keys.Inter = scanValue("project/doc/settings", 18);
+	P2->Keys.Pause = 0;
 	P2->Keys.Interact = 0;
 }
 
