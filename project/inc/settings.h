@@ -63,11 +63,11 @@ void initResources(surface*);
 void init_rs_ctrl(surface*);
 
 /*
-? - init_kb_ctrl(surface *sub) void func -
+? - init_kb_ctrl(surface *sub, int player) void func -
 * initialize the keyboard conf
 > {controls(), kb_ctrls()}
 */
-void init_kb_ctrl(surface *);
+void init_kb_ctrl(surface *, int);
 
 /*
 ? - init_cl_ctrl(surface *sub) void func -
@@ -137,27 +137,27 @@ void quit_settings(surface *);
 void controls(surface*, Mix_Chunk *);
 
 /*
-? - ctrl_scroll_UD(surface*, int*, int) void fn -
+? - ctrl_scroll_UD(surface *sub, int *, int, int player, Mix_Chunk *pip) void fn -
 * scroll the "controls" menu up and down
 > settings()
 ! support only the controls(surface*) function for now
 */
-void ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
+void ctrl_scroll_UD(surface *, int *, int, int, Mix_Chunk *);
 
 /*
-? - kb_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
+? - kb_ctrl(surface *sub, int ctrl_usrOpPos, int player, Mix_Chunk *pip) void fn -
 * kb_sub_controls_option
 * usr can modify the keyboard configuration
 > controls()
 */
-void kb_ctrl(surface *, int, Mix_Chunk *);
+void kb_ctrl(surface *, int, int, Mix_Chunk *);
 
 /*
-? - edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos) void fn -
+? - edit_kb(surface *sub, Mix_Chunk *pip, int kb_ctrl_usrOpPos, int player) void fn -
 * usr can change the keyboard keys
 > kb_ctrl()
 */
-void edit_kb(surface *, Mix_Chunk *, int);
+void edit_kb(surface *, Mix_Chunk *, int, int);
 
 /*
 ? - is_exist(int key) int fn -
@@ -169,12 +169,12 @@ void edit_kb(surface *, Mix_Chunk *, int);
 int is_exist(int key);
 
 /*
-? - kb_ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, Mix_Chunk *pip) void fn -
+? - kb_ctrl_scroll_UD(surface* sub, int* ctrl_usrOpPos, int direction, int player, Mix_Chunk *pip) void fn -
 * scroll the "keyboard conf" menu up and down
 > kb_ctrl()
 ! support only the controls(surface*) function
 */
-void kb_ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
+void kb_ctrl_scroll_UD(surface *, int *, int, int, Mix_Chunk *);
 
 /*
 ? - cl_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
@@ -185,11 +185,11 @@ void kb_ctrl_scroll_UD(surface *, int *, int, Mix_Chunk *);
 ////void cl_ctrl(surface *, int);
 
 /*
-? - rn_ctrl(surface *sub, int ctrl_usrOpPos) void fn -
+? - rn_ctrl(surface *sub, int ctrl_usrOpPos, int player) void fn -
 * return to the controls settings menu proccess
 > controls()
 */
-void rn_ctrl(surface *sub, int ctrl_usrOpPos);
+void rn_ctrl(surface *, int, int);
 
 /*
 ? - video(surface*) void func -

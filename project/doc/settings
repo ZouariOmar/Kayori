@@ -2,27 +2,27 @@
 --
 kb_right___ 275
 kb_left____ 276
-kb_up______ 274
-kb_down____ 273
-kb_jump____ 32
-kb_dash____ 99
-kb_interact 120
---
-** keyboard controller (P2) **
---
-kb_right___ 275
-kb_left____ 276
 kb_up______ 273
 kb_down____ 274
 kb_jump____ 32
-kb_dash____ 99
-kb_interact 119
+kb_dash____ 98
+kb_interact 110
+--
+** keyboard controller (P2) **
+--
+kb_right___ 100
+kb_left____ 113
+kb_up______ 122
+kb_down____ 115
+kb_jump____ 101
+kb_dash____ 119
+kb_interact 120
 --
 ** other options **
 --
 fullscreen  -2147483648
-musicVolume 128
-soundVolume 40
+musicVolume 16
+soundVolume 8
 language    0
 speedRun    0
 miniMap     0

@@ -8,6 +8,7 @@
 #include "../inc/inc.h"
 #include "Main_Menu.c"
 
+
 //? ----------------------- FUNCTIONS PROTOTYPE DEV PART -----------------------
 void initEverything() {
     //* SDL initialisation process

@@ -29,7 +29,7 @@ void enigma();
 ? initEnigma(surface sub) void fn
 * this fun blit the first viewed imgs
 */
-void initEnigma(surface *, TTF_Font *, eg);
+void initEnigma(surface *, eg);
 
 /*
 ? -- scanEnigma(char *path, eg *e, int line) void fn --

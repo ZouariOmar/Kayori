@@ -29,9 +29,6 @@ void enigma() {
     //* init the elapsed time var
     int elapsed_time = 0;
 
-    //* open the @Groundation_Foundation ttf file
-    TTF_Font *font = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 40);
-
     //* load the enigma resources
     loadResources(sub, "project/res/img_enigma/img", 0, 6);
     loadResources(sub, "project/res/img_enigma/timer_bar/img", 6, 26);
@@ -49,7 +46,7 @@ void enigma() {
     scanEnigma("project/doc/enigma", &e, rand() % 21);
 
     //* initializing the enigma first viewed resources
-    initEnigma(sub, font, e);
+    initEnigma(sub, e);
 
     //* update the screen
     SDL_Flip(screen);
@@ -95,7 +92,7 @@ void enigma() {
 
                         //? --- ESCAPE CLICK OPTION ---
                         case SDLK_ESCAPE:
-                            freeResources(sub, font, NULL, 30);
+                            freeResources(sub, NULL, NULL, 30);
                             return;
 
                         //? --- OTHER CLICK OPTION ---
@@ -129,7 +126,7 @@ void enigma() {
 
                 //? --------------------- QUIT CLICK EVENT ---------------------
                 case SDL_QUIT:
-                    freeResources(sub, font, NULL, 30);
+                    freeResources(sub, NULL, NULL, 30);
                     exit(EXIT_SUCCESS);
                     break;
 
@@ -147,12 +144,16 @@ void enigma() {
     }
 }
 
-void initEnigma(surface *sub, TTF_Font * font, eg e) {
+void initEnigma(surface *sub, eg e) {
+    //* open the @Groundation_Foundation ttf file in @size01 and @size02
+    TTF_Font *font_size01 = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 35);
+    TTF_Font *font_size02 = TTF_OpenFont("project/res/font/Groundation Foundation.ttf", 25);
+
     //* Render the @enigma_info
-    sub[26].win  = TTF_RenderText_Blended(font, e.op1, WHITE);
-    sub[27].win  = TTF_RenderText_Blended(font, e.op2, WHITE);
-    sub[28].win  = TTF_RenderText_Blended(font, e.op3, WHITE);
-    sub[29].win  = TTF_RenderText_Blended(font, e.qcm, WHITE);
+    sub[26].win  = TTF_RenderText_Blended(font_size02, e.op1, WHITE);
+    sub[27].win  = TTF_RenderText_Blended(font_size02, e.op2, WHITE);
+    sub[28].win  = TTF_RenderText_Blended(font_size02, e.op3, WHITE);
+    sub[29].win  = TTF_RenderText_Blended(font_size01, e.qcm, WHITE);
 
     //* blit the @enigma_info
     for (int i = 0; i < 30; i++) {
@@ -160,6 +161,10 @@ void initEnigma(surface *sub, TTF_Font * font, eg e) {
             i = 6;
         SDL_BlitSurface(sub[i].win, NULL, screen, &sub[i].pos);
     }
+
+    //* free fonts res
+    TTF_CloseFont(font_size01);
+    TTF_CloseFont(font_size02);
 }
 
 void scroll_LR(surface *sub, int *usrOpPos, int direction) {
